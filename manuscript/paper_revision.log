@@ -1,0 +1,1095 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.16)  21 MAR 2023 14:11
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**paper_revision.tex
+(./paper_revision.tex
+LaTeX2e <2022-11-01> patch level 1
+L3 programming layer <2023-02-22> (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2022/07/02 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@section=\count186
+\c@subsection=\count187
+\c@subsubsection=\count188
+\c@paragraph=\count189
+\c@subparagraph=\count190
+\c@figure=\count191
+\c@table=\count192
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count193
+\Gm@cntv=\count194
+\c@Gm@tempcnt=\count195
+\Gm@bindingoffset=\dimen141
+\Gm@wd@mp=\dimen142
+\Gm@odd@mp=\dimen143
+\Gm@even@mp=\dimen144
+\Gm@layoutwidth=\dimen145
+\Gm@layoutheight=\dimen146
+\Gm@layouthoffset=\dimen147
+\Gm@layoutvoffset=\dimen148
+\Gm@dimlist=\toks17
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/libertine/libertine.sty
+Package: libertine 2022/09/12 (Bob Tennent) Supports Libertine and Biolinum fonts for all LaTeX engines.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/ifxetex.sty
+Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/ifluatex.sty
+Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks18
+\XKV@tempa@toks=\toks19
+)
+\XKV@depth=\count196
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+)) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontaxes/fontaxes.sty
+Package: fontaxes 2020/07/21 v1.0e Font selection axes
+LaTeX Info: Redefining \upshape on input line 29.
+LaTeX Info: Redefining \itshape on input line 31.
+LaTeX Info: Redefining \slshape on input line 33.
+LaTeX Info: Redefining \swshape on input line 35.
+LaTeX Info: Redefining \scshape on input line 37.
+LaTeX Info: Redefining \sscshape on input line 39.
+LaTeX Info: Redefining \ulcshape on input line 41.
+LaTeX Info: Redefining \textsw on input line 47.
+LaTeX Info: Redefining \textssc on input line 48.
+LaTeX Info: Redefining \textulc on input line 49.
+)
+LaTeX Info: Redefining \oldstylenums on input line 483.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/libertine/LinLibertine_I.tex)) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+LaTeX Font Info:    Trying to load font information for T1+LinuxLibertineT-TLF on input line 112.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/libertine/T1LinuxLibertineT-TLF.fd
+File: T1LinuxLibertineT-TLF.fd 2017/03/20 (autoinst) Font definitions for T1/LinuxLibertineT-TLF.
+)
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 10.95pt on input line 112.
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks20
+\inpenc@posthook=\toks21
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/abstract/abstract.sty
+Package: abstract 2009/06/08 v1.2a configurable abstracts
+\abstitleskip=\skip50
+\absleftindent=\skip51
+\absrightindent=\skip52
+\absparindent=\skip53
+\absparsep=\skip54
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen149
+\Gin@req@width=\dimen150
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/grffile/grffile.sty
+Package: grffile 2019/11/11 v2.1 Extended file name support for graphics (legacy)
+Package grffile Info: This package is an empty stub for compatibility on input line 40.
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2021/07/05 v2.14 Sectioning titles
+\ttl@box=\box51
+\beforetitleunit=\skip55
+\aftertitleunit=\skip56
+\ttl@plus=\dimen151
+\ttl@minus=\dimen152
+\ttl@toksa=\toks22
+\titlewidth=\dimen153
+\titlewidthlast=\dimen154
+\titlewidthfirst=\dimen155
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/biblatex.sty
+Package: biblatex 2023/03/05 v3.19 programmable bibliographies (PK/MW)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count197
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+)) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/logreq/logreq.sty
+Package: logreq 2010/08/04 v1.0 xml request logger
+\lrq@indent=\count198
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/logreq/logreq.def
+File: logreq.def 2010/08/04 v1.0 logreq spec v1.0
+)) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+\c@tabx@nest=\count199
+\c@listtotal=\count266
+\c@listcount=\count267
+\c@liststart=\count268
+\c@liststop=\count269
+\c@citecount=\count270
+\c@citetotal=\count271
+\c@multicitecount=\count272
+\c@multicitetotal=\count273
+\c@instcount=\count274
+\c@maxnames=\count275
+\c@minnames=\count276
+\c@maxitems=\count277
+\c@minitems=\count278
+\c@citecounter=\count279
+\c@maxcitecounter=\count280
+\c@savedcitecounter=\count281
+\c@uniquelist=\count282
+\c@uniquename=\count283
+\c@refsection=\count284
+\c@refsegment=\count285
+\c@maxextratitle=\count286
+\c@maxextratitleyear=\count287
+\c@maxextraname=\count288
+\c@maxextradate=\count289
+\c@maxextraalpha=\count290
+\c@abbrvpenalty=\count291
+\c@highnamepenalty=\count292
+\c@lownamepenalty=\count293
+\c@maxparens=\count294
+\c@parenlevel=\count295
+\blx@tempcnta=\count296
+\blx@tempcntb=\count297
+\blx@tempcntc=\count298
+\c@blx@maxsection=\count299
+\blx@maxsegment@0=\count300
+\blx@notetype=\count301
+\blx@parenlevel@text=\count302
+\blx@parenlevel@foot=\count303
+\blx@sectionciteorder@0=\count304
+\blx@sectionciteorderinternal@0=\count305
+\blx@entrysetcounter=\count306
+\blx@biblioinstance=\count307
+\labelnumberwidth=\skip57
+\labelalphawidth=\skip58
+\biblabelsep=\skip59
+\bibitemsep=\skip60
+\bibnamesep=\skip61
+\bibinitsep=\skip62
+\bibparsep=\skip63
+\bibhang=\skip64
+\blx@bcfin=\read2
+\blx@bcfout=\write3
+\blx@langwohyphens=\language3
+\c@mincomprange=\count308
+\c@maxcomprange=\count309
+\c@mincompwidth=\count310
+Package biblatex Info: Trying to load biblatex default data model...
+Package biblatex Info: ... file 'blx-dm.def' found.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/blx-dm.def
+File: blx-dm.def 2023/03/05 v3.19 biblatex localization (PK/MW)
+)
+Package biblatex Info: Trying to load biblatex custom data model...
+Package biblatex Info: ... file 'biblatex-dm.cfg' not found.
+\c@afterword=\count311
+\c@savedafterword=\count312
+\c@annotator=\count313
+\c@savedannotator=\count314
+\c@author=\count315
+\c@savedauthor=\count316
+\c@bookauthor=\count317
+\c@savedbookauthor=\count318
+\c@commentator=\count319
+\c@savedcommentator=\count320
+\c@editor=\count321
+\c@savededitor=\count322
+\c@editora=\count323
+\c@savededitora=\count324
+\c@editorb=\count325
+\c@savededitorb=\count326
+\c@editorc=\count327
+\c@savededitorc=\count328
+\c@foreword=\count329
+\c@savedforeword=\count330
+\c@holder=\count331
+\c@savedholder=\count332
+\c@introduction=\count333
+\c@savedintroduction=\count334
+\c@namea=\count335
+\c@savednamea=\count336
+\c@nameb=\count337
+\c@savednameb=\count338
+\c@namec=\count339
+\c@savednamec=\count340
+\c@translator=\count341
+\c@savedtranslator=\count342
+\c@shortauthor=\count343
+\c@savedshortauthor=\count344
+\c@shorteditor=\count345
+\c@savedshorteditor=\count346
+\c@labelname=\count347
+\c@savedlabelname=\count348
+\c@institution=\count349
+\c@savedinstitution=\count350
+\c@lista=\count351
+\c@savedlista=\count352
+\c@listb=\count353
+\c@savedlistb=\count354
+\c@listc=\count355
+\c@savedlistc=\count356
+\c@listd=\count357
+\c@savedlistd=\count358
+\c@liste=\count359
+\c@savedliste=\count360
+\c@listf=\count361
+\c@savedlistf=\count362
+\c@location=\count363
+\c@savedlocation=\count364
+\c@organization=\count365
+\c@savedorganization=\count366
+\c@origlocation=\count367
+\c@savedoriglocation=\count368
+\c@origpublisher=\count369
+\c@savedorigpublisher=\count370
+\c@publisher=\count371
+\c@savedpublisher=\count372
+\c@language=\count373
+\c@savedlanguage=\count374
+\c@origlanguage=\count375
+\c@savedoriglanguage=\count376
+\c@pageref=\count377
+\c@savedpageref=\count378
+\shorthandwidth=\skip65
+\shortjournalwidth=\skip66
+\shortserieswidth=\skip67
+\shorttitlewidth=\skip68
+\shortauthorwidth=\skip69
+\shorteditorwidth=\skip70
+\locallabelnumberwidth=\skip71
+\locallabelalphawidth=\skip72
+\localshorthandwidth=\skip73
+\localshortjournalwidth=\skip74
+\localshortserieswidth=\skip75
+\localshorttitlewidth=\skip76
+\localshortauthorwidth=\skip77
+\localshorteditorwidth=\skip78
+Package biblatex Info: Trying to load compatibility code...
+Package biblatex Info: ... file 'blx-compat.def' found.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/blx-compat.def
+File: blx-compat.def 2023/03/05 v3.19 biblatex compatibility (PK/MW)
+)
+Package biblatex Info: Trying to load generic definitions...
+Package biblatex Info: ... file 'biblatex.def' found.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/biblatex.def
+File: biblatex.def 2023/03/05 v3.19 biblatex compatibility (PK/MW)
+\c@textcitecount=\count379
+\c@textcitetotal=\count380
+\c@textcitemaxnames=\count381
+\c@biburlbigbreakpenalty=\count382
+\c@biburlbreakpenalty=\count383
+\c@biburlnumpenalty=\count384
+\c@biburlucpenalty=\count385
+\c@biburllcpenalty=\count386
+\biburlbigskip=\muskip17
+\biburlnumskip=\muskip18
+\biburlucskip=\muskip19
+\biburllcskip=\muskip20
+\c@smartand=\count387
+)
+Package biblatex Info: Trying to load bibliography style 'numeric'...
+Package biblatex Info: ... file 'numeric.bbx' found.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/bbx/numeric.bbx
+File: numeric.bbx 2023/03/05 v3.19 biblatex bibliography style (PK/MW)
+Package biblatex Info: Trying to load bibliography style 'standard'...
+Package biblatex Info: ... file 'standard.bbx' found.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/bbx/standard.bbx
+File: standard.bbx 2023/03/05 v3.19 biblatex bibliography style (PK/MW)
+\c@bbx:relatedcount=\count388
+\c@bbx:relatedtotal=\count389
+))
+Package biblatex Info: Trying to load citation style 'numeric'...
+Package biblatex Info: ... file 'numeric.cbx' found.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/cbx/numeric.cbx
+File: numeric.cbx 2023/03/05 v3.19 biblatex citation style (PK/MW)
+Package biblatex Info: Redefining '\cite'.
+Package biblatex Info: Redefining '\parencite'.
+Package biblatex Info: Redefining '\footcite'.
+Package biblatex Info: Redefining '\footcitetext'.
+Package biblatex Info: Redefining '\smartcite'.
+Package biblatex Info: Redefining '\supercite'.
+Package biblatex Info: Redefining '\textcite'.
+Package biblatex Info: Redefining '\textcites'.
+Package biblatex Info: Redefining '\cites'.
+Package biblatex Info: Redefining '\parencites'.
+Package biblatex Info: Redefining '\smartcites'.
+)
+Package biblatex Info: Trying to load configuration file...
+Package biblatex Info: ... file 'biblatex.cfg' found.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/biblatex.cfg
+File: biblatex.cfg 
+)
+Package biblatex Info: Input encoding 'utf8' detected.
+Package biblatex Info: Document encoding is UTF8 ....
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2023-02-22 L3 programming layer (loader) 
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count390
+\l__pdf_internal_box=\box52
+))
+Package biblatex Info: ... and expl3
+(biblatex)             2023-02-22 L3 programming layer (loader) 
+(biblatex)             is new enough (at least 2020/04/06),
+(biblatex)             setting 'casechanger=expl3'.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/blx-case-expl3.sty (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+Package: xparse 2023-02-02 L3 Experimental document command parser
+)
+Package: blx-case-expl3 2023/03/05 v3.19 expl3 case changing code for biblatex
+))
+\c@hypothesis=\count391
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2022/12/04 v6.7b set line spacing
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count392
+\float@exts=\toks23
+\float@box=\box53
+\@float@everytoks=\toks24
+\@floatcapt=\box54
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2022/03/01 v3.6b Customizing captions (AR)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2022/03/17 v2.3b caption3 kernel (AR)
+\caption@tempdima=\dimen156
+\captionmargin=\dimen157
+\caption@leftmargin=\dimen158
+\caption@rightmargin=\dimen159
+\caption@width=\dimen160
+\caption@indent=\dimen161
+\caption@parindent=\dimen162
+\caption@hangindent=\dimen163
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count393
+\c@continuedfloat=\count394
+Package caption Info: float package is loaded.
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lineno/lineno.sty
+Package: lineno 2023/01/19 line numbers on paragraphs v5.1
+\linenopenalty=\count395
+\output=\toks25
+\linenoprevgraf=\count396
+\linenumbersep=\dimen164
+\linenumberwidth=\dimen165
+\c@linenumber=\count397
+\c@pagewiselinenumber=\count398
+\c@LN@truepage=\count399
+\c@internallinenumber=\count400
+\c@internallinenumbers=\count401
+\quotelinenumbersep=\dimen166
+\bframerule=\dimen167
+\bframesep=\dimen168
+\bframebox=\box55
+LaTeX Info: Redefining \\ on input line 3131.
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2022/06/12 v2.14 LaTeX color extensions (UK)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 227.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1353.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1357.
+Package xcolor Info: Model `RGB' extended on input line 1369.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1371.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1372.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1373.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1374.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1375.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1376.
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen169
+\lightrulewidth=\dimen170
+\cmidrulewidth=\dimen171
+\belowrulesep=\dimen172
+\belowbottomsep=\dimen173
+\aboverulesep=\dimen174
+\abovetopsep=\dimen175
+\cmidrulesep=\dimen176
+\cmidrulekern=\dimen177
+\defaultaddspace=\dimen178
+\@cmidla=\count402
+\@cmidlb=\count403
+\@aboverulesep=\dimen179
+\@belowrulesep=\dimen180
+\@thisruleclass=\count404
+\@lastruleclass=\count405
+\@thisrulewidth=\dimen181
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
+\LTleft=\skip79
+\LTright=\skip80
+\LTpre=\skip81
+\LTpost=\skip82
+\LTchunksize=\count406
+\LTcapwidth=\dimen182
+\LT@head=\box56
+\LT@firsthead=\box57
+\LT@foot=\box58
+\LT@lastfoot=\box59
+\LT@gbox=\box60
+\LT@cols=\count407
+\LT@rows=\count408
+\c@LT@tables=\count409
+\c@LT@chunks=\count410
+\LT@p@ftn=\toks26
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/array.sty
+Package: array 2022/09/04 v2.5g Tabular extension package (FMi)
+\col@sep=\dimen183
+\ar@mcellbox=\box61
+\extrarowheight=\dimen184
+\NC@list=\toks27
+\extratabsurround=\skip83
+\backup@length=\skip84
+\ar@cellbox=\box62
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
+\multirow@colwidth=\skip85
+\multirow@cntb=\count411
+\multirow@dima=\skip86
+\bigstrutjot=\dimen185
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/wrapfig/wrapfig.sty
+\wrapoverhang=\dimen186
+\WF@size=\dimen187
+\c@WF@wrappedlines=\count412
+\WF@box=\box63
+\WF@everypar=\toks28
+Package: wrapfig 2003/01/31  v 3.6
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2022/06/20 v1.0f Color table columns (DPC)
+\everycr=\toks29
+\minrowclearance=\skip87
+\rownum=\count413
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pdflscape/pdflscape.sty
+Package: pdflscape 2022-10-27 v0.13 Display of landscape pages in PDF
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pdflscape/pdflscape-nometadata.sty
+Package: pdflscape-nometadata 2022-10-28 v0.13 Display of landscape pages in PDF (HO)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/lscape.sty
+Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
+)
+Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
+)) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tabu/tabu.sty
+Package: tabu 2019/01/11 v2.9 - flexible LaTeX tabulars (FC+tabu-fixed)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/varwidth/varwidth.sty
+Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
+\@vwid@box=\box64
+\sift@deathcycles=\count414
+\@vwid@loff=\dimen188
+\@vwid@roff=\dimen189
+)
+\c@taburow=\count415
+\tabu@nbcols=\count416
+\tabu@cnt=\count417
+\tabu@Xcol=\count418
+\tabu@alloc=\count419
+\tabu@nested=\count420
+\tabu@target=\dimen190
+\tabu@spreadtarget=\dimen191
+\tabu@naturalX=\dimen192
+\tabucolX=\dimen193
+\tabu@Xsum=\dimen194
+\extrarowdepth=\dimen195
+\abovetabulinesep=\dimen196
+\belowtabulinesep=\dimen197
+\tabustrutrule=\dimen198
+\tabu@thebody=\toks30
+\tabu@footnotes=\toks31
+\tabu@box=\box65
+\tabu@arstrutbox=\box66
+\tabu@hleads=\box67
+\tabu@vleads=\box68
+\tabu@cellskip=\skip88
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/threeparttable/threeparttable.sty
+Package: threeparttable 2003/06/13  v 3.0
+\@tempboxb=\box69
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/threeparttablex/threeparttablex.sty
+Package: threeparttablex 2013/07/23 v0.3 by daleif
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/environ/environ.sty
+Package: environ 2014/05/04 v0.3 A new way to define environments
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/trimspaces/trimspaces.sty
+Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
+)
+\@envbody=\toks32
+)
+\TPTL@width=\skip89
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box70
+\UL@hyphenbox=\box71
+\UL@skip=\skip90
+\UL@hook=\toks33
+\UL@height=\dimen199
+\UL@pe=\count421
+\UL@pixel=\dimen256
+\ULC@box=\box72
+Package: ulem 2019/11/18
+\ULdepth=\dimen257
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/makecell/makecell.sty
+Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
+\rotheadsize=\dimen258
+\c@nlinenum=\count422
+\TeXr@lab=\toks34
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/placeins/placeins.sty
+Package: placeins 2005/04/18  v 2.2
+)
+\cslhangindent=\skip91
+\csllabelwidth=\skip92
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count423
+\calc@Bcount=\count424
+\calc@Adimen=\dimen259
+\calc@Bdimen=\dimen260
+\calc@Askip=\skip93
+\calc@Bskip=\skip94
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count425
+\calc@Cskip=\skip95
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2023-02-07 v7.00v Hypertext links for LaTeX
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
+Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/auxhook/auxhook.sty
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2022-05-17 v2.50 Cross-referencing by name of section
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+)
+\c@section@level=\count426
+)
+\@linkdim=\dimen261
+\Hy@linkcounter=\count427
+\Hy@pagecounter=\count428
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2023-02-07 v7.00v Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+) (c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
+)
+\Hy@SavedSpaceFactor=\count429
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2023-02-07 v7.00v Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Option `unicode' set `true' on input line 4060.
+Package hyperref Info: Hyper figures OFF on input line 4177.
+Package hyperref Info: Link nesting OFF on input line 4182.
+Package hyperref Info: Hyper index ON on input line 4185.
+Package hyperref Info: Plain pages OFF on input line 4192.
+Package hyperref Info: Backreferencing OFF on input line 4197.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4425.
+\c@Hy@tempcnt=\count430
+LaTeX Info: Redefining \url on input line 4763.
+\XeTeXLinkMargin=\dimen262
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
+))
+\Fld@menulength=\count431
+\Field@Width=\dimen263
+\Fld@charsize=\dimen264
+Package hyperref Info: Hyper figures OFF on input line 6042.
+Package hyperref Info: Link nesting OFF on input line 6047.
+Package hyperref Info: Hyper index ON on input line 6050.
+Package hyperref Info: backreferencing OFF on input line 6057.
+Package hyperref Info: Link coloring OFF on input line 6062.
+Package hyperref Info: Link coloring with OCG OFF on input line 6067.
+Package hyperref Info: PDF/A mode OFF on input line 6072.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
+package with kernel methods
+)
+\Hy@abspage=\count432
+\c@Item=\count433
+\c@Hfootnote=\count434
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2023-02-07 v7.00v Hyperref driver for pdfTeX
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend package
+with kernel methods
+)
+\Fld@listcount=\count435
+\c@bookmark@seq@number=\count436
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 285.
+)
+\Hy@SectionHShift=\skip96
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 179.
+Package hyperref Info: Option `breaklinks' set `true' on input line 179.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/cleveref/cleveref.sty
+Package: cleveref 2018/03/27 v0.21.4 Intelligent cross-referencing
+Package cleveref Info: `hyperref' support loaded on input line 2370.
+LaTeX Info: Redefining \cref on input line 2370.
+LaTeX Info: Redefining \Cref on input line 2370.
+LaTeX Info: Redefining \crefrange on input line 2370.
+LaTeX Info: Redefining \Crefrange on input line 2370.
+LaTeX Info: Redefining \cpageref on input line 2370.
+LaTeX Info: Redefining \Cpageref on input line 2370.
+LaTeX Info: Redefining \cpagerefrange on input line 2370.
+LaTeX Info: Redefining \Cpagerefrange on input line 2370.
+LaTeX Info: Redefining \labelcref on input line 2370.
+LaTeX Info: Redefining \labelcpageref on input line 2370.
+Package cleveref Info: always capitalise cross-reference names on input line 7825.
+Package cleveref Info: include cross-reference names in hyperlinks on input line 7836.
+Package cleveref Info: always capitalise cross-reference names on input line 7852.
+Package cleveref Info: include cross-reference names in hyperlinks on input line 7852.
+)
+\@quotelevel=\count437
+\@quotereset=\count438
+(./paper_revision.aux
+
+LaTeX Warning: Label `fig:cmaesrepAUCcal' multiply defined.
+
+
+LaTeX Warning: Label `fig:cmaesrepAUCcal@cref' multiply defined.
+
+
+LaTeX Warning: Label `fig:phenofit_model' multiply defined.
+
+
+LaTeX Warning: Label `fig:phenofit_model@cref' multiply defined.
+
+)
+\openout1 = `paper_revision.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=11.0pt
+* \footskip=30.0pt
+* \marginparwidth=59.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+\c@mv@tabular=\count439
+\c@mv@boldtabular=\count440
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/grfext/grfext.sty
+Package: grfext 2019/12/03 v1.3 Manage graphics extensions (HO)
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 504.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+))
+Package biblatex Info: Trying to load language 'english'...
+Package biblatex Info: ... file 'english.lbx' found.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/biblatex/lbx/english.lbx
+File: english.lbx 2023/03/05 v3.19 biblatex localization (PK/MW)
+)
+Package biblatex Info: Input encoding 'utf8' detected.
+Package biblatex Info: Automatic encoding selection.
+(biblatex)             Assuming data encoding 'utf8'.
+\openout3 = `paper_revision.bcf'.
+
+Package biblatex Info: Trying to load bibliographic data...
+Package biblatex Info: ... file 'paper_revision.bbl' not found.
+No file paper_revision.bbl.
+Package biblatex Info: Reference section=0 on input line 186.
+Package biblatex Info: Reference segment=0 on input line 186.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: hyperref package is loaded.
+Package caption Info: longtable package is loaded.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/ltcaption.sty
+Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
+)
+Package caption Info: threeparttable package is loaded.
+Package caption Info: wrapfig package is loaded.
+Package caption Info: End \AtBeginDocument code.
+Package hyperref Info: Link coloring ON on input line 186.
+(./paper_revision.out) (./paper_revision.out)
+\@outlinefile=\write4
+\openout4 = `paper_revision.out'.
+
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 18.0pt on input line 195.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 6.0pt on input line 197.
+LaTeX Font Info:    Trying to load font information for T1+LinuxBiolinumT-TLF on input line 197.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/libertine/T1LinuxBiolinumT-TLF.fd
+File: T1LinuxBiolinumT-TLF.fd 2017/03/20 (autoinst) Font definitions for T1/LinuxBiolinumT-TLF.
+)
+LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
+(Font)              scaled to size 6.0pt on input line 197.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
+(Font)              scaled to size 11.0pt on input line 204.
+LaTeX Font Info:    Trying to load font information for T1+phv on input line 204.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/t1phv.fd
+File: t1phv.fd 2020/03/25 scalable font definitions for T1/phv.
+)
+LaTeX Font Info:    Calculating math sizes for size <11> on input line 204.
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <5.5> not available
+(Font)              size <5> substituted on input line 204.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <5.5> not available
+(Font)              size <5> substituted on input line 204.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <5.5> not available
+(Font)              size <5> substituted on input line 204.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <11> on input line 204.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7.69997> on input line 204.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5.5> on input line 204.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 7.69997pt on input line 204.
+LaTeX Font Info:    Trying to load font information for TS1+LinuxLibertineT-TLF on input line 204.
+(c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/libertine/TS1LinuxLibertineT-TLF.fd
+File: TS1LinuxLibertineT-TLF.fd 2017/03/20 (autoinst) Font definitions for TS1/LinuxLibertineT-TLF.
+)
+LaTeX Font Info:    Font shape `TS1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 7.69997pt on input line 204.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 11.0pt on input line 204.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 9.0pt on input line 204.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 204.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 204.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 204.
+LaTeX Font Info:    Font shape `TS1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 6.0pt on input line 204.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
+(Font)              scaled to size 11.0pt on input line 205.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
+(Font)              scaled to size 10.0pt on input line 205.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
+(Font)              scaled to size 10.95pt on input line 231.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
+(Font)              scaled to size 10.95pt on input line 286.
+[1
+
+{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5]
+LaTeX Font Info:    Font shape `TS1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 10.95pt on input line 539.
+[6] [7]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 623.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 623.
+[8] [9]
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 10.0pt on input line 721.
+
+Overfull \hbox (4.14326pt too wide) in paragraph at lines 731--731
+[]\T1/LinuxLibertineT-TLF/m/n/10.95 PHENOFIT|  
+ []
+
+
+Overfull \hbox (8.24948pt too wide) in paragraph at lines 731--731
+[]\T1/LinuxLibertineT-TLF/m/n/10.95 CASTANEA|  
+ []
+
+<figs/phenofitmaps.pdf, id=382, 505.89pt x 505.89pt>
+File: figs/phenofitmaps.pdf Graphic file (type pdf)
+<use figs/phenofitmaps.pdf>
+Package pdftex.def Info: figs/phenofitmaps.pdf  used on input line 755.
+(pdftex.def)             Requested size: 469.76265pt x 469.76265pt.
+[10]
+<figs/castaneamaps.pdf, id=391, 505.89pt x 505.89pt>
+File: figs/castaneamaps.pdf Graphic file (type pdf)
+<use figs/castaneamaps.pdf>
+Package pdftex.def Info: figs/castaneamaps.pdf  used on input line 764.
+(pdftex.def)             Requested size: 469.76265pt x 469.76265pt.
+[11 <./figs/phenofitmaps.pdf>]
+<figs/cmaesrepAUCcal.pdf, id=418, 433.62pt x 216.81pt>
+File: figs/cmaesrepAUCcal.pdf Graphic file (type pdf)
+<use figs/cmaesrepAUCcal.pdf>
+Package pdftex.def Info: figs/cmaesrepAUCcal.pdf  used on input line 781.
+(pdftex.def)             Requested size: 433.63878pt x 216.81938pt.
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
+(Font)              scaled to size 10.0pt on input line 785.
+[12 <./figs/castaneamaps.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 797--803
+
+ []
+
+[13 <./figs/cmaesrepAUCcal.pdf>]
+<figs/unfoldingplots.pdf, id=470, 289.08pt x 289.08pt>
+File: figs/unfoldingplots.pdf Graphic file (type pdf)
+<use figs/unfoldingplots.pdf>
+Package pdftex.def Info: figs/unfoldingplots.pdf  used on input line 826.
+(pdftex.def)             Requested size: 289.09251pt x 289.09251pt.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 830.
+[14 <./figs/unfoldingplots.pdf>] [15] [16] [17] [18] [19] [20]
+Overfull \hbox (31.06586pt too wide) in paragraph at lines 1146--1151
+ \T1/LinuxLibertineT-TLF/m/n/10.95 sphere have plan-e-tary tip-ping points? \T1/LinuxLibertineT-TLF/m/it/10.95 Trends in Ecol-ogy & Evo-lu-tion\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 28\T1/LinuxLibertineT-TLF/m/n/10.95 , 396--401. [][]10.1016/j.tree.2013.01.016[][] 
+ []
+
+[21] [22] [23] [24]
+Overfull \hbox (24.13837pt too wide) in paragraph at lines 1399--1405
+ \T1/LinuxLibertineT-TLF/m/n/10.95 straints: Re-sults from a process-based mod-elling study. \T1/LinuxLibertineT-TLF/m/it/10.95 Global Change Bi-ol-ogy\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 6\T1/LinuxLibertineT-TLF/m/n/10.95 , 507--523. [][]10.1046/j.1365-
+ []
+
+[25] [26]
+Overfull \hbox (46.92027pt too wide) in paragraph at lines 1517--1525
+ \T1/LinuxLibertineT-TLF/m/n/10.95 im-prove pro-jec-tions of species dis-tri-bu-tions? \T1/LinuxLibertineT-TLF/m/it/10.95 Eco-log-i-cal Mod-elling\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 326\T1/LinuxLibertineT-TLF/m/n/10.95 , 63--74. [][]10.1016/j.ecolmodel.2015.11.007[][] 
+ []
+
+
+Overfull \hbox (1.19322pt too wide) in paragraph at lines 1545--1549
+ []\T1/LinuxLibertineT-TLF/m/n/10.95 Urban, M.C. (2015). Ac-cel-er-at-ing ex-tinc-tion risk from cli-mate change. \T1/LinuxLibertineT-TLF/m/it/10.95 Sci-ence\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 348\T1/LinuxLibertineT-TLF/m/n/10.95 , 571--573. [][]10.1126/sci-
+ []
+
+[27]
+Overfull \hbox (47.6712pt too wide) in paragraph at lines 1566--1572
+ \T1/LinuxLibertineT-TLF/m/n/10.95 cli-mates by 2100 AD. \T1/LinuxLibertineT-TLF/m/it/10.95 Pro-ceed-ings of the Na-tional Academy of Sci-ences\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 104\T1/LinuxLibertineT-TLF/m/n/10.95 , 5738--5742. [][]10.1073/pnas.0606292104[][] 
+ []
+
+[28]
+
+pdfTeX warning: pdflatex.exe (file ./figs/files/phenofit.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
+<figs/files/phenofit.pdf, id=681, 625.96065pt x 540.60239pt>
+File: figs/files/phenofit.pdf Graphic file (type pdf)
+<use figs/files/phenofit.pdf>
+Package pdftex.def Info: figs/files/phenofit.pdf  used on input line 1599.
+(pdftex.def)             Requested size: 469.76541pt x 405.7065pt.
+
+
+pdfTeX warning: pdflatex.exe (file ./figs/files/castanea_schema.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
+<figs/files/castanea_schema.pdf, id=682, 483.69685pt x 426.79132pt>
+File: figs/files/castanea_schema.pdf Graphic file (type pdf)
+<use figs/files/castanea_schema.pdf>
+Package pdftex.def Info: figs/files/castanea_schema.pdf  used on input line 1608.
+(pdftex.def)             Requested size: 469.76106pt x 414.49504pt.
+[1 <./figs/files/phenofit.pdf>] [2 <./figs/files/castanea_schema.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 1630--1631
+ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1647--1648
+ 
+ []
+
+
+
+pdfTeX warning: pdflatex.exe (file ./figs/files/presence_clustering.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
+<figs/files/presence_clustering.pdf, id=788, 910.48819pt x 284.52756pt>
+File: figs/files/presence_clustering.pdf Graphic file (type pdf)
+<use figs/files/presence_clustering.pdf>
+Package pdftex.def Info: figs/files/presence_clustering.pdf  used on input line 1651.
+(pdftex.def)             Requested size: 469.76108pt x 146.80032pt.
+[1 <./figs/files/presence_clustering.pdf>]
+
+pdfTeX warning: pdflatex.exe (file ./figs/files/occurrence_processing.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
+<figs/files/occurrence_processing.pdf, id=825, 753.99802pt x 597.50786pt>
+File: figs/files/occurrence_processing.pdf Graphic file (type pdf)
+<use figs/files/occurrence_processing.pdf>
+Package pdftex.def Info: figs/files/occurrence_processing.pdf  used on input line 1661.
+(pdftex.def)             Requested size: 592.78714pt x 469.75584pt.
+
+LaTeX Warning: Float too large for page by 34.00082pt on input line 1666.
+
+[2 <./figs/files/occurrence_processing.pdf>]
+<figs/distributionmaps.pdf, id=867, 289.08pt x 563.10374pt>
+File: figs/distributionmaps.pdf Graphic file (type pdf)
+<use figs/distributionmaps.pdf>
+Package pdftex.def Info: figs/distributionmaps.pdf  used on input line 1688.
+(pdftex.def)             Requested size: 289.09251pt x 563.12814pt.
+[1
+
+
+ <./figs/distributionmaps.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 1710--1711
+ 
+ []
+
+[1] [2]
+Underfull \hbox (badness 10000) in paragraph at lines 1778--1779
+ 
+ []
+
+<figs/calibCMAESquercus.pdf, id=907, 216.81pt x 194.7275pt>
+File: figs/calibCMAESquercus.pdf Graphic file (type pdf)
+<use figs/calibCMAESquercus.pdf>
+Package pdftex.def Info: figs/calibCMAESquercus.pdf  used on input line 1782.
+(pdftex.def)             Requested size: 216.81607pt x 194.73294pt.
+<figs/calibCMAESabies.pdf, id=908, 216.81pt x 194.7275pt>
+File: figs/calibCMAESabies.pdf Graphic file (type pdf)
+<use figs/calibCMAESabies.pdf>
+Package pdftex.def Info: figs/calibCMAESabies.pdf  used on input line 1791.
+(pdftex.def)             Requested size: 216.81607pt x 194.73294pt.
+[1 <./figs/calibCMAESquercus.pdf> <./figs/calibCMAESabies.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 1812--1813
+ 
+ []
+
+<figs/phenofit_output_maps.pdf, id=934, 325.215pt x 505.89pt>
+File: figs/phenofit_output_maps.pdf Graphic file (type pdf)
+<use figs/phenofit_output_maps.pdf>
+Package pdftex.def Info: figs/phenofit_output_maps.pdf  used on input line 1816.
+(pdftex.def)             Requested size: 325.21916pt x 505.89645pt.
+<figs/best_forward_maps.pdf, id=935, 325.215pt x 578.16pt>
+File: figs/best_forward_maps.pdf Graphic file (type pdf)
+<use figs/best_forward_maps.pdf>
+Package pdftex.def Info: figs/best_forward_maps.pdf  used on input line 1825.
+(pdftex.def)             Requested size: 325.22908pt x 578.18504pt.
+[1 <./figs/phenofit_output_maps.pdf>] [2 <./figs/best_forward_maps.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 1847--1848
+ 
+ []
+
+<figs/leafpardensity.pdf, id=987, 289.08pt x 289.08pt>
+File: figs/leafpardensity.pdf Graphic file (type pdf)
+<use figs/leafpardensity.pdf>
+Package pdftex.def Info: figs/leafpardensity.pdf  used on input line 1880.
+(pdftex.def)             Requested size: 289.09251pt x 289.09251pt.
+[1]
+<figs/consensusfitnessmap.pdf, id=996, 505.89pt x 289.08pt>
+File: figs/consensusfitnessmap.pdf Graphic file (type pdf)
+<use figs/consensusfitnessmap.pdf>
+Package pdftex.def Info: figs/consensusfitnessmap.pdf  used on input line 1889.
+(pdftex.def)             Requested size: 469.76265pt x 268.43579pt.
+[2 <./figs/leafpardensity.pdf> <./figs/consensusfitnessmap.pdf>]
+<figs/unfoldingdatesbackforw.pdf, id=1013, 505.89pt x 289.08pt>
+File: figs/unfoldingdatesbackforw.pdf Graphic file (type pdf)
+<use figs/unfoldingdatesbackforw.pdf>
+Package pdftex.def Info: figs/unfoldingdatesbackforw.pdf  used on input line 1907.
+(pdftex.def)             Requested size: 469.76265pt x 268.43579pt.
+[3 <./figs/unfoldingdatesbackforw.pdf>]
+
+LaTeX Warning: Empty bibliography on input line 1920.
+
+(./paper_revision.aux)
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 0.5pt have occurred.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package rerunfilecheck Info: File `paper_revision.out' has not changed.
+(rerunfilecheck)             Checksum: D775812344A73FB965F6D8F6376A1A6C;8363.
+Package logreq Info: Writing requests to 'paper_revision.run.xml'.
+\openout1 = `paper_revision.run.xml'.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 23697 strings out of 477984
+ 442519 string characters out of 5837085
+ 1872382 words of memory out of 5000000
+ 43346 multiletter control sequences out of 15000+600000
+ 592910 words of font info for 76 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 69i,16n,117p,830b,851s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_naooyc.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}<c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/libertine/LinBiolinumT.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb>
+Output written on paper_revision.pdf (41 pages, 7122403 bytes).
+PDF statistics:
+ 1146 PDF objects out of 1200 (max. 8388607)
+ 875 compressed objects within 9 object streams
+ 210 named destinations out of 1000 (max. 500000)
+ 353 words of extra memory for PDF output out of 10000 (max. 10000000)
+

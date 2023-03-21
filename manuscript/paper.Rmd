@@ -1,0 +1,1695 @@
+---
+output: 
+  stevetemplates::article:
+    keep_tex: true
+    fig_caption: true
+    number_sections: yes
+bibliography: bib/paper.bib
+csl: bib/mee.csl
+title: "A novel approach to inverse calibration of process-based models using evolutionary algorithm and species distribution data"
+author:
+- name: Victor Van der Meersch \footnote{Corresponding author - victor.vandermeersch@cefe.cnrs.fr}, Isabelle Chuine
+  affiliation: CEFE, Université de Montpellier, CNRS, EPHE, IRD, Montpellier, France
+abstract: "1. Two main types of species distribution models are used to project species range shifts in future climatic conditions: correlative and process-based models. Although there is some continuity between these two types of models, they are fundamentally different in their hypotheses (statistical relationships *vs* mechanistic relationships) and their calibration methods (dependent *vs* generally independent of the species observed distributions). \n\n 2. One of the limitations to the use of process-based models is the difficulty to parameterize them for a large number of species, while one of the advantages of correlative SDMs is their easier calibration using solely species occurrences}. We investigated the feasibility of using an evolutionary algorithm (called covariance matrix adaptation evolution strategy, CMA-ES) to calibrate process-based models using species distribution data. This method is well established in some fields (robotics, aerospace research, ...), but has never been used, to our knowledge, in ecology, despite its ability to deal with very large space dimensions. Using tree species occurrence data across Europe, we adapted the CMA-ES algorithm to find appropriate values of model parameters. We estimated simultaneously 27 to 77 parameters of two process-based models simulating forest tree's ecophysiology for three species with varying range sizes and geographical distributions. \n\n 3. CMA-ES provided parameter estimates leading to better prediction of species distribution than parameter estimates based on experts knowledge. Our results also revealed that some model parameters and processes were strongly dependent, and different parameter combinations could therefore lead to high model accuracy. \n\n 4. \\textcolor{darkgreen}{We conclude that} CMA-ES is an efficient state-of-the-art method to calibrate process-based models with a large number of parameters using species occurrence data. Inverse modelling using CMA-ES is a powerful method to calibrate process-based parameters which can hardly be measured. However, the method does not warranty that parameter estimates are correct because of several sources of bias, similarly to correlative models, and expert knowledge is required to validate results. \n\n"
+keywords: "calibration, evolutionary algorithm, cma-es, species distribution model, process-based model, trees"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: libertine
+fontsize: 11pt
+spacing: double
+endnote: no
+biblatex: true
+link-citations: true
+
+header-includes:
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage[width=.9\textwidth, font=small]{caption}
+  - \usepackage{libertine}
+  - \usepackage[left]{lineno}
+  - \linenumbers
+  - \renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+  - \usepackage{xcolor}
+  - \definecolor{darkgreen}{RGB}{112,173,71}
+
+---
+
+```{r setup, include=FALSE}
+
+wd <- 'C:/Users/vandermeersch/Documents/CEFE/phd/present_calibration/calibration_paper/second_revision'
+
+knitr::opts_chunk$set(message=FALSE, warning=FALSE,
+                      echo = FALSE, cache.lazy = FALSE,
+                      fig.path='figs/',
+                      cache.path = 'cache/',
+                      fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      if (file.rename(x, x2)) x2 else x
+                      })
+
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(ggbeeswarm)
+library(showtext)
+library(gtools)
+library(kableExtra)
+options(kableExtra.latex.load_packages = FALSE)
+library(AUC)
+library(cowplot)
+library(ggpubr)
+library(knitr)
+library(matrixStats) #rowMedians
+library(latex2exp)
+library(future.apply)
+library(extrafont)
+
+font_add("Linux Libertine G", regular = "LinLibertine_R_G.ttf", bold = "LinLibertine_RB_G.ttf", italic = "LinLibertine_RI_G.ttf")
+font_import(prompt = F, pattern = "LinLibertine")
+loadfonts(device = "all", quiet = TRUE)
+
+source(file.path(wd, "functions", "read_species_file.R"))
+source(file.path(wd, "functions", "read_mean_outputvalue_phenofit.R"))
+source(file.path(wd, "functions", "read_mean_outputvalue_castanea.R"))
+
+theme_set(theme_cowplot(font_family = "Linux Libertine G"))
+
+# triggers
+## fagus and phenofit
+recompute_AUC_CMAES <- F
+recompute_AUC_ABC <- F
+recompute_unfold_date <- F
+
+## quercus and phenofit
+recompute_quercus_AUC_CMAES <- F
+recompute_quercus_AUC_ABC <- F
+
+## abies and phenofit
+recompute_abies_AUC_CMAES <- F
+
+## auc castanea
+load_castanea_forward_values <- F
+load_castanea_backward_values <- F
+
+# Way to get lat/lon
+climate_folder <- "D:/climate/ERA5-Land/phenofit_format/transformed"
+alt_file <- paste0(climate_folder, "/ERA5LAND_", "Altitude.fit")
+alt <- fread(alt_file, showProgress=F)
+colnames(alt) <- c("lat", "lon", "alt")
+alt$lat <- round(alt$lat, 1)
+alt$lon <- round(alt$lon, 1)
+alt$points <- as.numeric(rownames(alt))
+
+```
+
+```{r data, include=FALSE}
+
+sp_folder <- "D:/species/processed"
+qile_presabs <- readRDS(file.path(sp_folder, "quercus_ilex/quercus_ilex_presabs_woUkraine.rds"))
+fsyl_presabs <- readRDS(file.path(sp_folder, "fagus_sylvatica/fagus_sylvatica_presabs_woUkraine.rds"))
+aalb_presabs <- readRDS(file.path(sp_folder, "abies_alba/abies_alba_presabs_woUkraine.rds"))
+
+```
+
+```{r mapmonde, include=FALSE}
+
+library(rnaturalearth)
+library(sf)
+library(tidyverse)
+
+# Europe map
+countries_EUForest <- c("Austria", "Belarus", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France",
+                        "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Moldova", "Netherlands", "Norway", "Poland", "Portugal",
+                        "Romania", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "United Kingdom")
+other_countries <- c("Bosnia and Herzegovina", "Republic of Serbia", "Macedonia", "Greece",
+                     "Kosovo", "Albania", "Montenegro", "Malta", "Liechtenstein", "Luxembourg")
+countries <- c(countries_EUForest, other_countries)
+world_map <- ne_countries(scale="medium",returnclass = 'sf')
+eu_map <- world_map %>% filter(sovereignt %in% countries)
+eu_map_cropped <- eu_map %>% 
+  st_crop(st_bbox(c(xmin = -12, xmax = 45, ymax = 71, ymin = 32), crs = st_crs(4326)))
+
+ERA5_points <- st_as_sf(alt, coords = c("lon", "lat"), crs = st_crs(4326))
+ERA5_points <- ERA5_points[st_intersects(ERA5_points, st_buffer(eu_map_cropped, 10000)) %>% lengths > 0,] 
+ERA5_points <- ERA5_points %>%
+  mutate(lat = round(unlist(map(ERA5_points$geometry,2)),1),
+         lon = round(unlist(map(ERA5_points$geometry,1)),1)) %>%
+  st_drop_geometry() %>%
+  dplyr::select(-c("points"))
+names(ERA5_points)[1] <- "pres"
+
+ERA5_grid_points <- left_join(ERA5_points, alt,  by = c('lat', 'lon'))
+ERA5_grid_points <- ERA5_grid_points[, c("lat", "lon", "points")]
+
+
+```
+
+
+
+# Introduction
+
+The speed and magnitude of projected climate changes are profoundly affecting species distributions, ecological communities and ecosystem processes, and numerous ecological systems are now approaching tipping points [@Lenton2008; @Barnosky2012; @Steffen2018; but see @Brook2013]. Large uncertainties on the persistence and the resilience of ecosystems exist. Ecological forecasting has now become a critical tool for managers and decision-makers [@Urban2015], and robust predictive approaches are necessary to provide reliable projections of species geographic range shifts and ecosystem functioning [@Mouquet2015]. Forecasting the dynamics of ecological systems for the upcoming decades and centuries is very difficult, because ecological systems are extremely complex, influenced by a lot of factors and processes, and climatic conditions with no analogues in the recent past are forecasted to become common [@Williams2007; @Radeloff2015; @Fitzpatrick2018]. Ecological models have thus increased in complexity over the last 50 years, incorporating more and more processes described with various degrees of complexity depending on their objectives.   
+   
+Nowadays, two main types of species distribution models (SDM) are used to project species range shifts in future climatic conditions: correlative and process-based models [@Dormann2012]. The vast majority of currently used SDMs are correlative: they seek to find statistical relationships between various environmental descriptors and species presence and absence. They assume there is an equilibrium between species distribution and environment [equilibrium postulate, @Guisan2005], that there is no adaptive responses within a generation [no trait plasticity, @Berzaghi2020], and that species niche is stable over macroevolutionary time [niche conservatism, @Pearman2008]. Most of them include a fairly large number of predictors (particularly in machine-learning approaches), and consider flexible transformations (linear, quadratic...) and interactions between them [@Merow2014]. Even though some authors advocate for "putting more biology into SDMs" [@Higgins2012], parameters have no a priori defined ecological meaning [@Dormann2012] and shape of response curves to environmental variables is generally not constrained based on biological considerations. Although these models are not always used correctly [@Araujo2019; @Santini2021], their flexibility makes them an important tool in predictive ecology [@Mouquet2015]. They have been widely used especially to generate species range projections under current and future climates [e.g. @Guisan2005]. Nevertheless, their ability to accurately describe the effects of climate on species distributions has recently been questioned [e.g. @Fourcade2018; @Journe2020; @Warren2021].  
+For all these reasons, another kind of models has been developed. Process-based models aim to translate into mathematical equations our knowledge about the physiological and ecological processes involved in an organism’s life, such as growth, reproduction, survival, movement, and interactions with other livebeings. Process-based models take more time to develop and are more challenging to use, but they might provide a greater comprehension of the complexity of ecosystem dynamics and more robust projections in novel conditions [@Evans2012; @Zurell2016; @Urban2016; @Singer2016]. A wide variety of process-based models exists, from quite simple models [e.g. @Kleidon2000] to much more complex ones [e.g. @Dufrene2005]. They all rely on an explicit representation of processes at stake, with a direct biological interpretation - at least in principle [@Connolly2017]. Process-based models may also include some phenomenological relationships on lower-level processes, but never on the pattern itself. The choices about the specific processes to include into the model are made based on theory, empirical observations and the objectives of the research, and modeler subjectivity may play an important role. One of the challenges is to build a model with the appropriate amount of complexity: a too simplistic model might be unrealistic whereas a very complex model could be far beyond our ability to understand it (because of interconnected mechanisms) and calibrate it. Each model relies on different hypotheses with its own balance of complexity, accuracy and parsimony - and thus different numbers of unknown parameters to calibrate. Parameter values of this kind of models are obtained with different methods. Some of these parameters can be individually estimated with field observations or experimental data, or are already available in the literature. When this is not possible, groups of parameters defining a relationship between a process variable and environmental variables or other processes are estimated jointly using inverse modelling methods and data on the processes modelled [e.g. @Cailleret2020; @Asse2020].  
+     
+Calibration (i.e. parameter setting and estimation) is a fundamental step in the modelling process. It allows the model to reproduce the reality with more or less success. The result of the calibration provides insights on the ability of the model to reproduce and explain reality (model predictive power). Calibration of complex models such as process-based SDMs is time-consuming, and modelers are often challenged by the dimension of the parameter space, the complexity of the possible correlations among parameters, and the scarcity of observed experimental data to calibrate them. Therefore, although the philosophy of such models is to measure parameters, statistical inference might be useful when data are not yet available to infer parameter values. Parameter inference can be achieved through several methods which have been developed in the last decades. \textcolor{darkgreen}{Most of them fall into two categories: informal and statistical calibration. On the one hand, statistical calibration assumes a data-generating model, and the likelihood function, which quantifies the probability of the observed data given the model parameters, is expressed mathematically. This likelihood is the foundation of maximum likelihood estimation and Bayesian inference, two commonly used methods for parameter estimation. In practice, deriving the likelihood function can be quite challenging for complex models with many parameters. One approach is to use numerical methods such as simulation-based inference or Approximate Bayesian Computation} [e.g. @Hartig2014]\textcolor{darkgreen}{. However, obtaining a reliable estimate of the likelihood of a complex process-based model can require a large number of simulated samples, which can be computationally expensive. On the other hand, using an informal objective function to measure the discrepancy between the model predictions and the observed data may be a reasonable alternative, even though it may not have the same statistical rigor. By minimizing the objective function, one is able to identify the parameter values that best fit the observed data. This optimization step can be achieved with many methods, either deterministic (e.g. Nelder-Mead method) or stochastic (e.g. simulated annealing, evolutionary algorithms).}     
+Recently, an approach belonging to the evolutionary algorithm family, called Covariance Matrix Adaptation Evolution Strategy (CMA-ES), has been proposed [@Hansen2001]. One of the advantages of CMA-ES is its ability to cumulate information over iterations in order to adapt its own parameters (in particular the covariance matrix), which makes it more robust to noise. CMA-ES is especially performant for non-separable problems (i.e. when the model parameters are dependent) and large search space. This method has been successfully applied in various fields such as aerospace [e.g. @Collange2010], optics [e.g. @Gagne2008], and robotics [e.g. @Hill2020]. CMA-ES is acknowledged to be one of the most efficient approaches in continuous black-box optimization [@Hansen2010] but to our knowledge has never been used in ecology. 
+
+Here we explored the feasibility and interests of calibrating process-based SDMs with CMA-ES using species occurrence data as correlative SDMs do [fitted process-based models *sensu* @Dormann2012]. We focused on two forest process-based models of varying levels of complexity to evaluate the ability of CMA-ES to calibrate such models. The two models are PHENOFIT [27 to 36 parameters, @Chuine2001] and CASTANEA [77 parameters, @Dufrene2005]. Each model also emphasizes different ecological processes: while PHENOFIT focuses on phenology and how it relates to survival and reproduction, CASTANEA focuses on carbon and water cycles. We focused on three European common tree species, with different range extent and ecological preferences in order to evaluate the algorithms performance in various geographical and climatic conditions. European beech (*Fagus sylvatica L.*) is one of the most widely distributed broadleaved tree in Europe (from southern Sweden to Sicily and from Spain to northwest Turkey), holm oak (*Quercus ilex L.*) is an evergreen broadleaved tree native of the Mediterranean region, and silver fir (*Abies alba Mill.*) is a coniferous tree which mainly occurs in mountain forests of Central Europe and some parts of Southern and Eastern Europe.
+
+# 1. Material and methods {#methods}
+
+## 1.1. Process-based models {#pbmodels}
+
+All versions of the models used for this study are coded in Java and distributed by the [CAPSIS](https://capsis.cirad.fr/capsis/home) platform.  
+  
+PHENOFIT is a process-based species distribution model for forest tree species which focuses on phenology. It relies on the principle that the distribution of a tree species depends mainly on the synchronization of its timing of development to the local climatic conditions [@Chuine2001]. It is composed of several submodels, including phenology models for leaves, flowers and fruits, and stress resistance models. It simulates the fitness (survival and reproductive success) of an average individual using daily meteorological data, soil water holding capacity and species specific parameters (see [Appendix A](#appendixA) for details). PHENOFIT has been validated for several North American and European species by comparing their known distribution to the modelled fitness [e.g. @Morin2007; @Saltre2013; @Duputie2015; @Gauzere2020].  
+  
+CASTANEA is an ecophysiological process-based model which simulates carbon and water fluxes in forests [@Dufrene2005]. The model simulates the ecosystem as an average tree with six compartments (leaves, branches, stem, coarse roots, fine roots and reserves). It is much more complex than PHENOFIT, with several processes described and computed, such as photosynthesis, stomatal opening, maintenance and growth respiration, transpiration, and carbon allocation (see [Appendix A](#appendixA) for details). CASTANEA requires daily meteorological variables and soil characteristics. The model has been initially validated at stand scale for beech [@Davi2005], and was then successfully applied to other European species [e.g. @Davi2006; @Delpierre2012; @Davi2017].  
+  
+Both models, in their standard version (called here after expert calibration), are parameterized using various sources of information. Some parameters are directly measured or found in the literature such as leaf life span, specific leaf area, LT50 (freezing temperature causing 50\% mortality) of leaves, leaf reflectance, and so on. Other parameters cannot be measured at all, or their measurement require an enormous effort that cannot be deployed for a large number of species. These parameters are thus inferred by inverse modelling using either Bayesian methods or optimizing methods and data on the specific process they are describing. This is for example the case for phenology models for which all parameters cannot be measured, especially those describing bud dormancy break regulation, since no method allow to measure dormancy break precisely so far (except for a few fruit tree species). Finally, a few parameters are prescribed based on expert knowledge as no data to estimate them exist. For this study, the standard versions of both models were run for the three species using the same climatic data used to do the inverse calibration (see [1.2.1. Climate data](#climatedata)), in order to compare the correctness of the predictions obtained with the two types of calibration.
+
+## 1.2. Data for the calibration {#data}
+
+### 1.2.1. Climate and soil data {#climatedata}
+
+Raw climatic variables were extracted from ERA5-Land hourly dataset [@Sabater2019; @Sabater2021] from 1970 to 2000, at a spatial resolution of 0.1 degree in latitude and longitude. We calculated the daily mean values of the following variables used by PHENOFIT and CASTANEA: minimum, mean and maximum daily temperatures, mean dewpoint temperature, daily precipitation, daily global radiation and daily mean wind speed. We computed the daily relative humidity with the ratio of vapor pressure and saturation vapor pressure (both calculated with Clausius-Clapeyron equation) using *humidity* R package [@Cai2019]. Daily potential evapotranspiration was calculated with Penman–Monteith equation (FAO standard of hypothetical grass reference surface) using a slightly modified version of the *ET()* function in *Evapotranspiration* R package [@Guo2016].  
+  
+Water content at field capacity and wilting point data were extracted from EU-SoilHydroGrids [@Toth2017] which is at 1km resolution. Percentage of sand, silt and clay particles, percentage of coarse fragments, bulk density and soil depth were extracted from SoilGrids250m [@Hengl2017] at a 250m resolution. These data (except for soil depth) are provided at seven soil depths, so we summarized them (weighted sum or weighted mean) taking into account each layer width and total soil depth. Finally, all variables were upscaled at the ERA5-Land spatial resolution 0.1° using bilinear interpolation.
+
+### 1.2.2. Tree occurrence data used for the calibration {#occurrencedata}
+
+Sources of occurrence data are known to differ even for common European trees [@Duputie2014] and this makes it quite challenging to gather comprehensive data at a sufficient spatial resolution all over Europe. The occurrence data we used essentially rely on the EU-Forest dataset [@Mauri2017] which benefits from inventory and monitoring programmes implemented in most European countries. 
+As EU-Forest is limited to forest ecosystems, we combined it with presence records extracted from the Global Biodiversity Information Facility [@GBIF2022, see [Appendix B](#appendixB) for all download links] but removing observations outside natural species ranges as defined by Atlas Flora Europeae [AFE, @AFE2005] and EuroVegMap [@EVM2003]. By doing so, we also included occurrences of isolated native trees living outside forests, excluding records from arboreta or gardens where the species would have been planted as an exotic. For holm oak, we also added occurrence records in the Mediterranean Basin from the WOODIV database [@Monnet2021], leaving out EU-Forest and GBIF records we had already gathered.
+We upscaled all species records at the ERA5-Land resolution (0.1°, see [1.2.1. Climate data](#climatedata)), i.e. the species is considered to be present in the cell if there is at least one record. We finally obtained `r nrow(fsyl_presabs[fsyl_presabs$pres == 1,])` occurrence cells for beech, `r nrow(qile_presabs[qile_presabs$pres == 1,])` for holm oak and `r nrow(aalb_presabs[aalb_presabs$pres == 1,])` for silver fir (see [Appendix B](#appendixB) for details).  
+  
+All the datasets described above are presence-only data. Therefore, we generated cells where species are supposed to be absent, i.e. pseudo-absence cells. In order to avoid as far as possible creating false absence data, we used EU-Forest cells where the species is not reported present as pseudo-absence cells. We assumed that national forest inventories were exhaustive (which is not true since only specific forest plots in a 0.1° cell are monitored). We obtained `r nrow(fsyl_presabs[fsyl_presabs$pres == 0,])` absence cells for beech, `r nrow(qile_presabs[qile_presabs$pres == 0,])` for holm oak and `r nrow(aalb_presabs[aalb_presabs$pres == 0,])` for silver fir (see [Appendix C](#appendixC)). 
+  
+We selected subsets of 2000 points (1000 presences and 1000 pseudo-absences) in order to reduce computational costs. For each species, we generated ten presence clusters (k-means algorithm) of similar bioclimatic conditions based on annual climate normals computed with R package *dismo* [@Hijmans2021] and ERA5-Land variables. In each cluster, we randomly sampled a number of cells where the species is present proportional to the total number of  a number of cells where the species is present in the cluster. The aim of this stratified random sampling was to make sure that all species environmental preferences were proportionally represented. We then randomly sampled the same number of pseudo-absence cells (see [Appendix B](#appendixB) for details).
+  
+Regarding PHENOFIT model, we calibrated ten times each species parameter set, with 5 repetitions on 2 random subsets of presences/pseudo-absences, except for beech. In the latter case, we ran 10 repetitions on 10 subsets (i.e. 100 calibrations) to investigate both the effect of subsampling and the effect of stochasticity. Since CASTANEA computing time was much higher (see \autoref{tab:modelstable}), we ran only two calibration for each species (on  2 different random subsets).
+
+## 1.3. Model calibration
+
+### 1.3.1. Covariance Matrix Adaptation Evolution Strategy principles
+
+Covariance Matrix Adaptation Evolution Strategy (CMA-ES) is widely accepted as a robust optimization algorithm for non-linear, non-convex, as well as non-separated optimization problems in continuous domain [@Hansen1996; @Hansen2001; @Hansen2006]. 
+It is based on the principle of evolutionary biology, via recombination, mutation and selection of the most fit candidate solutions (i.e. parameter sets providing the best predictions). At each iteration:  
+- $\lambda$ candidate solutions are evaluated, i.e. model runs $\lambda$ times with $\lambda$ different parameter sets and the objective function is evaluated  
+- the best $\mu$ candidate solutionss are selected  
+- the weighted mean candidate solution $m$ is computed (mean of the best $\mu$ parameter sets weighted by their objective function value)
+- covariance matrix $C$ and step size $\sigma$ are updated (with information accumulated over several consecutive iterations)   
+- new $\lambda$ candidate solutions are sampled in a normal distribution $\mathcal{N}(m, \sigma C)$, with both recombination (via the favorite solution $m$) and mutations (via the perturbations $\sigma C$)   
+One of the strength of this approach lies in the combination of rank-$\mu$-update, where prior information from previous generations is exploited (mean of the previous covariance matrices, with a higher weight for recent generations), and cumulation, where correlations between generations are retained in an evolution path (sum of consecutive steps), to update the covariance matrix at each step [see @Hansen2016 for a detailed description of the algorithm].
+
+### 1.3.2. CMA-ES in practice
+
+One of the advantages of CMA-ES is that it does not require a complex parameter tuning: as best parameter values at a given time of the optimization process might no longer be efficient later, CMA-ES implements an internal adaptation of its parameters. We only chose the number of candidate solutions $\lambda$, depending on the optimization problem complexity ($\mu$ was set to $\lambda/2$). The default recommended value for $\lambda$ is $4 + 3 ln(N)$, where $N$ is the number of parameters to calibrate (i.e. $\lambda \in [14,17]$ in our case). We set $\lambda = 20$, in order to improve the global search capability [@Hansen2004] and take advantage of the computation power at our disposal. All model parameters were linear scaled into $[0;10]$ so that the same standard deviation can be applied to all parameters: here we chose $\sigma = 2$ (see [Nikolaus Hansen personal website](https://cma-es.github.io/cmaes_sourcecode_page.html#practical) for practical hints on variable encoding). Our stopping criterion for the optimization procedure was the budget, i.e. the number of model runs.
+
+For an easier use and the sake of reproducibility, we chose to use a pure R implementation of CMA-ES available in the R package *cmaes* [@Trautmann2011]. The function *cma_es()* enables us to do $\lambda$ function evaluations in parallel so as to substantially reduce computation time. It also allows us to define lower and upper bound constraints, by penalising the objective function value of the candidate solution if it violates the boundaries. We customized the *cma_es()* function to add an option to define death penalty constraints (rejection of the infeasible candidate solution who is sampled again), in order to define a range of ecologically possible solutions in terms of inequality constraints between parameters (see [Appendix D](#appendixD) for details about boundaries and constraints handling). Death penalty is the easiest way to handle constraints when the feasible region is fairly large, but it is not perfect as there is no use of information from infeasible points (i.e. points which violate the constraints).  
+  
+The objective function for the calibration was the area under the receiver operating characteristic curve (AUC), evaluated against a subsets of 2000 points (see [1.2.2. Tree occurrence data](#occurrencedata)). Although AUC has been criticized as an imperfect measure of model performance [@Lobo2008; @Leroy2018], we used it as objective function because our goal here was only to calibrate models by maximizing discriminating capacity (i.e. potential to correctly classify presences and absences) with a threshold-independent measure. We used the *AUC* R package [@Ballings2013], and chose the two following model output variables as proxies of classification probabilities (i.e. used to determine if the species can be present or not): fitness index for PHENOFIT and carbon reserves for CASTANEA (see [Appendix A](#appendixA)).
+  
+We implemented the CMA-ES calibration on two computing clusters: GenOuest from IRISA-INRIA ([genouest.org](https://www.genouest.org)) and TGCC (*Très Grand Centre de Calcul*) from CEA ([hpc.cea.fr](http://www-hpc.cea.fr/fr/complexe/tgcc.htm)). As the models are coded in Java (see [1.1 Process-based models](#pbmodels)), they need a process of deallocating memory handled by a *garbage collector*. For PHENOFIT, each function evaluation (i.e. each model simulation) was run on a 2-core computing unit in order to have enough computing resources for both simulation and garbage collection. We thus needed twice as many cores as functions evaluated in parallel. CASTANEA model requires a fairly high computation time, so we used a nested parallelism distribution, where each parallel simulation was distributed on 4 computing units. We thus used 4 times as many cores as functions evaluated in parallel, plus some extra cores for garbage collection. We used R package *future* [@Bengtsson2021] for parallel processing.  
+
+```{r modelstable, results='asis'}
+table <- data.frame(
+  model = c('PHENOFIT', 'CASTANEA'),
+  output = c('Fitness index', 'Carbon reserves'),
+  npar = c('$[27;36]$', '$77$'),
+  lambda = c('$20$', '$20$'),
+  ncores = c('$40$', '$100$'),
+  memory = c('$80$ GB', '$120$ GB'),
+  eval = c('6000', '4000'),
+  runtime = c("$\\sim 24$ hours", "$\\sim 20$ days")
+)
+kable(table, booktabs = TRUE, escape = FALSE, 
+      col.names = c("Model", "Output variable of interest", "Number of parameters calibrated", "Number of candidate solutions $\\lambda$", "Number of cores", "Total memory", "Number of model evaluations", "Average runtime for one calibration"),
+      caption = "Summary of model calibration settings. Average runtime was assessed on the GenOuest cluster.",
+      linesep = "\\addlinespace") %>%
+  kable_classic(full_width = T, html_font = "Linux Libertine G") 
+
+# add_header_above(c("Model" = 2, "Calibration" = 4)) %>%
+
+```
+
+# 2. Results
+
+```{r phenofit_fagus_rep_data}
+
+cal_folder <- 'D:/calibrations/phenofit/fagus_sylvatica/1000pres_1000abs/paper_data'
+
+sim_folder <- 'D:/simulations/phenofit/backward/fagus_sylvatica/paper_data'
+
+# Calibrations
+cmaes_files <- mixedsort(list.files(path = file.path(cal_folder,"CMAES"), pattern = "\\.Rdata$", full.names = T, recursive = T))
+
+auc_data_cal <- data.frame()
+for(i in 1:length(cmaes_files)){
+  auc_data_cal[i, 'subset'] <- paste0(strsplit(cmaes_files[i], "_")[[1]][7])
+  auc_data_cal[i, 'rep'] <- strsplit(strsplit(cmaes_files[i], "_")[[1]][8], "[.]")[[1]][1]
+  
+  # Load AUC on calibration_points
+  load(cmaes_files[i])
+  auc_cal <- 1-round(cmaes_fit[[1]][["value"]], 6)
+  
+  auc_data_cal[i, 'cal'] <- auc_cal
+  
+  # # Load AUC on every pres/abs points
+  # sim_dir <- file.path(sim_folder, cal_list[i])
+  # fitness_presabs <- read_mean_outputvalue_phenofit(sim_dir, "Fitness", points = fsyl_presabs)
+  # auc_presabs <- round(auc(roc(fitness_presabs, as.factor(fsyl_presabs$pres))),3)
+  # 
+  # auc_data[i, 'presabs'] <- auc_presabs
+}
+
+if(recompute_AUC_CMAES){
+  simulation_files <- mixedsort(list.files(path = file.path(sim_folder, "CMAES"), pattern = "Fitness", full.names = T, recursive = T))
+  
+  auc_data_tot <- data.frame()
+  fitness_data <- as.data.frame(cbind(alt$lat, alt$lon))
+  for(i in 1:(length(simulation_files))){
+    auc_data_tot[i, 'subset'] <- strsplit(strsplit(simulation_files[i], "/")[[1]][8], "_")[[1]][1]
+    auc_data_tot[i, 'rep'] <- strsplit(strsplit(simulation_files[i], "/")[[1]][8], "_")[[1]][2]
+    
+    # Compute AUC on every pres/abs points
+    fitness_presabs <- read_mean_outputvalue_phenofit(simulation_files[i], points = fsyl_presabs)
+    auc_tot <- round(auc(roc(fitness_presabs, as.factor(fsyl_presabs$pres))),6)
+    auc_data_tot[i, 'tot'] <- auc_tot
+    
+    # Best threshold
+    youden_index <- sensitivity(fitness_presabs, as.factor(fsyl_presabs$pres), perc.rank = F)$measure +
+      specificity(fitness_presabs, as.factor(fsyl_presabs$pres), perc.rank = F)$measure - 1
+    thresholds <- sensitivity(fitness_presabs, as.factor(fsyl_presabs$pres), perc.rank = F)$cutoffs
+    best_threshold <- thresholds[which(youden_index == max(youden_index))]
+    auc_data_tot[i, 'best_threshold'] <- best_threshold
+    
+    # Load fitness
+    fitness <- read_mean_outputvalue_phenofit(simulation_files[i])
+    fitness_data[,2+i] <- t(fitness)
+                                             
+  }
+  
+  # Consensus 
+  names(fitness_data)[1:2] <- c("lat", "lon")
+  fitness_data$mean <- rowMeans(fitness_data[,3:ncol(fitness_data)])
+  fitness_data$mad <- rowMads(as.matrix(fitness_data[,3:ncol(fitness_data)]))
+  fitness_data$sd <- rowSds(as.matrix(fitness_data[,3:ncol(fitness_data)]))
+  
+  saveRDS(auc_data_tot, file.path(wd, "cache", "fagus_auc_data_tot.rds"))
+  saveRDS(fitness_data, file.path(wd, "cache", "fagus_fitness_data.rds"))
+}else{
+  auc_data_tot <- readRDS(file.path(wd, "cache", "fagus_auc_data_tot.rds"))
+  fitness_data <- readRDS(file.path(wd, "cache", "fagus_fitness_data.rds"))
+}
+
+fagus_auc_data_cal <- auc_data_cal
+fagus_auc_data_tot <- auc_data_tot
+
+```
+
+```{r phenofit_quercus_rep_data}
+
+cal_folder <- 'D:/calibrations/phenofit/quercus_ilex/1000pres_1000abs/paper_data'
+sim_folder <- 'D:/simulations/phenofit/backward/quercus_ilex/paper_data'
+
+# Calibrations
+cmaes_files <- mixedsort(list.files(path = file.path(cal_folder,"CMAES"), pattern = "\\.Rdata$", full.names = T, recursive = T))
+
+auc_data_cal <- data.frame()
+for(i in 1:length(cmaes_files)){
+  auc_data_cal[i, 'subset'] <- paste0(strsplit(cmaes_files[i], "_")[[1]][7])
+  auc_data_cal[i, 'rep'] <- strsplit(strsplit(cmaes_files[i], "_")[[1]][8], "[.]")[[1]][1]
+  
+  # Load AUC on calibration_points
+  load(cmaes_files[i])
+  auc_cal <- 1-round(cmaes_fit[[1]][["value"]], 6)
+  
+  auc_data_cal[i, 'cal'] <- auc_cal
+  
+  # # Load AUC on every pres/abs points
+  # sim_dir <- file.path(sim_folder, cal_list[i])
+  # fitness_presabs <- read_mean_outputvalue_phenofit(sim_dir, "Fitness", points = qile_presabs)
+  # auc_presabs <- round(auc(roc(fitness_presabs, as.factor(qile_presabs$pres))),3)
+  # 
+  # auc_data[i, 'presabs'] <- auc_presabs
+}
+
+if(recompute_quercus_AUC_CMAES){
+  simulation_files <- mixedsort(list.files(path = file.path(sim_folder, "CMAES"), pattern = "Fitness", full.names = T, recursive = T))
+  
+  auc_data_tot <- data.frame()
+
+  for(i in 1:(length(simulation_files))){
+    auc_data_tot[i, 'subset'] <- strsplit(strsplit(simulation_files[i], "/")[[1]][8], "_")[[1]][1]
+    auc_data_tot[i, 'rep'] <- strsplit(strsplit(simulation_files[i], "/")[[1]][8], "_")[[1]][2]
+    
+    # Compute AUC on every pres/abs points
+    fitness_presabs <- read_mean_outputvalue_phenofit(simulation_files[i], points = qile_presabs)
+    auc_tot <- round(auc(roc(fitness_presabs, as.factor(qile_presabs$pres))),6)
+    auc_data_tot[i, 'tot'] <- auc_tot
+    
+    # Best threshold
+    youden_index <- sensitivity(fitness_presabs, as.factor(qile_presabs$pres), perc.rank = F)$measure +
+      specificity(fitness_presabs, as.factor(qile_presabs$pres), perc.rank = F)$measure - 1
+    thresholds <- sensitivity(fitness_presabs, as.factor(qile_presabs$pres), perc.rank = F)$cutoffs
+    best_threshold <- thresholds[which(youden_index == max(youden_index))]
+    auc_data_tot[i, 'best_threshold'] <- best_threshold
+    
+    # Load fitness
+    #fitness <- read_mean_outputvalue_phenofit(simulation_files[i])
+    #fitness_data[,2+i] <- t(fitness)
+                                             
+  }
+  
+  # Consensus 
+  # names(fitness_data)[1:2] <- c("lat", "lon")
+  # fitness_data$mean <- rowMeans(fitness_data[,3:ncol(fitness_data)])
+  # fitness_data$mad <- rowMads(as.matrix(fitness_data[,3:ncol(fitness_data)]))
+  # fitness_data$sd <- rowSds(as.matrix(fitness_data[,3:ncol(fitness_data)]))
+  
+  saveRDS(auc_data_tot, file.path(wd, "cache", "quercus_auc_data_tot.rds"))
+  # saveRDS(fitness_data, file.path(wd, "cache", "quercus_fitness_data.rds"))
+}else{
+  auc_data_tot <- readRDS(file.path(wd, "cache", "quercus_auc_data_tot.rds"))
+  #fitness_data <- readRDS(file.path(wd, "cache", "fitness_data.rds"))
+}
+
+quercus_auc_data_cal <- auc_data_cal
+quercus_auc_data_tot <- auc_data_tot
+
+
+```
+
+```{r phenofit_abies_rep_data}
+
+cal_folder <- 'D:/calibrations/phenofit/abies_alba/1000pres_1000abs/paper_data'
+sim_folder <- 'D:/simulations/phenofit/backward/abies_alba/paper_data'
+
+# Calibrations
+cmaes_files <- mixedsort(list.files(path = file.path(cal_folder,"CMAES"), pattern = "\\.Rdata$", full.names = T, recursive = T))
+
+auc_data_cal <- data.frame()
+for(i in 1:length(cmaes_files)){
+  auc_data_cal[i, 'subset'] <- paste0(strsplit(cmaes_files[i], "_")[[1]][7])
+  auc_data_cal[i, 'rep'] <- strsplit(strsplit(cmaes_files[i], "_")[[1]][8], "[.]")[[1]][1]
+  
+  # Load AUC on calibration_points
+  load(cmaes_files[i])
+  auc_cal <- 1-round(cmaes_fit[[1]][["value"]], 6)
+  
+  auc_data_cal[i, 'cal'] <- auc_cal
+  
+  # # Load AUC on every pres/abs points
+  # sim_dir <- file.path(sim_folder, cal_list[i])
+  # fitness_presabs <- read_mean_outputvalue_phenofit(sim_dir, "Fitness", points = qile_presabs)
+  # auc_presabs <- round(auc(roc(fitness_presabs, as.factor(qile_presabs$pres))),3)
+  # 
+  # auc_data[i, 'presabs'] <- auc_presabs
+}
+
+if(recompute_abies_AUC_CMAES){
+  simulation_files <- mixedsort(list.files(path = file.path(sim_folder, "CMAES"), pattern = "Fitness", full.names = T, recursive = T))
+  
+  auc_data_tot <- data.frame()
+  for(i in 1:(length(simulation_files))){
+    auc_data_tot[i, 'subset'] <- strsplit(strsplit(simulation_files[i], "/")[[1]][8], "_")[[1]][1]
+    auc_data_tot[i, 'rep'] <- strsplit(strsplit(simulation_files[i], "/")[[1]][8], "_")[[1]][2]
+    
+    # Compute AUC on every pres/abs points
+    fitness_presabs <- read_mean_outputvalue_phenofit(simulation_files[i], points = aalb_presabs)
+    auc_tot <- round(auc(roc(fitness_presabs, as.factor(aalb_presabs$pres))),6)
+    auc_data_tot[i, 'tot'] <- auc_tot
+    
+    # Best threshold
+    youden_index <- sensitivity(fitness_presabs, as.factor(aalb_presabs$pres), perc.rank = F)$measure +
+      specificity(fitness_presabs, as.factor(aalb_presabs$pres), perc.rank = F)$measure - 1
+    thresholds <- sensitivity(fitness_presabs, as.factor(aalb_presabs$pres), perc.rank = F)$cutoffs
+    best_threshold <- thresholds[which(youden_index == max(youden_index))]
+    auc_data_tot[i, 'best_threshold'] <- best_threshold
+    
+    # Load fitness
+    #fitness <- read_mean_outputvalue_phenofit(simulation_files[i])
+    #fitness_data[,2+i] <- t(fitness)
+                                             
+  }
+  
+  # Consensus 
+  # names(fitness_data)[1:2] <- c("lat", "lon")
+  # fitness_data$mean <- rowMeans(fitness_data[,3:ncol(fitness_data)])
+  # fitness_data$mad <- rowMads(as.matrix(fitness_data[,3:ncol(fitness_data)]))
+  # fitness_data$sd <- rowSds(as.matrix(fitness_data[,3:ncol(fitness_data)]))
+  
+  saveRDS(auc_data_tot, file.path(wd, "cache", "abies_auc_data_tot.rds"))
+  # saveRDS(fitness_data, file.path(wd, "cache", "quercus_fitness_data.rds"))
+}else{
+  auc_data_tot <- readRDS(file.path(wd, "cache", "abies_auc_data_tot.rds"))
+  #fitness_data <- readRDS(file.path(wd, "cache", "fitness_data.rds"))
+}
+
+abies_auc_data_cal <- auc_data_cal
+abies_auc_data_tot <- auc_data_tot
+
+
+```
+
+## 2.1. Calibration results
+
+```{r phenofit_fitness_maps}
+lcol <- "#EBEBD3"
+hcol <- "#488B49"
+
+# lcol <- "#ffeaa1"
+# hcol <- "#ec572f"
+
+sim_folder <- 'D:/simulations/phenofit/backward/fagus_sylvatica/paper_data'
+phenofit_fagus_best_rep <- paste0(fagus_auc_data_tot[fagus_auc_data_tot$tot == max(fagus_auc_data_tot$tot), "subset"],"_", fagus_auc_data_tot[fagus_auc_data_tot$tot == max(fagus_auc_data_tot$tot), "rep"])
+best_fit <- read_mean_outputvalue_phenofit(file.path(file.path(sim_folder, "CMAES"), phenofit_fagus_best_rep, "Fitness.txt"), points = ERA5_points)
+phenofit_fagus_best_fit <- as.data.frame(cbind(ERA5_points$lat, ERA5_points$lon,t(best_fit)))
+colnames(phenofit_fagus_best_fit) <- c("lat", "lon", "fitness")
+# best threshold
+best_threshold <- fagus_auc_data_tot[fagus_auc_data_tot$tot == max(fagus_auc_data_tot$tot), "best_threshold"]
+phenofit_fagus_best_fit[phenofit_fagus_best_fit$fitness < best_threshold, 'presence'] <- 0
+phenofit_fagus_best_fit[phenofit_fagus_best_fit$fitness >= best_threshold, 'presence'] <- 1
+phenofit_fagus_map <- ggplot(data=phenofit_fagus_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Fitness") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1), na.value = "#B5BEC6") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(max(fagus_auc_data_tot$tot), 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+sim_folder <- 'D:/simulations/phenofit/backward/quercus_ilex/paper_data'
+phenofit_quercus_best_rep <- paste0(quercus_auc_data_tot[quercus_auc_data_tot$tot == max(quercus_auc_data_tot$tot), "subset"],"_", quercus_auc_data_tot[quercus_auc_data_tot$tot == max(quercus_auc_data_tot$tot), "rep"])
+best_fit <- read_mean_outputvalue_phenofit(file.path(file.path(sim_folder, "CMAES"), phenofit_quercus_best_rep, "Fitness.txt"), points = ERA5_points)
+phenofit_quercus_best_fit <- as.data.frame(cbind(ERA5_points$lat, ERA5_points$lon,t(best_fit)))
+colnames(phenofit_quercus_best_fit) <- c("lat", "lon", "fitness")
+# best threshold
+best_threshold <- quercus_auc_data_tot[quercus_auc_data_tot$tot == max(quercus_auc_data_tot$tot), "best_threshold"]
+phenofit_quercus_best_fit[phenofit_quercus_best_fit$fitness < best_threshold, 'presence'] <- 0
+phenofit_quercus_best_fit[phenofit_quercus_best_fit$fitness >= best_threshold, 'presence'] <- 1
+phenofit_quercus_map <- ggplot(data=phenofit_quercus_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Fitness") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1), na.value = "#B5BEC6") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(max(quercus_auc_data_tot$tot), 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+sim_folder <- 'D:/simulations/phenofit/backward/abies_alba/paper_data'
+phenofit_abies_best_rep <- paste0(abies_auc_data_tot[abies_auc_data_tot$tot == max(abies_auc_data_tot$tot), "subset"],"_", abies_auc_data_tot[abies_auc_data_tot$tot == max(abies_auc_data_tot$tot), "rep"])
+best_fit <- read_mean_outputvalue_phenofit(file.path(file.path(sim_folder, "CMAES"), phenofit_abies_best_rep, "Fitness.txt"), points = ERA5_points)
+phenofit_abies_best_fit <- as.data.frame(cbind(ERA5_points$lat, ERA5_points$lon,t(best_fit)))
+colnames(phenofit_abies_best_fit) <- c("lat", "lon", "fitness")
+# best threshold
+best_threshold <- abies_auc_data_tot[abies_auc_data_tot$tot == max(abies_auc_data_tot$tot), "best_threshold"]
+phenofit_abies_best_fit[phenofit_abies_best_fit$fitness < best_threshold, 'presence'] <- 0
+phenofit_abies_best_fit[phenofit_abies_best_fit$fitness >= best_threshold, 'presence'] <- 1
+phenofit_abies_map <- ggplot(data=phenofit_abies_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Fitness") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1), na.value = "#B5BEC6") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(max(abies_auc_data_tot$tot), 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+```
+
+```{r castanea_fitness_maps}
+
+sim_folder <- "D:/simulations/castanea/backward"
+
+if(load_castanea_backward_values){
+  backward_fit <- read_mean_outputvalue_castanea(ERA5_grid_points$points, lambda =1, file.path(sim_folder, "fagus_sylvatica/paper_data/CMAES/subset1_rep2"), var = "BiomassOfReserves")
+  backward_fit <- t(backward_fit)
+  backward_fit[backward_fit < 0 ] <- 0 # negative values in reserve
+  castanea_fagus_best_fit <- as.data.frame(cbind(ERA5_grid_points$lat, ERA5_grid_points$lon,backward_fit))
+  colnames(castanea_fagus_best_fit) <- c("lat", "lon", "biomass_reserves")
+  saveRDS(castanea_fagus_best_fit, file = file.path(wd, "cache", "castanea_fagus_biomassreserves_bestfit.rds"))
+}else{
+  castanea_fagus_best_fit <- readRDS(file = file.path(wd, "cache", "castanea_fagus_biomassreserves_bestfit.rds"))
+}
+# auc
+presabs_fit <- left_join(fsyl_presabs, castanea_fagus_best_fit)
+castanea_fagus_best_auc <- auc(roc(presabs_fit$biomass_reserves, as.factor(fsyl_presabs$pres)))
+# best threshold
+youden_index <- sensitivity(presabs_fit$biomass_reserves, as.factor(fsyl_presabs$pres), perc.rank = F)$measure +
+  specificity(presabs_fit$biomass_reserves, as.factor(fsyl_presabs$pres), perc.rank = F)$measure - 1
+thresholds <- sensitivity(presabs_fit$biomass_reserves, as.factor(fsyl_presabs$pres), perc.rank = F)$cutoffs
+castanea_fagus_backward_best_threshold <- thresholds[which(youden_index == max(youden_index))]
+castanea_fagus_best_fit[is.na(castanea_fagus_best_fit$biomass_reserves), "biomass_reserves"] <- -9999 # NA values impossible for threshold
+castanea_fagus_best_fit[castanea_fagus_best_fit$biomass_reserves < castanea_fagus_backward_best_threshold, 'presence'] <- 0
+castanea_fagus_best_fit[castanea_fagus_best_fit$biomass_reserves >= castanea_fagus_backward_best_threshold, 'presence'] <- 1
+castanea_fagus_best_fit[castanea_fagus_best_fit$biomass_reserves == -9999, "biomass_reserves"] <- NA
+castanea_fagus_best_fit[is.na(castanea_fagus_best_fit$biomass_reserves), 'presence'] <- NA
+castanea_backward_fagus_map <- ggplot(data=castanea_fagus_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Presence") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1), na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_fagus_best_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+if(load_castanea_backward_values){
+  backward_fit <- read_mean_outputvalue_castanea(ERA5_grid_points$points, lambda =1, file.path(sim_folder, "abies_alba/paper_data/CMAES/subset1_rep1"), var = "BiomassOfReserves")
+  backward_fit <- t(backward_fit)
+  backward_fit[backward_fit < 0 ] <- 0 # negative values in reserve
+  castanea_abies_best_fit <- as.data.frame(cbind(ERA5_grid_points$lat, ERA5_grid_points$lon,backward_fit))
+  colnames(castanea_abies_best_fit) <- c("lat", "lon", "biomass_reserves")
+  saveRDS(castanea_abies_best_fit, file = file.path(wd, "cache", "castanea_abies_biomassreserves_bestfit.rds"))
+}else{
+  castanea_abies_best_fit <- readRDS(file = file.path(wd, "cache", "castanea_abies_biomassreserves_bestfit.rds"))
+}
+# auc
+presabs_fit <- left_join(aalb_presabs, castanea_abies_best_fit)
+castanea_abies_best_auc <- auc(roc(presabs_fit$biomass_reserves, as.factor(aalb_presabs$pres)))
+# best threshold
+youden_index <- sensitivity(presabs_fit$biomass_reserves, as.factor(aalb_presabs$pres), perc.rank = F)$measure +
+  specificity(presabs_fit$biomass_reserves, as.factor(aalb_presabs$pres), perc.rank = F)$measure - 1
+thresholds <- sensitivity(presabs_fit$biomass_reserves, as.factor(aalb_presabs$pres), perc.rank = F)$cutoffs
+castanea_abies_backward_best_threshold <- thresholds[which(youden_index == max(youden_index))]
+castanea_abies_best_fit[is.na(castanea_abies_best_fit$biomass_reserves), "biomass_reserves"] <- -9999 # NA values impossible for threshold
+castanea_abies_best_fit[castanea_abies_best_fit$biomass_reserves < castanea_abies_backward_best_threshold, 'presence'] <- 0
+castanea_abies_best_fit[castanea_abies_best_fit$biomass_reserves >= castanea_abies_backward_best_threshold, 'presence'] <- 1
+castanea_abies_best_fit[castanea_abies_best_fit$biomass_reserves == -9999, "biomass_reserves"] <- NA
+castanea_abies_best_fit[is.na(castanea_abies_best_fit$biomass_reserves), 'presence'] <- NA
+castanea_backward_abies_map <- ggplot(data=castanea_abies_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Presence") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1), na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_abies_best_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+if(load_castanea_backward_values){
+  backward_fit <- read_mean_outputvalue_castanea(ERA5_grid_points$points, lambda =1, file.path(sim_folder, "quercus_ilex/paper_data/CMAES/subset1_rep1"), var = "BiomassOfReserves")
+  backward_fit <- t(backward_fit)
+  backward_fit[backward_fit < 0 ] <- 0 # negative values in reserve
+  castanea_quercus_best_fit <- as.data.frame(cbind(ERA5_grid_points$lat, ERA5_grid_points$lon,backward_fit))
+  colnames(castanea_quercus_best_fit) <- c("lat", "lon", "biomass_reserves")
+  saveRDS(castanea_quercus_best_fit, file = file.path(wd, "cache", "castanea_quercus_biomassreserves_bestfit.rds"))
+}else{
+  castanea_quercus_best_fit <- readRDS(file = file.path(wd, "cache", "castanea_quercus_biomassreserves_bestfit.rds"))
+}
+# auc
+presabs_fit <- left_join(qile_presabs, castanea_quercus_best_fit)
+castanea_quercus_best_auc <- auc(roc(presabs_fit$biomass_reserves, as.factor(qile_presabs$pres)))
+# best threshold
+youden_index <- sensitivity(presabs_fit$biomass_reserves, as.factor(qile_presabs$pres), perc.rank = F)$measure +
+  specificity(presabs_fit$biomass_reserves, as.factor(qile_presabs$pres), perc.rank = F)$measure - 1
+thresholds <- sensitivity(presabs_fit$biomass_reserves, as.factor(qile_presabs$pres), perc.rank = F)$cutoffs
+castanea_quercus_backward_best_threshold <- thresholds[which(youden_index == max(youden_index))]
+castanea_quercus_best_fit[is.na(castanea_quercus_best_fit$biomass_reserves), "biomass_reserves"] <- -9999 # NA values impossible for threshold
+castanea_quercus_best_fit[castanea_quercus_best_fit$biomass_reserves < castanea_quercus_backward_best_threshold, 'presence'] <- 0
+castanea_quercus_best_fit[castanea_quercus_best_fit$biomass_reserves >= castanea_quercus_backward_best_threshold, 'presence'] <- 1
+castanea_quercus_best_fit[castanea_quercus_best_fit$biomass_reserves == -9999, "biomass_reserves"] <- NA
+castanea_quercus_best_fit[is.na(castanea_quercus_best_fit$biomass_reserves), 'presence'] <- NA
+castanea_backward_quercus_map <- ggplot(data=castanea_quercus_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Presence") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1), na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_quercus_best_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+
+
+false_fit <- castanea_fagus_best_fit
+false_fit$biomass_reserves <- 0
+castanea_false_map <- ggplot(data=false_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = biomass_reserves), color = NA) +
+  theme_void() +
+  labs(fill = "Carbon reserves") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1)) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(0, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+```
+
+```{r species_distribution_maps}
+
+fsyl_presabs_europe <- right_join(fsyl_presabs, castanea_fagus_best_fit[, c("lon", "lat")])
+fsyl_presabs_europe[is.na(fsyl_presabs_europe)] <- 0
+
+fagus_dist_map <- ggplot() +
+  geom_raster(data = fsyl_presabs_europe, aes(x = lon, y = lat, fill = pres), color = NA) +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1)) +
+  theme_void() +
+  ylab("") +
+  xlab("") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G"))
+
+
+qile_presabs_europe <- right_join(qile_presabs, castanea_fagus_best_fit[, c("lon", "lat")])
+qile_presabs_europe[is.na(qile_presabs_europe)] <- 0
+
+quercus_dist_map <- ggplot() +
+  geom_raster(data = qile_presabs_europe, aes(x = lon, y = lat, fill = pres), color = NA) +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1)) +
+  theme_void() +
+  ylab("") +
+  xlab("") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G"))
+
+
+aalb_presabs_europe <- right_join(aalb_presabs, castanea_fagus_best_fit[, c("lon", "lat")])
+aalb_presabs_europe[is.na(aalb_presabs_europe)] <- 0
+
+abies_dist_map <- ggplot() +
+  geom_raster(data = aalb_presabs_europe, aes(x = lon, y = lat, fill = pres), color = NA) +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1)) +
+  theme_void() +
+  ylab("") +
+  xlab("") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G"))
+
+
+
+```
+
+
+```{r phenofit_forward_fitness_maps}
+
+
+
+forward_sim_folder <- "D:/simulations/phenofit/forward"
+
+forward_fit <- read_mean_outputvalue_phenofit(file.path(forward_sim_folder, "fagus_sylvatica/VVanderMeersch", "Fitness.txt"), points = ERA5_points)
+#auc
+fitness_presabs <- read_mean_outputvalue_phenofit(file.path(forward_sim_folder, "fagus_sylvatica/VVanderMeersch", "Fitness.txt"), 
+                                          points = fsyl_presabs) # only on pres/abs points
+phenofit_fagus_forward_auc <- auc(roc(fitness_presabs, as.factor(fsyl_presabs$pres)))
+# best threshold
+youden_index <- sensitivity(fitness_presabs, as.factor(fsyl_presabs$pres), perc.rank = F)$measure +
+  specificity(fitness_presabs, as.factor(fsyl_presabs$pres), perc.rank = F)$measure - 1
+thresholds <- sensitivity(fitness_presabs, as.factor(fsyl_presabs$pres), perc.rank = F)$cutoffs
+phenofit_fagus_forward_best_threshold <- thresholds[which(youden_index == max(youden_index))]
+
+phenofit_fagus_forward_fit <- as.data.frame(cbind(ERA5_points$lat, ERA5_points$lon,t(forward_fit)))
+colnames(phenofit_fagus_forward_fit) <- c("lat", "lon", "fitness")
+phenofit_fagus_forward_fit[phenofit_fagus_forward_fit$fitness < phenofit_fagus_forward_best_threshold, 'presence'] <- 0
+phenofit_fagus_forward_fit[phenofit_fagus_forward_fit$fitness >= phenofit_fagus_forward_best_threshold, 'presence'] <- 1
+
+phenofit_forward_fagus_map <- ggplot(data=phenofit_fagus_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Presence") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1)) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(phenofit_fagus_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+
+
+forward_fit <- read_mean_outputvalue_phenofit(file.path(forward_sim_folder, "abies_alba/VVanderMeersch2", "Fitness.txt"), points = ERA5_points)
+# auc
+fitness_presabs <- read_mean_outputvalue_phenofit(file.path(forward_sim_folder, "abies_alba/VVanderMeersch2", "Fitness.txt"), 
+                                          points = aalb_presabs) # only on pres/abs points
+phenofit_abies_forward_auc <- auc(roc(fitness_presabs, as.factor(aalb_presabs$pres)))
+# best threshold
+youden_index <- sensitivity(fitness_presabs, as.factor(aalb_presabs$pres), perc.rank = F)$measure +
+  specificity(fitness_presabs, as.factor(aalb_presabs$pres), perc.rank = F)$measure - 1
+thresholds <- sensitivity(fitness_presabs, as.factor(aalb_presabs$pres), perc.rank = F)$cutoffs
+phenofit_abies_forward_best_threshold <- thresholds[which(youden_index == max(youden_index))]
+
+phenofit_abies_forward_fit <- as.data.frame(cbind(ERA5_points$lat, ERA5_points$lon,t(forward_fit)))
+colnames(phenofit_abies_forward_fit) <- c("lat", "lon", "fitness")
+phenofit_abies_forward_fit[phenofit_abies_forward_fit$fitness < phenofit_abies_forward_best_threshold, 'presence'] <- 0
+phenofit_abies_forward_fit[phenofit_abies_forward_fit$fitness >= phenofit_abies_forward_best_threshold, 'presence'] <- 1
+
+phenofit_forward_abies_map <- ggplot(data=phenofit_abies_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Presence") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1)) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(phenofit_abies_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+forward_fit <- read_mean_outputvalue_phenofit(file.path(forward_sim_folder, "quercus_ilex/FTauc/modcode", "Fitness.txt"), points = ERA5_points)
+#auc
+fitness_presabs <- read_mean_outputvalue_phenofit(file.path(forward_sim_folder, "quercus_ilex/FTauc/modcode", "Fitness.txt"), 
+                                          points = qile_presabs) # only on pres/abs points
+phenofit_quercus_forward_auc <- auc(roc(fitness_presabs, as.factor(qile_presabs$pres)))
+# best threshold
+youden_index <- sensitivity(fitness_presabs, as.factor(qile_presabs$pres), perc.rank = F)$measure +
+  specificity(fitness_presabs, as.factor(qile_presabs$pres), perc.rank = F)$measure - 1
+thresholds <- sensitivity(fitness_presabs, as.factor(qile_presabs$pres), perc.rank = F)$cutoffs
+phenofit_quercus_forward_best_threshold <- thresholds[which(youden_index == max(youden_index))]
+
+phenofit_quercus_forward_fit <- as.data.frame(cbind(ERA5_points$lat, ERA5_points$lon,t(forward_fit)))
+colnames(phenofit_quercus_forward_fit) <- c("lat", "lon", "fitness")
+phenofit_quercus_forward_fit[phenofit_quercus_forward_fit$fitness < phenofit_quercus_forward_best_threshold, 'presence'] <- 0
+phenofit_quercus_forward_fit[phenofit_quercus_forward_fit$fitness >= phenofit_quercus_forward_best_threshold, 'presence'] <- 1
+
+phenofit_forward_quercus_map <- ggplot(data=phenofit_quercus_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Presence") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1)) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(phenofit_quercus_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+```
+
+```{r castanea_forward_fitness_maps, eval = T}
+
+forward_sim_folder <- "D:/simulations/castanea/forward"
+
+if(load_castanea_forward_values){
+  forward_fit <- read_mean_outputvalue_castanea(ERA5_grid_points$points, lambda =1, file.path(forward_sim_folder, "fagus_sylvatica_capsisrevision18131"), var = "BiomassOfReserves")
+  forward_fit <- t(forward_fit)
+  forward_fit[forward_fit < 0 ] <- 0 # negative values in reserve
+  castanea_fagus_forward_fit <- as.data.frame(cbind(ERA5_grid_points$lat, ERA5_grid_points$lon,forward_fit))
+  colnames(castanea_fagus_forward_fit) <- c("lat", "lon", "biomass_reserves")
+  saveRDS(castanea_fagus_forward_fit, file = file.path(wd, "cache", "castanea_fagus_biomassreserves_fit.rds"))
+}else{
+  castanea_fagus_forward_fit <- readRDS(file = file.path(wd, "cache", "castanea_fagus_biomassreserves_fit.rds"))
+}
+# auc
+presabs_fit <- left_join(fsyl_presabs, castanea_fagus_forward_fit)
+castanea_fagus_forward_auc <- auc(roc(presabs_fit$biomass_reserves, as.factor(fsyl_presabs$pres)))
+# best threshold
+youden_index <- sensitivity(presabs_fit$biomass_reserves, as.factor(fsyl_presabs$pres), perc.rank = F)$measure +
+  specificity(presabs_fit$biomass_reserves, as.factor(fsyl_presabs$pres), perc.rank = F)$measure - 1
+thresholds <- sensitivity(presabs_fit$biomass_reserves, as.factor(fsyl_presabs$pres), perc.rank = F)$cutoffs
+castanea_fagus_forward_best_threshold <- thresholds[which(youden_index == max(youden_index))]
+castanea_fagus_forward_fit[is.na(castanea_fagus_forward_fit$biomass_reserves), "biomass_reserves"] <- -9999 # NA values impossible for threshold
+castanea_fagus_forward_fit[castanea_fagus_forward_fit$biomass_reserves < castanea_fagus_forward_best_threshold, 'presence'] <- 0
+castanea_fagus_forward_fit[castanea_fagus_forward_fit$biomass_reserves >= castanea_fagus_forward_best_threshold, 'presence'] <- 1
+castanea_fagus_forward_fit[castanea_fagus_forward_fit$biomass_reserves == -9999, "biomass_reserves"] <- NA
+castanea_fagus_forward_fit[is.na(castanea_fagus_forward_fit$biomass_reserves), 'presence'] <- NA
+castanea_forward_fagus_map <- ggplot(data=castanea_fagus_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Presence") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1), na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_fagus_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+if(load_castanea_forward_values){
+  forward_fit <- read_mean_outputvalue_castanea(ERA5_grid_points$points, lambda =1, file.path(forward_sim_folder, "quercus_ilex_capsisrevision17568"), var = "BiomassOfReserves")
+  forward_fit <- t(forward_fit)
+  forward_fit[forward_fit < 0 ] <- 0 # negative values in reserve
+  castanea_quercus_forward_fit <- as.data.frame(cbind(ERA5_grid_points$lat, ERA5_grid_points$lon,forward_fit))
+  colnames(castanea_quercus_forward_fit) <- c("lat", "lon", "biomass_reserves")
+  saveRDS(castanea_quercus_forward_fit, file = file.path(wd, "cache", "castanea_quercus_biomassreserves_fit.rds"))
+}else{
+  castanea_quercus_forward_fit <- readRDS(file = file.path(wd, "cache", "castanea_quercus_biomassreserves_fit.rds"))
+}
+# auc
+presabs_fit <- left_join(qile_presabs, castanea_quercus_forward_fit)
+castanea_quercus_forward_auc <- auc(roc(presabs_fit$biomass_reserves, as.factor(qile_presabs$pres)))
+# best threshold
+youden_index <- sensitivity(presabs_fit$biomass_reserves, as.factor(qile_presabs$pres), perc.rank = F)$measure +
+  specificity(presabs_fit$biomass_reserves, as.factor(qile_presabs$pres), perc.rank = F)$measure - 1
+thresholds <- sensitivity(presabs_fit$biomass_reserves, as.factor(qile_presabs$pres), perc.rank = F)$cutoffs
+castanea_quercus_forward_best_threshold <- thresholds[which(youden_index == max(youden_index))]
+castanea_quercus_forward_fit[is.na(castanea_quercus_forward_fit$biomass_reserves), "biomass_reserves"] <- -9999 # NA values impossible for threshold
+castanea_quercus_forward_fit[castanea_quercus_forward_fit$biomass_reserves < castanea_quercus_forward_best_threshold, 'presence'] <- 0
+castanea_quercus_forward_fit[castanea_quercus_forward_fit$biomass_reserves >= castanea_quercus_forward_best_threshold, 'presence'] <- 1
+castanea_quercus_forward_fit[castanea_quercus_forward_fit$biomass_reserves == -9999, "biomass_reserves"] <- NA
+castanea_quercus_forward_fit[is.na(castanea_quercus_forward_fit$biomass_reserves), 'presence'] <- NA
+castanea_forward_quercus_map <- ggplot(data=castanea_quercus_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence)) +
+  theme_void() +
+  labs(fill = "Presence") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1), na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_quercus_forward_auc, 2)), color = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+if(load_castanea_forward_values){
+  forward_fit <- read_mean_outputvalue_castanea(ERA5_grid_points$points, lambda =1, file.path(forward_sim_folder, "abies_alba_capsisrevision17568"), var = "BiomassOfReserves")
+  forward_fit <- t(forward_fit)
+  forward_fit[forward_fit < 0 ] <- 0 # negative values in reserve
+  castanea_abies_forward_fit <- as.data.frame(cbind(ERA5_grid_points$lat, ERA5_grid_points$lon,forward_fit))
+  colnames(castanea_abies_forward_fit) <- c("lat", "lon", "biomass_reserves")
+  saveRDS(castanea_abies_forward_fit, file = file.path(wd, "cache", "castanea_abies_biomassreserves_fit.rds"))
+}else{
+  castanea_abies_forward_fit <- readRDS(file = file.path(wd, "cache", "castanea_abies_biomassreserves_fit.rds"))
+}
+# auc
+presabs_fit <- left_join(aalb_presabs, castanea_abies_forward_fit)
+castanea_abies_forward_auc <- auc(roc(presabs_fit$biomass_reserves, as.factor(aalb_presabs$pres)))
+# best threshold
+youden_index <- sensitivity(presabs_fit$biomass_reserves, as.factor(aalb_presabs$pres), perc.rank = F)$measure +
+  specificity(presabs_fit$biomass_reserves, as.factor(aalb_presabs$pres), perc.rank = F)$measure - 1
+thresholds <- sensitivity(presabs_fit$biomass_reserves, as.factor(aalb_presabs$pres), perc.rank = F)$cutoffs
+castanea_abies_forward_best_threshold <- thresholds[which(youden_index == max(youden_index))]
+castanea_abies_forward_fit[is.na(castanea_abies_forward_fit$biomass_reserves), "biomass_reserves"] <- -9999 # NA values impossible for threshold
+castanea_abies_forward_fit[castanea_abies_forward_fit$biomass_reserves < castanea_abies_forward_best_threshold, 'presence'] <- 0
+castanea_abies_forward_fit[castanea_abies_forward_fit$biomass_reserves >= castanea_abies_forward_best_threshold, 'presence'] <- 1
+castanea_abies_forward_fit[castanea_abies_forward_fit$biomass_reserves == -9999, "biomass_reserves"] <- NA
+castanea_abies_forward_fit[is.na(castanea_abies_forward_fit$biomass_reserves), 'presence'] <- NA
+castanea_forward_abies_map <- ggplot(data=castanea_abies_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = presence), color = NA) +
+  theme_void() +
+  labs(fill = "Presence") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient(low = lcol, high = hcol, limits = c(0,1), breaks = c(0,0.5,1), na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.5,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_abies_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+
+```
+
+Calibrations using species distribution data are hereafter called inverse calibrations, and calibrations based on expert knowledge, observations and measurements of the processes modelled are called expert calibrations.  
+  
+CMA-ES calibration of PHENOFIT model allows an average `r round(((max(fagus_auc_data_tot$tot)-phenofit_fagus_forward_auc)/phenofit_fagus_forward_auc + (max(quercus_auc_data_tot$tot)-phenofit_quercus_forward_auc)/phenofit_quercus_forward_auc + (max(abies_auc_data_tot$tot)-phenofit_abies_forward_auc)/phenofit_abies_forward_auc)/3*100,1)`% increase of AUC across the three species compared to expert calibration (\hyperref[fig:phenofitmaps]{Figure 1}). The maximum increase is obtained for silver fir, from `r round(phenofit_abies_forward_auc,2)` to `r round(max(abies_auc_data_tot$tot),2)` (`r round((max(abies_auc_data_tot$tot)-phenofit_abies_forward_auc)/phenofit_abies_forward_auc*100,1)`%).  
+CMA-ES calibration of CASTANEA allows an average `r round(((castanea_fagus_best_auc-castanea_fagus_forward_auc)/castanea_fagus_forward_auc + (castanea_quercus_best_auc-castanea_quercus_forward_auc)/castanea_quercus_forward_auc + (castanea_abies_best_auc-castanea_abies_forward_auc)/castanea_abies_forward_auc)/3*100,1)` % increase of AUC compared to expert calibration (\hyperref[fig:castaneamaps]{Figure 2}), and a maximum increase obtained for holm oak (`r round((castanea_quercus_best_auc-castanea_quercus_forward_auc)/castanea_quercus_forward_auc*100,1)`%).  
+
+
+```{r phenofitmaps, include=TRUE, fig.height = 7, fig.width = 7, fig.align = "center", fig.cap = "Species distribution maps obtained with PHENOFIT expert and inverse calibrations, compared with observed species occurrences. Optimal threshold to dichotomize model predicted fitness index in presence/absence is the Youden index-based cut-off point. Note that models predict species climatic niche which is larger than the realized niche that corresponds to species presence map.", fig.pos="H", fig.showtext=TRUE, eval = T}
+
+p <- plot_grid(
+  "",
+  plot_grid(
+    "",
+    phenofit_forward_fagus_map + theme(legend.position = "none"),
+    fagus_dist_map + theme(legend.position = "none"),
+    phenofit_fagus_map + theme(legend.position = "none"), 
+    "",
+    phenofit_forward_quercus_map + theme(legend.position = "none"),
+    quercus_dist_map + theme(legend.position = "none"),
+    phenofit_quercus_map + theme(legend.position = "none"),
+    "",
+    phenofit_forward_abies_map + theme(legend.position = "none"),
+    abies_dist_map + theme(legend.position = "none"),
+    phenofit_abies_map + theme(legend.position = "none"), 
+    "",
+    ncol= 4, rel_widths = c(1, 5, 5, 5),
+    nrow= 3, rel_heights = c(5, 5, 5)),
+  ncol = 1,
+  rel_heights = c(2,20))
+
+ggdraw(p) +
+  draw_label("Expert calibration", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.21,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Species occurrence", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.53,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Inverse calibration", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.84,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Fagus sylvatica", color = "#495057", size = 10, angle = 90, y = 0.75, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Quercus ilex", color = "#495057", size = 10, angle = 90, y = 0.44, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Abies alba", color = "#495057", size = 10, angle = 90, y = 0.14, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic")
+
+
+
+```
+
+```{r castaneamaps, include=TRUE, fig.height = 7, fig.width = 7, fig.align = "center", fig.cap = "Species distribution maps obtained with CASTANEA expert and inverse calibrations, compared with observed species occurrences. Optimal threshold to dichotomize model predicted carbon reserves in presence/absence is the Youden index-based cut-off point. Note that models predict species climatic niche which is larger than the realized niche that corresponds to species presence map. Note also that CASTANEA cannot be used in high-latitude regions (grey area).", fig.pos="H", fig.showtext=TRUE, eval = T}
+
+
+
+p <- plot_grid(
+  "",
+  plot_grid(
+    "",
+    castanea_forward_fagus_map + theme(legend.position = "none"),
+    fagus_dist_map + theme(legend.position = "none"),
+    castanea_backward_fagus_map + theme(legend.position = "none"), 
+    "",
+    castanea_forward_quercus_map + theme(legend.position = "none"),
+    quercus_dist_map + theme(legend.position = "none"),
+    castanea_backward_quercus_map + theme(legend.position = "none"),
+    "",
+    castanea_forward_abies_map + theme(legend.position = "none"),
+    abies_dist_map + theme(legend.position = "none"),
+    castanea_backward_abies_map + theme(legend.position = "none"), 
+    "",
+    ncol= 4, rel_widths = c(1, 5, 5, 5),
+    nrow= 3, rel_heights = c(5, 5, 5)),
+  ncol = 1,
+  rel_heights = c(2,20))
+
+ggdraw(p) +
+  draw_label("Expert calibration", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.21,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Species occurrence", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.53,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Inverse calibration", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.84,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Fagus sylvatica", color = "#495057", size = 10, angle = 90, y = 0.75, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Quercus ilex", color = "#495057", size = 10, angle = 90, y = 0.44, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Abies alba", color = "#495057", size = 10, angle = 90, y = 0.14, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic")
+
+  
+
+```
+
+
+## 2.2. Impacts of subsampling and calibration stochasticity
+
+### 2.2.1. Variability of calibration performance
+
+```{r cmaesrepAUCcal, include=TRUE, fig.height = 3, fig.width = 6, fig.align = "center", fig.cap = "\\label{fig:cmaesrepAUCcal} Effects of data sub-sampling and stochasticity on CMA-ES calibration using the PHENOFIT model for beech: \\textbf{(A)} calibration AUC (calculated only with calibration cells) and \\textbf{(B)} total AUC (calculated with all presence/absence cells). Each color is a different sub-sampling of occurrence data, each point is a calibration run. Diamonds (with black border) are mean AUC values. On \\textbf{(A)}, the grouping letters represent the multiple comparisons with pairwise Dunn’s tests.", fig.pos="H", fig.showtext=TRUE}
+
+custom_colors = c("#9e0142", "#d53e4f", "#f46d43", "#fdae61", "#fee08b",
+                               "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#5e4fa2")
+
+positions <- c(rep(1,10), rep(1.1,10), rep(1.2,10), rep(1.3, 10), rep(1.4, 10), 
+                   rep(1.5, 10), rep(1.6, 10), rep(1.7, 10), rep(1.8, 10), rep(1.9, 10))
+fagus_auc_data_cal$positions <- positions
+
+# Wilcoxon
+# wilcoxon_test_cal <- compare_means(cal ~ positions,  data = fagus_auc_data_cal) 
+# wilcoxon_test_s7 <- wilcoxon_test_cal %>% filter(p.signif != "ns") %>% filter(group1 == "1.7" | group2 == "1.7")
+# list_comparisons <- lapply(1:nrow(wilcoxon_test_s7), function(i){
+#   return(c(wilcoxon_test_s7$group1[i], wilcoxon_test_s7$group2[i]))})
+# list_positions <- c(0.875, 0.9225, 0.9245, 0.917, 0.9145, 0.8785, 0.882, 0.894, 0.888)
+# 
+symnum.args <- list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), symbols = c("****", "***", "**", "*", "ns"))
+# 
+# p_auc_cal <-fagus_auc_data_cal %>% ggplot(aes(y = cal, x = as.character(positions), group = subset, 
+#                     color = factor(subset, levels = paste0("subset", 1:10)), 
+#                     fill = factor(subset, levels = paste0("subset", 1:10)))) +
+#   geom_boxplot(width = 0.5, alpha = 0.3, outlier.shape = NA, fatten = 1, lwd=0.3) +
+#   geom_beeswarm(alpha = 0.8, cex = 2.5, size = 0.5) +
+#   stat_compare_means(comparisons = list_comparisons, symnum.args = symnum.args, 
+#                      tip.length = c(-0.005, rep(0.005,4), rep(-0.005,4)),
+#                      label.y = list_positions, size=2, vjust = 0.6, bracket.size = 0.2) + 
+#   annotate("text", label = "Kruskal-Wallis", x = 1.65, y = 0.917, family = "Linux Libertine G", size = 2.5) +
+#   annotate("text", label = paste0("p = ", compare_means(cal ~ positions,  
+#                                                         data = fagus_auc_data_cal, method = "kruskal.test")$p.format), 
+#            x = 1.65, y = 0.915, family = "Linux Libertine G", size = 3, fontface = "bold") +
+#   scale_fill_manual(values = hcl.colors(10, palette = "Dynamic")) +
+#   scale_color_manual(values = hcl.colors(10, palette = "Dynamic")) +
+#   theme_minimal() +
+#   theme(axis.text.x = element_blank(),
+#         axis.title.x = element_blank(),
+#         axis.text.y = element_text(family = "Linux Libertine G"),
+#         axis.title.y = element_text(family = "Linux Libertine G", margin = margin(t = 0, r = 10, b = 0, l = 0)),
+#         axis.ticks.x=element_blank(),
+#         panel.grid.major = element_line(size = 0.2),
+#         panel.grid.major.x = element_blank(),
+#         panel.grid.minor.x = element_blank(),
+#         panel.grid.minor.y = element_blank(),
+#         legend.position="none") +
+#   coord_cartesian(ylim = c(0.875, 0.925)) +
+#   labs(y = "AUC")
+
+
+# Dunn better after Kruskal
+library(rstatix)
+fagus_auc_data_cal$positions <- as.character(positions)
+dunn.stat.test.all <- fagus_auc_data_cal %>% dunn_test(cal ~ positions, p.adjust.method = "holm")
+dunn.stat.test <- fagus_auc_data_cal %>% dunn_test(cal ~ positions, p.adjust.method = "holm") %>% 
+  dplyr::filter((group1 == "1.7" | group2 == "1.7") & p.adj.signif !="ns")
+
+
+p_auc_cal <-  ggplot(data = fagus_auc_data_cal) +
+  geom_boxplot(aes(y = cal, x = as.character(positions), group = subset, 
+                   color = factor(subset, levels = paste0("subset", 1:10)), 
+                   fill = factor(subset, levels = paste0("subset", 1:10))), 
+               width = 0.5, alpha = 0.3, outlier.shape = NA, fatten = 1, lwd=0.3) +
+  geom_beeswarm(aes(y = cal, x = as.character(positions), group = subset, 
+                    color = factor(subset, levels = paste0("subset", 1:10)), 
+                    fill = factor(subset, levels = paste0("subset", 1:10))),
+                alpha = 0.8, cex = 2.5, size = 0.5) +
+  stat_pvalue_manual(data = dunn.stat.test, hide.ns = FALSE, y.position = c(0.9205, 0.9225, 0.9245, 0.9165, 0.9185),
+                     tip.length = 0.005, size=2, vjust = 0.6, bracket.size = 0.2) +
+  annotate("text", label = "Kruskal-Wallis", x = 1.67, y = 0.917, family = "Linux Libertine G", size = 2.5) +
+  annotate("text", label = paste0("p = ", compare_means(cal ~ positions,  
+                                                        data = fagus_auc_data_cal, method = "kruskal.test")$p.format), 
+           x = 1.67, y = 0.915, family = "Linux Libertine G", size = 3, fontface = "bold") +
+  geom_point(data = fagus_auc_data_cal %>% group_by(subset) %>% summarise(mean_cal = mean(cal), position = mean(as.numeric(positions))),
+             aes(x = as.character(position), y = mean_cal, fill = factor(subset, levels = paste0("subset", 1:10))), inherit.aes = F,
+             size = 0.8, alpha = 0.8, shape = 23, colour="white") +
+  scale_fill_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  scale_color_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G", margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.ticks.x=element_blank(),
+        panel.grid.major = element_line(size = 0.2),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  coord_cartesian(ylim = c(0.875, 0.925)) +
+  labs(y = "AUC")
+
+
+
+# Test lettres
+dunnTest_out <- FSA::dunnTest(cal ~ positions, method = "bh", data = fagus_auc_data_cal)
+letters <- rcompanion::cldList(P.adj ~ Comparison, data = dunnTest_out$res, threshold = 0.05)
+
+data_letters <- data.frame(letters)
+data_letters$y <- unlist(fagus_auc_data_cal %>% 
+  group_by(positions) %>%
+  summarise(
+    min = min(cal, na.rm = T)
+  ) %>%
+  select(min) - 0.004)
+
+p_auc_cal <- fagus_auc_data_cal %>% ggplot() +
+  geom_boxplot(aes(y = cal, x = as.character(positions), group = subset, 
+                   color = factor(subset, levels = paste0("subset", 1:10)), 
+                   fill = factor(subset, levels = paste0("subset", 1:10))), 
+               width = 0.5, alpha = 0.3, outlier.shape = NA, fatten = 1, lwd=0.3) +
+  geom_beeswarm(aes(y = cal, x = as.character(positions), group = subset, 
+                    color = factor(subset, levels = paste0("subset", 1:10)), 
+                    fill = factor(subset, levels = paste0("subset", 1:10))),
+                alpha = 0.8, cex = 2.5, size = 0.5) +
+  geom_text(data = data_letters, aes(x = as.character(Group), label = Letter, y = y), vjust = -0.5, inherit.aes = F,
+            family = "Linux Libertine G", size = 2.5) +
+  annotate("text", label = "Kruskal-Wallis", x = 1.68, y = 0.917, family = "Linux Libertine G", size = 2.5) +
+  annotate("text", label = paste0("p = ", compare_means(cal ~ positions,  
+                                                        data = fagus_auc_data_cal, method = "kruskal.test")$p.format), 
+           x = 1.68, y = 0.915, family = "Linux Libertine G", size = 3, fontface = "bold") +
+  geom_point(data = fagus_auc_data_cal %>% group_by(subset) %>% summarise(mean_cal = mean(cal), position = mean(as.numeric(positions))),
+             aes(x = as.character(position), y = mean_cal, fill = factor(subset, levels = paste0("subset", 1:10))), inherit.aes = F,
+             size = 0.8, alpha = 1, shape = 23, colour="black", stroke = 0.2) +
+  scale_fill_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  scale_color_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G", margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.ticks.x=element_blank(),
+        panel.grid.major = element_line(size = 0.2),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  coord_cartesian(ylim = c(0.875, 0.925)) +
+  labs(y = "AUC")
+
+
+
+
+fagus_auc_data_tot$positions <- positions
+
+wilcoxon_test_tot <- compare_means(tot ~ positions,  data = fagus_auc_data_tot) 
+wilcoxon_test_s7 <- wilcoxon_test_tot %>% filter(p.signif != "ns") %>% filter(group1 == "1.7" | group2 == "1.7")
+list_comparisons <- lapply(1:nrow(wilcoxon_test_s7), function(i){
+  return(c(wilcoxon_test_s7$group1[i], wilcoxon_test_s7$group2[i]))})
+
+p_auc_tot <- na.omit(fagus_auc_data_tot) %>% ggplot(aes(y = tot, as.character(positions), group = subset, 
+                    color = factor(subset, levels = paste0("subset", 1:10)), fill = factor(subset, levels = paste0("subset", 1:10)))) +
+  geom_boxplot(width = 0.5, alpha = 0.2, outlier.shape = NA, fatten = 1, lwd=0.3) +
+  geom_beeswarm(alpha = 0.8, cex = 2.5, size = 0.5) +
+  annotate("text", label = "Kruskal-Wallis", x = 1.68, y = 0.917, family = "Linux Libertine G", size = 2.5) +
+  annotate("text", label = paste0("p = ", compare_means(tot ~ positions,  
+                                                        data = fagus_auc_data_tot, method = "kruskal.test")$p.format), 
+           x = 1.68, y = 0.915, family = "Linux Libertine G", size = 3, fontface = "bold") +
+  geom_point(data = fagus_auc_data_tot %>% group_by(subset) %>% summarise(mean_tot = mean(tot), position = mean(as.numeric(positions))),
+             aes(x = as.character(position), y = mean_tot, fill = factor(subset, levels = paste0("subset", 1:10))), inherit.aes = F,
+             size = 0.8, alpha = 1, shape = 23, colour="black", stroke = 0.2) +
+  scale_fill_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  scale_color_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        axis.ticks.x=element_blank(),
+        panel.grid.major = element_line(size = 0.2),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  coord_cartesian(ylim = c(0.875, 0.925)) +
+  labs(y = "")
+
+
+plot_grid(p_auc_cal, p_auc_tot, labels=c("(A)", "(B)"), ncol = 2, nrow = 1,
+          hjust = 0, vjust = 1.1, align = "h", label_size = 12, label_colour = "#495057")
+
+
+```
+
+```{r cvs}
+
+library(sjstats)
+
+cv_cal <- fagus_auc_data_cal %>%
+    group_by(subset) %>%
+    dplyr::summarize(mean = mean(cal), cv = cv(cal))
+
+
+
+cv_tot <- fagus_auc_data_tot %>%
+    group_by(subset) %>%
+    dplyr::summarize(mean = mean(tot), cv = cv(tot))
+
+
+```
+
+The 100 calibrations of the PHENOFIT model realized for beech showed that random data subsampling had an effect on the final objective function value (i.e. the AUC computed on the 2000 calibration points). Kruskal-Wallis test was significant (p = `r compare_means(cal ~ positions,  data = fagus_auc_data_cal, method = "kruskal.test")$p.format`), meaning that at least one subset provided better AUC during calibration. According to Dunn's tests, `r nrow(dunn.stat.test.all %>% filter(p.adj.signif != "ns"))` pairwise comparisons out of `r nrow(dunn.stat.test.all)` were significant (\hyperref[fig:cmaesrepAUCcal]{Figure 3.A.}). The calibration AUC ranged from `r round(min(fagus_auc_data_cal$cal),3)` to `r round(max(fagus_auc_data_cal$cal),3)` over all subsets, with a mean value of `r round(mean(fagus_auc_data_cal$cal),3)`. 
+  
+However, more importantly, the repetition of calibrations on different subsets had no significant impact on the total AUC computed on all presence/absence points (Kruskal-Wallis test, p = `r compare_means(tot ~ positions,  data = fagus_auc_data_tot, method = "kruskal.test")$p.format`). Thus, no subset led to an overall better prediction of the species distribution (see \hyperref[fig:cmaesrepAUCcal]{Figure 3.B.}). The total AUC ranged from `r round(min(fagus_auc_data_tot$tot),3)` to `r round(max(fagus_auc_data_tot$tot),3)`, with a mean value of `r round(mean(fagus_auc_data_tot$tot),3)`. 
+\newline
+
+### 2.2.2. Non-identifiability of parameters
+
+```{r parameters_values}
+cal_folder <- 'D:/calibrations/phenofit/fagus_sylvatica/1000pres_1000abs/paper_data'
+sim_folder <- 'D:/simulations/phenofit/backward/fagus_sylvatica/paper_data'
+
+forward_species_file <- "C:/Users/vandermeersch/Dropbox/These_Victor/Phenofit4/species/forward/Fagus_sylvatica_VVanderMeersch.species"
+forward_values <- as.numeric(read_species_file(forward_species_file))
+
+# Bounds
+bd_folder <- 'C:/Users/vandermeersch/Dropbox/These_Victor/Phenofit4/species/backward/fagus_sylvatica'
+species_lb  <- as.numeric(read_species_file(file.path(bd_folder, 'Fagus_sylvatica_lb.species')))
+species_ub <- as.numeric(read_species_file(file.path(bd_folder, 'Fagus_sylvatica_ub.species')))
+species_init <- as.numeric(read_species_file(file.path(bd_folder, 'Fagus_sylvatica_init.species')))
+
+# Calibrations
+species_files <- mixedsort(list.files(path = file.path(cal_folder,"CMAES"), pattern = "\\.species$", full.names = T, recursive = T))
+
+# Load values
+best_values <- as.numeric(read_species_file("D:/calibrations/phenofit/fagus_sylvatica/1000pres_1000abs/paper_data/CMAES/subset_4/cmaes_fit_subset4_rep1.species"))
+species_parameters <- lapply(species_files, function(x){
+  species_values <- data.frame(value = read_species_file(x)) %>% 
+    mutate_all(as.numeric)
+  subset <- strsplit(x, "/")[[1]][8]
+  rep <- strsplit(strsplit(strsplit(x, "/")[[1]][9], "_")[[1]][4], "[.]")[[1]][1]
+  species_values$rep <- paste0(subset, "_", rep)
+  species_values$var <- rownames(species_values)
+  species_values$lb <- species_lb
+  species_values$ub <- species_ub
+  species_values$init <- species_init
+  species_values$forward <- forward_values
+  species_values$best <- best_values
+  species_values
+  })
+species_parameters <- do.call(rbind, species_parameters)
+species_parameters <- na.omit(species_parameters) #remove fixed parameters (bounds = NA)
+
+# Calibrations
+species_files <- mixedsort(list.files(path = file.path(cal_folder,"ABC"), pattern = "\\.species$", full.names = T, recursive = T))
+
+# Load values
+best_values <- as.numeric(read_species_file("D:/calibrations/phenofit/fagus_sylvatica/1000pres_1000abs/paper_data/ABC/subset_1/abc_rej_subset1_rep9.species" ))
+species_parameters_ABC <- lapply(species_files, function(x){
+  species_values <- data.frame(value = read_species_file(x)) %>% 
+    mutate_all(as.numeric)
+  subset <- strsplit(x, "/")[[1]][8]
+  rep <- strsplit(strsplit(strsplit(x, "/")[[1]][9], "_")[[1]][4], "[.]")[[1]][1]
+  species_values$rep <- paste0(subset, "_", rep)
+  species_values$var <- rownames(species_values)
+  species_values$lb <- species_lb
+  species_values$ub <- species_ub
+  species_values$init <- species_init
+  species_values$forward <- forward_values
+  species_values$best <- best_values
+  species_values
+  })
+species_parameters_ABC <- do.call(rbind, species_parameters_ABC)
+species_parameters_ABC <- na.omit(species_parameters_ABC) #remove fixed parameters (bounds = NA)
+
+
+```
+
+```{r unfolding_data}
+
+if(recompute_unfold_date){
+  simulation_files <- mixedsort(list.files(path = file.path(sim_folder, "CMAES"), pattern = "LeafUnfoldingDate", full.names = T, recursive = T))
+  
+  unfold_date_data <- as.data.frame(cbind(alt$lat, alt$lon))
+  for(i in 1:(length(simulation_files))){
+    # Load date
+    date <- read_mean_outputvalue_phenofit(simulation_files[i])
+    unfold_date_data[,2+i] <- t(date)
+  }
+  
+  # Summary 
+  names(unfold_date_data)[1:2] <- c("lat", "lon")
+  unfold_date_data$mean <- rowMeans(unfold_date_data[,3:ncol(unfold_date_data)])
+  unfold_date_data$median <- rowMedians(as.matrix(unfold_date_data[,3:ncol(unfold_date_data)]))
+  unfold_date_data$sd <- rowSds(as.matrix(unfold_date_data[,3:ncol(unfold_date_data)]))
+  unfold_date_data$mad <- rowMads(as.matrix(unfold_date_data[,3:ncol(unfold_date_data)]))
+  
+  saveRDS(unfold_date_data, file.path(wd, "cache", "unfold_date_data.rds"))
+}else{
+  unfold_date_data <- readRDS(file.path(wd, "cache", "unfold_date_data.rds"))
+}
+
+data_leaf_par <- species_parameters %>%
+  dplyr::filter(grepl("leaf", species_parameters$var))
+data_leaf_par$var_name <- factor(data_leaf_par$var, labels = c('leaf1' = parse(text=TeX('$t_0$')),
+                                                               'leaf2' = parse(text=TeX('$T_b$')),
+                                                               'leaf3' = parse(text=TeX('$d_T$')),
+                                                               'leaf4' = parse(text=TeX('$T_{50}$')),
+                                                               'leaf5' = parse(text=TeX('$C_{crit}$')),
+                                                               'leaf6' = parse(text=TeX('$F_{crit}$'))))
+
+data_leaf_par_ABC <- species_parameters_ABC %>%
+  dplyr::filter(grepl("leaf", species_parameters_ABC$var))
+data_leaf_par_ABC$var_name <- factor(data_leaf_par_ABC$var, labels = c('leaf1' = parse(text=TeX('$t_0$')),
+                                                               'leaf2' = parse(text=TeX('$T_b$')),
+                                                               'leaf3' = parse(text=TeX('$d_T$')),
+                                                               'leaf4' = parse(text=TeX('$T_{50}$')),
+                                                               'leaf5' = parse(text=TeX('$C_{crit}$')),
+                                                               'leaf6' = parse(text=TeX('$F_{crit}$'))))
+
+```
+
+To illustrate the variability in the parameter estimates that can be obtained with the inverse calibration, we focused on the leaf unfolding date submodel of PHENOFIT (see [Appendix A](#appendixA) and [Appendix G](#appendixG)). The parameter values found by CMA-ES varied greatly across the 100 calibrations (\hyperref[fig:unfoldingplots]{Figure 4}). For example, the critical amount of chilling $C_{crit}$ required to break bud dormancy and the critical amount of forcing $F_{crit}$ required to break bud ranged from `r round(min(data_leaf_par[data_leaf_par$var == "leaf5", "value"]),2)` to `r round(max(data_leaf_par[data_leaf_par$var == "leaf5", "value"]),2)` and from `r round(min(data_leaf_par[data_leaf_par$var == "leaf6", "value"]),2)` to `r round(max(data_leaf_par[data_leaf_par$var == "leaf6", "value"]),2)` respectively, with a mean value of `r round(mean(data_leaf_par[data_leaf_par$var == "leaf5", "value"]),2)` and `r round(mean(data_leaf_par[data_leaf_par$var == "leaf6", "value"]),2)`. Their coefficient of variations were `r round(cv(data_leaf_par[data_leaf_par$var == "leaf5", "value"])*100,1)`% and `r round(cv(data_leaf_par[data_leaf_par$var == "leaf6", "value"])*100,1)`% respectively. Kendall correlation coefficient between $C_{crit}$ and the threshold temperature of the response function to temperature during dormancy $T_b$ is `r round(cor.test(data_leaf_par[data_leaf_par$var == "leaf2", "value"], data_leaf_par[data_leaf_par$var == "leaf5", "value"], method="kendall")$estimate,2)` ($p <$ `r max(0.001, cor.test(data_leaf_par[data_leaf_par$var == "leaf2", "value"], data_leaf_par[data_leaf_par$var == "leaf5", "value"], method="kendall")$p.value)`). Kendall correlation coefficient between $F_{crit}$ and the mid-response temperature $T_{50}$ is `r round(cor.test(data_leaf_par[data_leaf_par$var == "leaf4", "value"], data_leaf_par[data_leaf_par$var == "leaf6", "value"], method="kendall")$estimate,2)` ($p <$ `r max(0.001, cor.test(data_leaf_par[data_leaf_par$var == "leaf4", "value"], data_leaf_par[data_leaf_par$var == "leaf6", "value"], method="kendall")$p.value)`). 
+
+```{r unfoldingplots, include=TRUE, fig.height = 4, fig.width = 4, fig.align = "center", fig.cap = "Effects of stochasticity of CMA-ES calibrationd on PHENOFIT leaf unfolding model parameter values for beech. Each panel is a parameter. Y-axis limits are lower and upper bounds used during calibration. Each point is a calibrated parameter value, color gradient is based on $F_{crit}$ values. Red diamonds are parameter values obtained with expert calibration, blue ones are parameter values obtained with the best inverse calibration.", fig.pos="H", fig.showtext=TRUE}
+count1 <- 0
+breaks_fun1 <- function(x) {
+  count1 <<- count1 + 1
+  switch(
+    count1,
+    c(-122, -100, -75, -50, -25, 0),
+    c(-122, -100, -75, -50, -25, 0),
+    c(-5, 0, 5, 12),
+    c(-5, 0, 5, 12),
+    c(-2, -1.5, -1, -0.5, -0.05),
+    c(-2, -1.5, -1, -0.5, -0.05),
+    c(5, 10, 15, 20),
+    c(5, 10, 15, 20),
+    c(1, 50, 100, 150),
+    c(1, 50, 100, 150),
+    c(1, 25, 50, 75, 100, 120),
+    c(1, 25, 50, 75, 100, 120)
+  )
+}
+
+count2 <- 0
+breaks_fun2 <- function(x) {
+  count2 <<- count2 + 1
+  switch(
+    count2,
+    c(-122, -100, -75, -50, -25, 0),
+    c(-122, -100, -75, -50, -25, 0),
+    c(-5, 0, 5, 12),
+    c(-5, 0, 5, 12),
+    c(-2, -1.5, -1, -0.5, -0.05),
+    c(-2, -1.5, -1, -0.5, -0.05),
+    c(5, 10, 15, 20),
+    c(5, 10, 15, 20),
+    c(1, 50, 100, 150),
+    c(1, 50, 100, 150),
+    c(1, 25, 50, 75, 100, 120),
+    c(1, 25, 50, 75, 100, 120)
+  )
+}
+
+col_Fcrit_temp <- data_leaf_par[data_leaf_par$var == "leaf6",]
+col_Fcrit_temp <- col_Fcrit_temp[order(col_Fcrit_temp$value),]
+col_Fcrit_temp <- split(col_Fcrit_temp, ceiling(seq_along(col_Fcrit_temp$value)/10))
+for(i in 1:10){
+  col_Fcrit_temp[[i]]['col_group'] <- i
+}
+col_Fcrit_temp<- do.call("rbind", col_Fcrit_temp) %>% dplyr::select(c(rep, col_group))
+
+data_leaf_par <- left_join(data_leaf_par, col_Fcrit_temp)
+
+parameter_plot <- data_leaf_par %>%
+  ggplot(aes(y = value, x = 1)) +
+  geom_violin(fill = 'lightgrey', alpha= 0.2, size = 0.4, colour = 'darkgrey') +
+  geom_beeswarm(aes(fill = factor(col_group), col = factor(col_group)), 
+                alpha = 0.5, cex = 2.5, size = 0.4) +
+  facet_wrap("var_name", scales="free_y",
+             labeller= label_parsed) +
+  scale_y_continuous(breaks = breaks_fun1) +
+  geom_point(aes(y = forward, x= 0.55), fill = 'darkred', size = 1.5, alpha = 0.9, shape = 23, colour="white", stat = "unique") +
+  geom_point(data = data.frame(best = unique(data_leaf_par$best), var_name = unique(data_leaf_par$var_name)),
+             aes(y = best, x= c(0.55, 0.65, 0.55, 0.55, 0.55, 0.55)), fill = 'darkblue', size = 1.5, 
+             alpha = 0.9, shape = 23, colour="white", inherit.aes = F) +
+  scale_fill_manual(values = c("#002f61", "#004a72", "#00647e", "#007c84", "#009382", "#00aa76", "#3bbd60", "#83c846", "#bdce29", "#f4d004")) +
+  scale_color_manual(values = c("#002f61", "#004a72", "#00647e", "#007c84", "#009382", "#00aa76", "#3bbd60", "#83c846", "#bdce29", "#f4d004")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        strip.text.x = element_text(family = "Linux Libertine G", face = "bold", size = 11),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  geom_blank(aes(y = lb)) +
+  geom_blank(aes(y = ub)) +
+  labs(y = "")
+
+
+
+col_Fcrit_temp <- data_leaf_par_ABC[data_leaf_par_ABC$var == "leaf6",]
+col_Fcrit_temp <- col_Fcrit_temp[order(col_Fcrit_temp$value),]
+col_Fcrit_temp <- split(col_Fcrit_temp, ceiling(seq_along(col_Fcrit_temp$value)/10))
+for(i in 1:3){
+  col_Fcrit_temp[[i]]['col_group'] <- i
+}
+col_Fcrit_temp<- do.call("rbind", col_Fcrit_temp) %>% dplyr::select(c(rep, col_group))
+
+data_leaf_par_ABC <- left_join(data_leaf_par_ABC, col_Fcrit_temp)
+
+parameter_plot_ABC <- data_leaf_par_ABC %>%
+  ggplot(aes(y = value, x = 1)) +
+  geom_violin(fill = 'lightgrey', alpha= 0.2, size = 0.4, colour = 'darkgrey') +
+  geom_beeswarm(aes(fill = factor(col_group), col = factor(col_group)), 
+                alpha = 0.5, cex = 2.5, size = 0.4) +
+  facet_wrap("var_name", scales="free_y",
+             labeller= label_parsed) +
+  scale_y_continuous(breaks = breaks_fun2) +
+  geom_point(aes(y = forward, x= 0.55), fill = 'darkred', size = 1.5, alpha = 0.9, shape = 23, colour="white", stat = "unique") +
+  geom_point(data = data.frame(best = unique(data_leaf_par_ABC$best), var_name = unique(data_leaf_par_ABC$var_name)),
+             aes(y = best, x= 0.55), fill = 'darkblue', size = 1.5, 
+             alpha = 0.9, shape = 23, colour="white", inherit.aes = F) +
+  scale_fill_manual(values = c("#002f61", "#00aa76", "#f4d004")) +
+  scale_color_manual(values = c("#002f61", "#00aa76", "#f4d004")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        strip.text.x = element_text(family = "Linux Libertine G", face = "bold", size = 11),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  geom_blank(aes(y = lb)) +
+  geom_blank(aes(y = ub)) +
+  labs(y = "")
+
+# with ABC:
+# plot_grid(parameter_plot, parameter_plot_ABC, labels=c("(A)", "(B)"), ncol = 2, nrow = 1,
+#           hjust = 0, vjust = 1.1, align = "h", label_size = 12, rel_widths = c(1, 1),
+#           label_colour = "#495057")
+
+parameter_plot
+
+# geom_dotplot(binaxis = 'y', stackdir='center', alpha=0.5, col = 'darkred') can also be an option ?
+
+unfold_date_data_fsyl <- left_join(fsyl_presabs, unfold_date_data)
+
+```
+
+# 3. Discussion
+
+\textcolor{darkgreen}{Our results showed that CMA-ES is a feasible and efficient optimizer for inverse calibration of complex ecological models. The algorithm was able to find parameter sets that significantly improved the predictions of the calibrated models compared to the expert parametrization.  However, our study also highlighted the issue of non-identifiability of parameter values due to the data limitation and the dependence between process-based model parameters, which may result in diverging parameter values even though the calibrated models describe the observed species distribution well. Nonetheless, our study provides a promising methodological framework for calibrating process-based models using CMA-ES, and for spreading the use of such models in predictive ecology.}
+
+## 3.1. Performance and advantages of CMA-ES to calibrate complex models in ecology
+
+Here we demonstrated that inverse calibration with CMA-ES is feasible and provide good results for complex and runtime-expensive ecological models.  
+With a subsampling of species occurrence data, the algorithm succeeds in finding parameter sets which provide \textcolor{darkgreen}{higher} AUC values. The predictions of the calibrated models are sharply improved compared to expert parametrization (\hyperref[fig:phenofitmaps]{Figure 1} and \hyperref[fig:castaneamaps]{Figure 2}). Two striking examples are the increase in the performance of PHENOFIT model for silver fir, from 0.72 to 0.9, and of CASTANEA model for holm oak, from 0.7 to 0.95. Moreover, CMA-ES performed equally well regardless of the species occurrence subset used during calibration (\hyperref[fig:cmaesrepAUCcal]{Figure 3.B.}), and thus permitted to find a good compromise between computational cost and calibration efficiency. 
+  
+CMA-ES is a "generic" optimizer which can be applied to various problems. It is easy to use as it does not require an extensive tuning to  efficiently explore the parameter space. We only had to choose the number of candidate solutions $\lambda$, and the initial search region (initial starting point and step size $\sigma$). As well as being quasi parameter-free, CMA-ES has several structural advantages particularly useful for complex optimization problems. \textcolor{darkgreen}{Firstly, the algorithm's covariance matrix enables the learning of second-order information, which provides insights into pairwise dependencies between parameters. Secondly, the covariance matrix adaptation of CMA-ES is highly efficient in handling ill-conditioned and non-separable problems }[@Hansen2011]\textcolor{darkgreen}{. Lastly, CMA-ES's update mechanism of step size $\sigma$ (i.e. the mutation force) helps prevent premature convergence }[@Hansen2001]\textcolor{darkgreen}{, allowing the algorithm to explore more of the search space.}
+CMA-ES has been shown to outperform several other optimization algorithms [@Hansen2010], and is usually the most efficient method when the target cost (i.e. the number of objective function evaluations) is about $100*N$ [$N$ being the dimension of the parameter search space, @Baeck2013].
+
+## 3.2. Non-identifiability of parameter values
+
+\textcolor{darkgreen}{Equifinality is a common problem encountered during model calibration, where multiple parameter sets can produce equally good fits to the observed data. This issue can arise due to several factors, including limitations in the quantity or quality of available data, competing processes within the model, and parameter interactions that affect the model output in complex ways.}  
+  
+In both models used in this study, biological mechanisms are explicitly calculated in several submodels (e.g. a leaf unfolding submodel or a stomatal opening submodel). A submodel output has inevitably a significant influence on the other submodels as biological processes can be highly dependent with feedbacks: in CASTANEA, for example, the stomatal opening affects the photosynthesis, and *vice versa*. Within each submodel, parameters are also strongly dependent because of structural correlations. To illustrate this problem, we focused on the beech leaf unfolding submodel of PHENOFIT (see [Appendix A](#appendixA)). This model has 6 parameters [@Chuine2000]: a starting date of the processes ($t_0$), one parameter describing the response function to temperature during the dormancy phase ($T_b$), two parameters describing the response function to temperature during the phase of bud growth ($d_T$, $T_{50}$), and two parameters representing the sums of the daily responses to temperature during bud dormancy ($C_{crit}$) and during bud growth ($F_{crit}$) that respectively determine the date of bud dormancy break and the date of leaf unfolding (see [Appendix G](#appendixG) for details). Since no information on the date of bud dormancy break is available for the calibration, a first structural negative correlation exists between $C_{crit}$ and $F_{crit}$: the same leaf unfolding date can be obtained with either a long dormancy phase and short bud growth phase or a short dormancy phase and a long bud growth phase. Other structural correlations exist between $T_b$ and $C_{crit}$ on the one hand and $d_T$/$T_{50}$ and $F_{crit}$ on the other hand: for example, a rapid accumulation of chilling units with a high critical chilling requirement could yield identical results as a slow accumulation with a low critical chilling requirement (i.e. the threshold temperature $T_{b}$ and the critical chilling requirement $C_{crit}$ are dependent, see Figure G.1.A. in [Appendix G](#appendixG)). 
+
+Consequently, several parameter sets may be statistically equivalent and parameters non-identifiable. In fact, calibration repetitions gave diverging parameter values (\hyperref[fig:unfoldingplots]{Figure 4}) while being efficient in distinguishing between species presence and absence (i.e. AUC ~ 0.9, \hyperref[fig:cmaesrepAUCcal]{Figure 3}). Thus, even if the calibrated model describes the observed species distribution very well, it does not necessarily mean that parameter values are ecologically relevant. This concern is similar to the criticisms against correlative SDMs, in which parameter values and correlations that well reproduce species ranges do not necessarily describe a complex biological reality. In our case, the constraints imposed by the explicit mathematical equations embedded in the models we used were not sufficient to ensure calibration convergence towards similar solutions that would have suggested a high biological realism. However, it is worth noting that we deliberately chose large parameter ranges (although biologically realistic, i.e. corresponding to the observations made on the different processes modelled across different species) in order to give free rein to the optimization algorithm. As our goal was to assess the performance of CMA-ES objectively, we did not attempt to minimize this non-identifiability issue by restricting the parameter space. To deal with equifinality issues, an avenue to explore could be the use of multiple objective functions during model calibration to assess different aspects of the model performance. \textcolor{darkgreen}{Additionally, if a closed-form likelihood can be derived, one could use a Bayesian framework to combine prior knowledge and inverse estimation of parameters to constrain the parameter space and study the nature of trade-offs between parameters} [@Hartig2012; @Cailleret2020].
+
+## 3.3. Methodological issues and perspectives
+
+Our goal here was to investigate the performance of CMA-ES to calibrate quite complex process-based species distribution models using species occurrence data. We did not attempt to validate our parametrizations using temporally or spatially independent data, and AUC was only used to determine if model outputs were consistent with species distributions. However, AUC is scale-invariant (it measures how well predictions are ranked rather than their absolute values), and prevents us from obtaining calibrated outputs with more ecological meaning. For example, in PHENOFIT, one species with a fitness of $0.8$ could be considered as absent whereas another one as present. Further work could thus be conducted to examine the effects of choosing a different objective function.
+  
+It would also be valuable to use a significantly higher computing power, with an adapted version of CMA-ES. To improve the global search performance of CMA-ES, we slightly increased the number of candidate solutions $\lambda$ [@Hansen2004] and used a computing cluster to evaluate $\lambda$ functions in parallel. We were able to use between 40 and 120 cores, which is far from the computing power of some GPUs (> 2000 cores). In this case, choosing a very large number of candidate solutions might not be the best choice. To use efficiently this large parallel computing power, one could rather use a CMA-ES restart strategy [e.g. IPOP-CMA-ES, @Auger2005], where the number of candidate solutions is successively increased (by a factor of 2), and run these calibrations in parallel. Moreover, when a model  requires a high computation time and thus only a small budget can be afforded, the original fitness function could be approximated with a surrogate model in order to reduce the number of original function evaluations required [e.g. @Auger2004 ; @Loshchilov2013]. 
+
+There are several issues regarding the process-based models we used which can impact their calibration and bias their parameter estimates. First, like any model, although they have a certain level of complexity, they are not a perfect representation of the reality, and their inherent structural errors increase the probability of finding parameter values that deviate from the true values of the underlying processes [see @Oberpriller2021]. Secondly, they do not necessarily include all the environmental factors at stake. For example, pedologic variable in PHENOFIT only involve the water holding capacity. In this model, other variables such as pH or soil texture are not considered. Thirdly, and more importantly, they are used here to represent the fundamental niche, and to estimate the potential distribution of the species using pedoclimatic variables. When calibrated against observed distributions, which represent the realized niche, they face the same issues as correlative models, and their parameter estimated can be distorted because compensating for processes not represented in the model (e.g. biotic interactions). In addition, in our case here, land use management probably also play an important role in shaping tree realized distribution, while not being addressed in the models. We included GBIF occurrence data, and especially as much as possible isolated native tree records outside forests, to help correct this problem, but it is impossible to be exhaustive at the spatial resolution of 0.1°. At this scale, local variations of soil characteristics and of competitive interactions among trees (e.g. along an altitudinal gradient) can also not be considered.
+  
+Finally, several authors advocate for process-based modeling approaches relying upon species response functions that are a priori defined [e.g. @Higgins2020]. However, the main limitation of such models is the data availability to infer their parameters [@Urban2016]. Expert parameterization is often long and arduous. One possible way to facilitate parameter value estimation would be to use inverse calibration, and we demonstrated here that CMA-ES can be a powerful optimizer to this end. For example, CMA-ES driven by species occurrence data could be used to calibrate submodels whose parameter values cannot be measured or are too hard to measure experimentally. However, when a structural correlation exists (i.e. trade-off between processes that are inherently present and interconnected in the model, as in the leaf unfolding submodel), inverse calibration might not provide the right parameter estimates. In such a case, expert knowledge, observations and measurements are necessary to determine *a posteriori* which estimates are the most realistic. This is possible in the case of process-based SDMs, and usually not feasable in the case of correlative SDMs. A combination of both expert and inverse calibrations might offer a new perspective for spreading the use of process-based models in predictive ecology, especially for climate change impact studies.
+  
+<!-- # Conclusion (optionnal) -->
+
+<!-- **[Commentaire : ce n’est pas une conclusion, il faut la refaire. Ca ressemble plus à une partie perspectives et ouverture d’une discussions]** -->
+<!-- \newline -->
+
+<!-- ~~We do recognize that the calibration approach proposed here is not a perfect method, the main weakness being the questionable biological plausibility of parameter values we found. Nevertheless, CMA-ES is particularly useful to generate inverse optimized versions of the process-based models. These fitted model versions integrate explicit processes but are calibrated on species distributions like cSDMs. They thus fall within the continuum between correlative and forward models [see @Dormann2012]. Both types of models have been compared in several studies, which found strong discrepancies between projections [@Morin2009; @Cheaib2012; @Gritti2013]. No studies, though, have examined the structural differences between the two approaches in order to determine the origin of their robustness. Comparison of correlative models to optimized process-based model projections will allow testing whether model robustness come from the cause-to-effect relationships or not, while comparison of optimized process-based model to standard process-based models will allow testing whether model robustness come from a calibration independent species distribution or not. This study is, to our knowledge, the first one to assess the feasibility of CMA-ES to calibrate ecological process-based models, and will permit to carry out a thorough comparison of different versions of the models.~~ -->
+<!-- \newline -->
+
+# Acknowledgements
+
+The authors would like to thank Hendrik Davi for helping us in using the CASTANEA model. We are also deeply grateful for many helpful comments from Florence Tauc. We would also like to thank François de Coligny, manager of the CAPSIS platform, Gilles Le Moguedec, and the GenOuest and TGCC teams for their support. Finally, we would like to thank Florian Hartig and another anonymous reviewer whose comments and suggestions helped us improve and clarify this manuscript.   
+V.V. was supported by a GAIA doctoral school PhD Fellowship.
+
+# Conflict of interest
+
+The authors have no conflicts of interest to declare.
+
+# Author contributions
+
+I.C. devised the main conceptual ideas. V.V. worked out the technical details, performed the numerical calculations and wrote the first draft of the manuscript. The two authors discussed the analyses and the results, and contributed to the final manuscript.
+
+# Data availability
+
+ERA5-Land dataset is available on the [Copernicus Climate Change Service website](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-land?tab=overview). EU-SoilHydroGrids is available on the 
+[European Soil Data Centre website](https://esdac.jrc.ec.europa.eu/content/3d-soil-hydraulic-database-europe-1-km-and-250-m-resolution). SoilGrids250m is available on the [International Soil Reference and Information Centre website](https://www.isric.org/explore/soilgrids). EU-Forest database is available on [FigShare](https://figshare.com/collections/A_high-resolution_pan-European_tree_occurrence_dataset/3288407). The R code associated with this work will be made available on GitLab upon acceptance of the manuscript.
+
+# References
+\setlength{\parindent}{-0.2in}
+\setlength{\leftskip}{0.2in}
+\setlength{\parskip}{8pt}
+\vspace*{-0.2in}
+\noindent
+<div id="refs"></div>
+
+\newpage
+
+# Supplementary Appendix A: Insights on the models {#appendixA}
+
+\renewcommand*\thetable{A.\arabic{table}}
+\renewcommand*\thefigure{A.\arabic{figure}}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{A--\arabic{page}}
+
+```{r appendixA, child = c('appendix/appendixA.Rmd'), eval=T}
+```
+
+# Supplementary Appendix B: Processing of occurrence data {#appendixB}
+
+\renewcommand*\thetable{B.\arabic{table}}
+\renewcommand*\thefigure{B.\arabic{figure}}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{B--\arabic{page}}
+
+```{r appendixB, child = c('appendix/appendixB.Rmd'), eval=T}
+```
+
+\newpage
+
+# Supplementary Appendix C: Species distributions {#appendixC}
+
+\renewcommand*\thetable{C.\arabic{table}}
+\renewcommand*\thefigure{C.\arabic{figure}}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{C--\arabic{page}}
+
+```{r appendixC, child = c('appendix/appendixC.Rmd'), eval=T}
+```
+
+\newpage
+
+# Supplementary Appendix D: Objective function and constraint handling in CMA-ES {#appendixD}
+
+\renewcommand*\thetable{D.\arabic{table}}
+\renewcommand*\thefigure{D.\arabic{figure}}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{D--\arabic{page}}
+
+```{r appendixD, child = c('appendix/appendixD.Rmd'), eval=T}
+```
+
+\newpage
+
+# Supplementary Appendix E: holm oak and silver fir calibrations {#appendixE}
+
+\renewcommand*\thetable{E.\arabic{table}}
+\renewcommand*\thefigure{E.\arabic{figure}}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{E--\arabic{page}}
+
+```{r appendixE, child = c('appendix/appendixE.Rmd'), eval=T}
+```
+
+\newpage
+
+# Supplementary Appendix F: Raw model outputs  {#appendixF}
+
+\renewcommand*\thetable{F.\arabic{table}}
+\renewcommand*\thefigure{F.\arabic{figure}}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{F--\arabic{page}}
+
+```{r appendixF, child = c('appendix/appendixF.Rmd'), eval=T}
+```
+
+\newpage
+
+# Supplementary Appendix G: Leaf unfolding submodel  {#appendixG}
+
+\renewcommand*\thetable{G.\arabic{table}}
+\renewcommand*\thefigure{G.\arabic{figure}}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{G--\arabic{page}}
+
+```{r appendixG, child = c('appendix/appendixG.Rmd'), eval=T}
+```
