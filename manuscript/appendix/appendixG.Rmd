@@ -1,0 +1,339 @@
+---
+output: 
+  stevetemplates::article:
+    fig_caption: true
+#bibliography: master.bib
+title: "Estimating process-based model parameters from species distribution data"
+subtitle: "Supplementary Appendix G"
+author:
+- name: Victor Van der Meersch
+  affiliation: CEFE, CNRS
+- name: Isabelle Chuine
+  affiliation: CEFE, CNRS
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: libertine
+fontsize: 11pt
+# spacing: double
+appendix: yes
+appendixletter: G
+endnote: no
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage[width=.9\textwidth, textfont=it, font=small]{caption}
+  - \usepackage{libertine}
+
+---
+
+```{r setup_appendixG, include=FALSE}
+
+knitr::opts_chunk$set(cache=TRUE,
+                      message=FALSE, warning=FALSE,
+                      echo = FALSE,
+                      fig.path='figs/',
+                      cache.path = '_cache/',
+                      fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      if (file.rename(x, x2)) x2 else x
+                      })
+
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(ggbeeswarm)
+library(showtext)
+library(kableExtra)
+options(kableExtra.latex.load_packages = FALSE)
+font_add("Linux Libertine G", regular = "LinLibertine_R_G.ttf")
+
+cal_folder <- 'D:/calibrations/phenofit/fagus_sylvatica/1000pres_1000abs/paper_data'
+
+sim_folder <- 'D:/simulations/phenofit/backward/fagus_sylvatica/paper_data'
+
+```
+
+\hfill \break
+
+## Fagus sylvatica leaf unfolding submodel
+
+This model, called UniChill [@Chuine2000], is a sequential two-phase model (endodormancy and ecodormancy phases).  
+The endodormancy phase begins at day $t_0$. 
+The daily rate of chilling $R_c$ is defined as a threshold function of the daily mean temperature $T_d$:
+$$ R_c(T_d) = \left\{
+\begin{array}{ll}
+      0 & T_d \geq T_b \\
+      1 & T_d < T_b \\
+\end{array} 
+\right. $$
+where $T_b$ is the threshold temperature below which the bud  accumulates chilling units.  
+The endodormancy releases at day $t_c$ when the accumulated rate of chilling has reached the level $C_{crit}$:
+$$\sum\limits_{t_0}^{t_c} R_c(T_d) \geq C_{crit} $$
+Then, the ecodormancy phase begins. The daily rate of forcing $R_f$ is defined as a sigmoid function of the daily mean temperature $T_d$:
+$$R_f(T_d) = \frac{1}{1 + e^{-d_T(T_d-T_{50})}} $$
+where $d_T$ is the slope and $T_{50}$ the mid-response temperature.
+Bud break occurs at day $t_f$ when the accumulated rate of forcing has reached the level $F_{crit}$:
+$$\sum\limits_{t_c}^{t_f} R_f(T_d) \geq F_{crit} $$
+Thus, the UniChill model has 6 parameters: $t_0$, $T_b$ and $C_{crit}$ for the first phase, $d_T$, $T_{50}$ and $F_{crit}$ for the second phase. 
+
+
+```{r leafpardensity, include=TRUE, fig.height = 4, fig.width = 4, fig.align = "center", fig.cap = "Beech leaf unfolding model parameter density. Y-axis and X-axis limits are lower and upper bounds used during calibration.", fig.pos="H", fig.showtext=TRUE, eval=T}
+
+par_names <- unique(data_leaf_par$var) 
+names(par_names) <- c("t_0", "T_b", "d_T", "T_{50}", "C_{crit}", "F_{crit}")
+
+parameter_name1 <- "T_b"
+parameter_name2 <- "C_{crit}"
+plot_name <- "plot_Vb_Ccrit"
+breaks1 <- c(0, 5)
+breaks2 <- c(50, 100)
+source(file.path(wd, "scripts", "generate_density_plot.R"))
+
+parameter_name1 <- "d_T"
+parameter_name2 <- "F_{crit}"
+plot_name <- "plot_d_Fcrit"
+breaks1 <- c(-1.5, -0.5)
+breaks2 <- c(40, 80)
+source(file.path(wd, "scripts", "generate_density_plot.R"))
+
+parameter_name1 <- "T_{50}"
+parameter_name2 <- "F_{crit}"
+plot_name <- "plot_e_Fcrit"
+breaks1 <- c(10, 15)
+source(file.path(wd, "scripts", "generate_density_plot.R"))
+
+parameter_name1 <- "F_{crit}"
+parameter_name2 <- "C_{crit}"
+plot_name <- "plot_Fcrit_Ccrit"
+breaks1 <- c(40, 80)
+breaks2 <- c(50, 100)
+source(file.path(wd, "scripts", "generate_density_plot.R"))
+  
+p <- plot_grid(plot_Vb_Ccrit + theme(legend.position = "none"), plot_Fcrit_Ccrit + theme(legend.position = "none"),
+               plot_d_Fcrit + theme(legend.position = "none"), plot_e_Fcrit + theme(legend.position = "none"), 
+          labels=c("(A)", "(B)", "(C)", "(D)"), ncol = 2, nrow = 2,
+          hjust = 0, vjust = 1, align = "h", scale = 0.95)
+
+legend <- get_legend(plot_Vb_Ccrit)
+
+plot_grid(p, legend, ncol = 1, nrow = 2, rel_heights= c(0.9, 0.25))
+
+```
+
+```{r parametersplots, include=TRUE, fig.height = 4, fig.width = 6, fig.align = "center", fig.cap = "Impacts of replications of CMA-ES calibration, with PHENOFIT model and beech.", fig.pos="H", fig.showtext=TRUE, eval= F}
+
+data_fruit_par <- species_parameters %>%
+  dplyr::filter(grepl("fruit", species_parameters$var))
+data_fruit_par$var_name <- factor(data_fruit_par$var, labels = c('fruitmat1' = parse(text=TeX('$aa$')),
+                                                               'fruitmat2' = parse(text=TeX('$bb$')),
+                                                               'fruitmat3' = parse(text=TeX('$F_{crit}$')),
+                                                               'fruitmat4' = parse(text=TeX('$T_{opt}$')),
+                                                               'fruitmat5' = parse(text=TeX('$Mat_{moy}$')),
+                                                               'fruitmat6' = parse(text=TeX('$\\sigma$')),
+                                                               'fruitmat7' = parse(text=TeX('$PFE_{50}$'))))
+
+data_fruit_par$var_name <- factor(data_fruit_par$var, labels = c('fruitmat1' = parse(text=TeX('$aa$')),
+                                                               'fruitmat2' = parse(text=TeX('$bb$')),
+                                                               'fruitmat3' = parse(text=TeX('$cc$')),
+                                                               'fruitmat4' = parse(text=TeX('$dd$')),
+                                                               'fruitmat5' = parse(text=TeX('$ee$')),
+                                                               'fruitmat6' = parse(text=TeX('$sig$')),
+                                                               'fruitmat7' = parse(text=TeX('$gg$'))))
+
+fruit_parameter_plot <- data_fruit_par %>%
+  ggplot(aes(y = value, x = factor(1))) +
+  geom_violin(fill = 'lightgrey', alpha= 0.2) +
+  geom_hline(aes(yintercept = init), linetype = 'dashed', col = 'darkred') +
+  geom_beeswarm(col = 'darkred', 
+                alpha = 0.5, cex = 2.5, size = 0.4) +
+  facet_wrap("var_name", scales="free",
+             labeller = label_parsed) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        strip.text.x = element_text(family = "Linux Libertine G", face = "bold", size = 11),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  geom_blank(aes(y = lb)) +
+  geom_blank(aes(y = ub)) +
+  labs(y = "")
+
+data_frost_par <- species_parameters %>%
+  dplyr::filter(grepl("frost", species_parameters$var))
+data_frost_par$var_name <- factor(data_frost_par$var, labels = c('frost1' = parse(text=TeX('$FH_{max1}^{fr}$')),
+                                                               'frost2' = parse(text=TeX('$FH_{max2}^{fr}$')),
+                                                               'frost3' = parse(text=TeX('$FH_{min}^{fe}$')),
+                                                               'frost4' = parse(text=TeX('$FH_{min}^{f1}$')),
+                                                               'frost5' = parse(text=TeX('$Te_1$')),
+                                                               'frost6' = parse(text=TeX('$Te_2$')),
+                                                               'frost7' = parse(text=TeX('$FH_{max}^{tfe}$')),
+                                                               'frost8' = parse(text=TeX('$FH_{max}^{tf1}$')),
+                                                               'frost9' = parse(text=TeX('$FH_{max}^{pfe}$')),
+                                                               'frost10' = parse(text=TeX('$FH_{max}^{pf1}$')),
+                                                               'frost11' = parse(text=TeX('$NL_1$')),
+                                                               'frost12' = parse(text=TeX('$NL_2$'))))
+frost_parameter_plot <- data_frost_par %>%
+  ggplot(aes(y = value, x = factor(1))) +
+  geom_violin(fill = 'lightgrey', alpha= 0.2) +
+  geom_hline(aes(yintercept = init), linetype = 'dashed', col = 'darkred') +
+  geom_beeswarm(col = 'darkred', 
+                alpha = 0.5, cex = 2.5, size = 0.4) +
+  facet_wrap("var_name", scales="free",
+             labeller = label_parsed) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        strip.text.x = element_text(family = "Linux Libertine G", face = "bold", size = 11),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  geom_blank(aes(y = lb)) +
+  geom_blank(aes(y = ub)) +
+  labs(y = "")
+
+data_senes_par <- species_parameters %>%
+  dplyr::filter(grepl("senes", species_parameters$var))
+data_senes_par$var_name <- factor(data_senes_par$var, labels = c('senes1' = parse(text=TeX('$P_b$')),
+                                                               'senes2' = parse(text=TeX('$T_b$')),
+                                                               'senes3' = parse(text=TeX('$\\alpha$')),
+                                                               'senes4' = parse(text=TeX('$\\beta$')),
+                                                               'senes5' = parse(text=TeX('$S_{crit}$')),
+                                                               'senes6' = parse(text=TeX('$\\sigma$'))))
+senes_parameter_plot <- data_senes_par %>%
+  ggplot(aes(y = value, x = factor(1))) +
+  geom_violin(fill = 'lightgrey', alpha= 0.2) +
+  geom_hline(aes(yintercept = init), linetype = 'dashed', col = 'darkred') +
+  geom_beeswarm(col = 'darkred', 
+                alpha = 0.5, cex = 2.5, size = 0.4) +
+  facet_wrap("var_name", scales="free",
+             labeller = label_parsed) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        strip.text.x = element_text(family = "Linux Libertine G", face = "bold", size = 11),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  geom_blank(aes(y = lb)) +
+  geom_blank(aes(y = ub)) +
+  labs(y = "")
+
+plot_grid(fruit_parameter_plot, fruit_parameter_plot, labels=c("(A)", "(B)"), ncol = 2, nrow = 2,
+          hjust = 0, vjust = 1, align = "h", label_size = 12, 
+          label_colour = "#495057")
+
+
+
+plot_grid(fruit_parameter_plot, mad_map, labels=c("(A)", "(B)"), ncol = 2, nrow = 1,
+          hjust = 0, vjust = 1, align = "h", label_size = 12, rel_widths = c(1, 0.9),
+          label_colour = "#495057")
+
+```
+
+```{r consensusfitnessmap, include=TRUE, fig.height = 4, fig.width = 7, fig.align = "center", fig.cap = "Median absolute deviation of beech \\textbf{(A)} leaf unfolding date and \\textbf{(B)} fitness, predicted with 100 calibrated parameter sets of PHENOFIT.", fig.pos="H", fig.showtext=TRUE}
+
+mad_unfolding <- ggplot(data=unfold_date_data, aes(x = lon, y = unfold_date_data$lat)) + 
+  geom_tile(aes(fill = mad), color = NA) +
+  theme_void() +
+  scale_fill_gradient2(name = stringr::str_wrap("Median absolute deviation", width = 30), 
+                       low = "#0A9396", mid ="#e9d8a6", high = "#bb3e03", 
+                       limits = c(0,max(unfold_date_data$mad)), 
+                       midpoint = 60,
+                       guide = guide_colourbar(title.position = "top", frame.colour = "black", frame.linewidth = 0.5, ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.direction = "horizontal", legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(1, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G"))
+
+mad_fitness <- ggplot(data=fitness_data, aes(x = lon, y = lat)) + 
+  geom_tile(aes(fill = mad), color = NA) +
+  theme_void() +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(name = stringr::str_wrap("Median absolute deviation", width = 30), 
+                       low = "#0A9396", mid ="#e9d8a6", high = "#bb3e03", 
+                       limits = c(0,max(fitness_data$mad)), 
+                       midpoint = 0.25,
+                       guide = guide_colourbar(title.position = "top", frame.colour = "black", frame.linewidth = 0.5, ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", legend.direction = "horizontal",
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(1, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G"))
+
+plot_grid(mad_unfolding, mad_fitness, labels=c("(A)", "(B)"), ncol = 2, nrow = 1,
+          hjust = 0, vjust = 1, align = "h", label_size = 12,
+          label_colour = "#495057")
+
+fitness_data_fsyl <- left_join(fsyl_presabs, fitness_data)
+
+```
+
+The median standard deviation of unfolding date across Europe was about `r round(median(unfold_date_data$sd),1)` days. On beech presence points, it was about `r round(median(unfold_date_data_fsyl[unfold_date_data_fsyl$pres ==1, 'sd']),1)` days. Nearly `r round(nrow(unfold_date_data[unfold_date_data$mad < 30,])/nrow(unfold_date_data)*100,1)`% of cells had a median absolute deviation lower than 30 days (\hyperref[fig:consensusfitnessmap]{Figure F.2.A.}).
+The median standard deviation of fitness across Europe was about `r round(median(fitness_data$sd),3)`. On beech presence points, it was about `r round(median(fitness_data_fsyl[fitness_data_fsyl$pres ==1, 'sd']),3)`. Nearly `r round(nrow(fitness_data[fitness_data$mad < 0.1,])/nrow(fitness_data)*100,1)`% and `r round(nrow(fitness_data[fitness_data$mad < 0.2,])/nrow(fitness_data)*100,1)`% of total cells had a median absolute deviation lower than 0.1 and 0.2 respectively (\hyperref[fig:consensusfitnessmap]{Figure F.2.B.}).
+
+```{r unfoldingdatesbackforw, include=TRUE, fig.height = 4, fig.width = 7, fig.align = "center", fig.cap = "Mean leaf unfolding day of beech with \\textbf{(A)} best CMA-ES calibrated parameters and \\textbf{(B)} expert parameters. Values above June solstice day (167) are in grey. Note that PHENOFIT model assign a value of 365 when unfolding has not happened at all due to climate conditions.", fig.pos="H", fig.showtext=TRUE}
+
+best_unfoldingdate <- read_mean_outputvalue_phenofit(file.path(file.path(sim_folder, "CMAES"), phenofit_fagus_best_rep, "LeafUnfoldingDate.txt"))
+backward_unfoldingdate <- data.frame(lat= alt$lat, lon =alt$lon, date = t(best_unfoldingdate))
+backward_unfoldingdate[backward_unfoldingdate$date > 172, "date"] <- NA # 21 june
+
+backward_unfolding_map <- ggplot(data=backward_unfoldingdate, aes(x = lon, y = lat)) + 
+  geom_tile(aes(fill = date), color = NA) +
+  theme_void() +
+  scale_fill_gradient2(name = stringr::str_wrap("Leaf unfolding day", width = 30), 
+                       low = "#0A9396", mid ="#e9d8a6", high = "#bb3e03", 
+                       limits = c(100,max(backward_unfoldingdate$date)), 
+                       midpoint = 140,
+                       guide = guide_colourbar(title.position = "top", frame.colour = "black", frame.linewidth = 0.5, ticks = FALSE),
+                       na.value = "grey50") +
+  theme(legend.title.align = 0.5, legend.direction = "horizontal", legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(1, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G"))
+
+
+forward_sim_folder <- "D:/simulations/phenofit/forward"
+unfoldingdate <- read_mean_outputvalue_phenofit(file.path(forward_sim_folder, "fagus_sylvatica/EvolLett2019", "LeafUnfoldingDate.txt"))
+forward_unfoldingdate <- data.frame(lat= alt$lat, lon =alt$lon, date = t(unfoldingdate))
+forward_unfoldingdate[forward_unfoldingdate$date > 172, "date"] <- NA
+
+forward_unfolding_map <- ggplot(data=forward_unfoldingdate, aes(x = lon, y = lat)) + 
+  geom_tile(aes(fill = date), color = NA) +
+  theme_void() +
+  scale_fill_gradient2(name = stringr::str_wrap("Leaf unfolding day", width = 30), 
+                       low = "#0A9396", mid ="#e9d8a6", high = "#bb3e03", 
+                       limits = c(100,max(forward_unfoldingdate$date)), 
+                       midpoint = 140,
+                       guide = guide_colourbar(title.position = "top", frame.colour = "black", frame.linewidth = 0.5, ticks = FALSE),
+                       na.value = "grey50") +
+  theme(legend.title.align = 0.5, legend.direction = "horizontal", legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(1, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G"))
+
+
+plot_grid(backward_unfolding_map , forward_unfolding_map, labels=c("(A)", "(B)"), ncol = 2, nrow = 1,
+          hjust = 0, vjust = 1, align = "h", label_size = 12,
+          label_colour = "#495057")
+
+fitness_data_fsyl <- left_join(fsyl_presabs, fitness_data)
+
+```
+
+

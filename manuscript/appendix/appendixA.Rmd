@@ -1,0 +1,79 @@
+---
+output: 
+  stevetemplates::article:
+    fig_caption: true
+#bibliography: master.bib
+title: "Estimating process-based model parameters from species distribution data"
+subtitle: "Supplementary Appendix A"
+author:
+- name: Victor Van der Meersch
+  affiliation: CEFE, CNRS
+- name: Isabelle Chuine
+  affiliation: CEFE, CNRS
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: libertine
+fontsize: 11pt
+# spacing: double
+appendix: yes
+appendixletter: A
+endnote: no
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage[width=.9\textwidth, textfont=it, font=small]{caption}
+  - \usepackage{libertine}
+
+---
+
+```{r setup_appendixA, include=FALSE}
+
+knitr::opts_chunk$set(cache=TRUE,
+                      message=FALSE, warning=FALSE,
+                      echo = FALSE,
+                      fig.path='figs/',
+                      cache.path = '_cache/',
+                      fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      if (file.rename(x, x2)) x2 else x
+                      })
+
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(ggbeeswarm)
+library(showtext)
+library(kableExtra)
+options(kableExtra.latex.load_packages = FALSE)
+font_add("Linux Libertine G", regular = "LinLibertine_R_G.ttf")
+
+```
+
+
+```{=latex}
+\begin{figure}[htbp]
+
+{\centering \includegraphics{figs/files/phenofit} 
+
+}
+
+\caption{PHENOFIT model in a nutshell.}\label{fig:phenofit_model}
+\end{figure}
+```
+
+```{=latex}
+\begin{figure}[htbp]
+
+{\centering \includegraphics{figs/files/castanea_schema} 
+
+}
+
+\caption{CASTANEA model in a nutshell.}\label{fig:phenofit_model}
+\end{figure}
+```
+
+\newpage
+

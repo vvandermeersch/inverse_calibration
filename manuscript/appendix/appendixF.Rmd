@@ -1,0 +1,372 @@
+---
+output: 
+  stevetemplates::article:
+    fig_caption: true
+#bibliography: master.bib
+title: "Estimating process-based model parameters from species distribution data"
+subtitle: "Supplementary Appendix F"
+author:
+- name: Victor Van der Meersch
+  affiliation: CEFE, CNRS
+- name: Isabelle Chuine
+  affiliation: CEFE, CNRS
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: "left=0.7in,right=0.7in,top=0.3in,bottom=0.7in"
+fontfamily: libertine
+fontsize: 11pt
+# spacing: double
+appendix: yes
+appendixletter: F
+endnote: no
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage[width=.9\textwidth, textfont=it, font=small]{caption}
+  - \usepackage{libertine}
+
+---
+
+```{r setup_appendixF, include=FALSE}
+
+knitr::opts_chunk$set(cache=TRUE,
+                      message=FALSE, warning=FALSE,
+                      echo = FALSE,
+                      fig.path='figs/',
+                      cache.path = '_cache/',
+                      fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      if (file.rename(x, x2)) x2 else x
+                      })
+
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(ggbeeswarm)
+library(showtext)
+library(kableExtra)
+options(kableExtra.latex.load_packages = FALSE)
+font_add("Linux Libertine G", regular = "LinLibertine_R_G.ttf", bold = "LinLibertine_RB_G.ttf", italic = "LinLibertine_RI_G.ttf")
+
+cal_folder <- 'D:/calibrations/phenofit/fagus_sylvatica/1000pres_1000abs/paper_data'
+
+sim_folder <- 'D:/simulations/phenofit/backward/fagus_sylvatica/paper_data'
+
+```
+
+\hfill \break
+
+```{r phenofit_cmaes_output_maps}
+
+phenofit_fagus_map <- ggplot(data=phenofit_fagus_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = fitness), color = NA) +
+  theme_void() +
+  labs(fill = "Fitness") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,1), breaks = c(0,0.5,1), midpoint = 0.5) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(max(fagus_auc_data_tot$tot), 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+phenofit_quercus_map <- ggplot(data=phenofit_quercus_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = fitness), color = NA) +
+  theme_void() +
+  labs(fill = "Fitness") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,1), breaks = c(0,0.5,1), midpoint = 0.5) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(max(quercus_auc_data_tot$tot), 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+
+phenofit_abies_map <- ggplot(data=phenofit_abies_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = fitness), color = NA) +
+  theme_void() +
+  labs(fill = "Fitness") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,1), breaks = c(0,0.5,1), midpoint = 0.5) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(max(abies_auc_data_tot$tot), 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+```
+
+
+```{r castanea_cmaes_output_maps}
+
+castanea_fagus_map <- ggplot(data=castanea_fagus_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = biomass_reserves), color = NA) +
+  theme_void() +
+  labs(fill = "Carbon reserves") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,22), breaks = c(0, 10, 20), midpoint = 10,
+                       na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.15, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 8),
+        legend.text = element_text(family = "Linux Libertine G", size = 8)) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_fagus_best_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+castanea_quercus_map <- ggplot(data=castanea_quercus_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = biomass_reserves), color = NA) +
+  theme_void() +
+  labs(fill = "Carbon reserves") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,436), breaks = c(0, 200, 400), midpoint = 200,
+                       na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.15, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 8),
+        legend.text = element_text(family = "Linux Libertine G", size = 8)) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_quercus_best_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+castanea_abies_map <- ggplot(data=castanea_abies_best_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = biomass_reserves), color = NA) +
+  theme_void() +
+  labs(fill = "Carbon reserves") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,5457), breaks = c(0, 2500, 5000), midpoint = 2500,
+                       na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.15, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 8),
+        legend.text = element_text(family = "Linux Libertine G", size = 8)) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_abies_best_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+```
+
+
+
+```{r phenofit_forward_output_maps}
+
+phenofit_forward_fagus_map <- ggplot(data=phenofit_fagus_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = fitness), color = NA) +
+  theme_void() +
+  labs(fill = "Fitness") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,1), breaks = c(0,0.5,1), midpoint = 0.5) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(phenofit_fagus_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+phenofit_forward_quercus_map <- ggplot(data=phenofit_quercus_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = fitness), color = NA) +
+  theme_void() +
+  labs(fill = "Fitness") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,1), breaks = c(0,0.5,1), midpoint = 0.5) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(phenofit_quercus_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+
+phenofit_forward_abies_map <- ggplot(data=phenofit_abies_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = fitness), color = NA) +
+  theme_void() +
+  labs(fill = "Fitness") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,1), breaks = c(0,0.5,1), midpoint = 0.5) +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.15, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 8),
+        legend.text = element_text(family = "Linux Libertine G", size = 8)) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(phenofit_abies_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+```
+
+
+```{r castanea_forward_output_maps}
+
+castanea_forward_fagus_map <- ggplot(data=castanea_fagus_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = biomass_reserves), color = NA) +
+  theme_void() +
+  labs(fill = "Carbon reserves") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,204), breaks = c(0, 100, 200), midpoint = 100,
+                       na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.15, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 8),
+        legend.text = element_text(family = "Linux Libertine G", size = 8)) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_fagus_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+castanea_forward_quercus_map <- ggplot(data=castanea_quercus_forward_fit, aes(x = lon, y = lat)) + 
+  geom_raster(aes(fill = biomass_reserves), color = NA) +
+  theme_void() +
+  labs(fill = "Carbon reserves") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,3800), breaks = c(0, 1000, 2000, 3000), midpoint = 1900,
+                       na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.15, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 8),
+        legend.text = element_text(family = "Linux Libertine G", size = 8)) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_quercus_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+
+castanea_forward_abies_map <- ggplot(data=castanea_abies_forward_fit, aes(x = lon, y = lat)) + 
+  geom_tile(aes(fill = biomass_reserves), color = NA) +
+  theme_void() +
+  labs(fill = "Carbon reserves") +
+  ylab("") +
+  xlab("") +
+  scale_fill_gradient2(low = "#EBEBD3", mid = "#B4E0AA", high = "#488B49", limits = c(0,117), breaks = c(0, 50, 100), midpoint = 55,
+                       na.value = "#EAEAEA") +
+  guides(fill = guide_colorbar(title.position = "top", direction = "horizontal", frame.colour = "black", frame.linewidth = 0.3,
+                               ticks = FALSE)) +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.15, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 8),
+        legend.text = element_text(family = "Linux Libertine G", size = 8)) +
+  annotate("text", x = -4, y = 65, label = paste("AUC =", round(castanea_abies_forward_auc, 2)), colour = 'darkgrey', size = 3.6, 
+           family = "Linux Libertine G", fontface = "bold")
+
+```
+
+```{r phenofit_output_maps, include=TRUE, fig.height = 7, fig.width = 4.5, fig.align = "center", fig.cap = "Fitness index predicted by PHENOFIT with the expert and the inverse calibrations.", fig.pos="H", fig.showtext=TRUE, eval = T}
+
+p <- plot_grid(
+  "",
+  plot_grid(
+    "",
+    phenofit_forward_fagus_map + theme(legend.position = "none"), 
+    phenofit_fagus_map + theme(legend.position = "none"),
+    "",
+    phenofit_forward_quercus_map + theme(legend.position = "none"), 
+    phenofit_quercus_map + theme(legend.position = "none"),
+    "",
+    phenofit_forward_abies_map + theme(legend.position = "none"), 
+    phenofit_abies_map + theme(legend.position = "none"),
+    ncol=3, rel_widths = c(1, 5, 5),
+    rel_heights = c(5, 5, 5)),
+  get_legend(phenofit_fagus_map),
+  ncol = 1,
+  rel_heights = c(2, 20, 2))
+
+
+ggdraw(p) +
+  draw_label("Expert calibration", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.29,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Inverse calibration", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.75,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Fagus sylvatica", color = "#495057", size = 10, angle = 90, y = 0.75, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Quercus ilex", color = "#495057", size = 10, angle = 90, y = 0.46, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Abies alba", color = "#495057", size = 10, angle = 90, y = 0.18, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic")
+
+  
+
+```
+
+
+
+
+```{r best_forward_maps, include=TRUE, fig.height = 8, fig.width = 4.5, fig.align = "center", fig.cap = "Carbon reserves predicted by CASTANEA with the expert and the inverse calibrations. Note that CASTANEA cannot be used in high-latitude regions (grey area).", fig.pos="H", fig.showtext=TRUE, eval = T}
+
+p <- plot_grid(
+  "",
+  plot_grid(
+    "",
+    castanea_forward_fagus_map + theme(legend.position = "none"), 
+    castanea_fagus_map + theme(legend.position = "none"),
+    "", get_legend(castanea_forward_fagus_map), get_legend(castanea_fagus_map),
+    "",
+    castanea_forward_quercus_map + theme(legend.position = "none"), 
+    castanea_quercus_map + theme(legend.position = "none"),
+    "", get_legend(castanea_forward_quercus_map), get_legend(castanea_quercus_map),
+    "",
+    castanea_forward_abies_map + theme(legend.position = "none"), 
+    castanea_abies_map + theme(legend.position = "none"),
+    "",
+    get_legend(castanea_forward_abies_map),
+    get_legend(castanea_abies_map),
+    ncol=3, rel_widths = c(1, 5, 5),
+    rel_heights = c(5, 1, 5, 1, 5, 1)),
+  ncol = 1,
+  rel_heights = c(2,20))
+
+ggdraw(p) +
+  draw_label("Expert calibration", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.28,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Inverse calibration", color = "#495057", size = 10, angle = 0, y = 0.92, x = 0.75,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Fagus sylvatica", color = "#495057", size = 10, angle = 90, y = 0.75, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Quercus ilex", color = "#495057", size = 10, angle = 90, y = 0.46, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic") +
+  draw_label("Abies alba", color = "#495057", size = 10, angle = 90, y = 0.18, x = 0.04,
+             fontfamily = "Linux Libertine G", fontface = "italic")
+
+  
+
+```
+
+
+

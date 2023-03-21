@@ -1,0 +1,356 @@
+---
+output: 
+  stevetemplates::article:
+    fig_caption: true
+#bibliography: master.bib
+title: "Estimating process-based model parameters from species distribution data"
+subtitle: "Supplementary Appendix E"
+author:
+- name: Victor Van der Meersch
+  affiliation: CEFE, CNRS
+- name: Isabelle Chuine
+  affiliation: CEFE, CNRS
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: libertine
+fontsize: 11pt
+# spacing: double
+appendix: yes
+appendixletter: E
+endnote: no
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage[width=.9\textwidth, textfont=it, font=small]{caption}
+  - \usepackage{libertine}
+
+---
+
+```{r setup_appendixE, include=FALSE}
+
+knitr::opts_chunk$set(cache=TRUE,
+                      message=FALSE, warning=FALSE,
+                      echo = FALSE,
+                      fig.path='figs/',
+                      cache.path = '_cache/',
+                      fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      if (file.rename(x, x2)) x2 else x
+                      })
+
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(ggbeeswarm)
+library(showtext)
+library(kableExtra)
+options(kableExtra.latex.load_packages = FALSE)
+font_add("Linux Libertine G", regular = "LinLibertine_R_G.ttf", bold = "LinLibertine_RB_G.ttf", italic = "LinLibertine_RI_G.ttf")
+
+```
+
+\hfill \break
+
+
+
+```{r ABC_quercus_data}
+
+# Calibrations
+cal_folder <- 'D:/calibrations/phenofit/quercus_ilex/1000pres_1000abs/paper_data'
+sim_folder <- 'D:/simulations/phenofit/backward/quercus_ilex/paper_data'
+abc_files <- mixedsort(list.files(path = file.path(cal_folder, "ABC"), pattern = "\\.rds$", full.names = T, recursive = T))
+
+auc_data_ABC_cal <- data.frame()
+for(i in 1:length(abc_files)){
+  auc_data_ABC_cal[i, 'subset'] <- paste0(strsplit(abc_files[i], "_")[[1]][7])
+  
+  # Load AUC on calibration_points
+  abc_fit <- readRDS(abc_files[i])
+  auc_cal <- 1-round(min(abc_fit$stats), 6)
+  
+  auc_data_ABC_cal[i, 'cal'] <- auc_cal
+
+}
+
+auc_data_ABC_cal$method <- "ABC"
+quercus_auc_data_cal$method <- "CMAES"
+
+quercus_auc_data_cal_comparison <- rbind(quercus_auc_data_cal[quercus_auc_data_cal$subset %in% c("subset1"), c("subset", "cal", "method")], 
+                                 auc_data_ABC_cal[auc_data_ABC_cal$subset %in% c("subset1"),],
+                                 quercus_auc_data_cal[quercus_auc_data_cal$subset %in% c("subset2"), c("subset", "cal", "method")], 
+                                 auc_data_ABC_cal[auc_data_ABC_cal$subset %in% c("subset2"),])
+
+if(recompute_quercus_AUC_ABC){
+  simulation_files <- mixedsort(list.files(path = file.path(sim_folder, "ABC"), pattern = "Fitness", full.names = T, recursive = T))
+  
+  auc_data_ABC_tot <- data.frame()
+  fitness_ABC_data <- as.data.frame(cbind(alt$lat, alt$lon))
+  for(i in 1:(length(simulation_files))){
+    auc_data_ABC_tot[i, 'subset'] <- strsplit(strsplit(simulation_files[i], "/")[[1]][8], "_")[[1]][1]
+    
+    # Compute AUC on every pres/abs points
+    fitness_presabs <- read_mean_outputvalue_phenofit(simulation_files[i], points = qile_presabs)
+    auc_tot <- round(auc(roc(fitness_presabs, as.factor(qile_presabs$pres))),6)
+    auc_data_ABC_tot[i, 'tot'] <- auc_tot
+    
+    # Load fitness
+    # fitness <- read_mean_outputvalue_phenofit(simulation_files[i])
+    # fitness_ABC_data[,2+i] <- t(fitness)
+                                             
+  }
+  
+  # Consensus 
+  # names(fitness_ABC_data)[1:2] <- c("lat", "lon")
+  # fitness_ABC_data$mean <- rowMeans(fitness_ABC_data[,3:ncol(fitness_ABC_data)])
+  # fitness_ABC_data$mad <- rowMads(as.matrix(fitness_ABC_data[,3:ncol(fitness_ABC_data)]))
+  # fitness_ABC_data$sd <- rowSds(as.matrix(fitness_ABC_data[,3:ncol(fitness_ABC_data)]))
+  
+  saveRDS(auc_data_ABC_tot, file.path(wd, "cache", "quercus_auc_data_ABC_tot.rds"))
+  # saveRDS(fitness_ABC_data, file.path(wd, "cache", "quercus_fitness_ABC_data.rds"))
+}else{
+  auc_data_ABC_tot <- readRDS(file.path(wd, "cache", "quercus_auc_data_ABC_tot.rds"))
+  # fitness_ABC_data <- readRDS(file.path(wd, "cache", "quercus_fitness_ABC_data.rds"))
+}
+
+auc_data_ABC_tot$method <- "ABC"
+quercus_auc_data_tot$method <- "CMAES"
+
+quercus_auc_data_tot_comparison <- rbind(quercus_auc_data_tot[quercus_auc_data_tot$subset %in% c("subset1"), c("subset", "tot", "method")], 
+                                 auc_data_ABC_tot[auc_data_ABC_tot$subset %in% c("subset1"),],
+                                 quercus_auc_data_tot[quercus_auc_data_tot$subset %in% c("subset2"), c("subset", "tot", "method")], 
+                                 auc_data_ABC_tot[auc_data_ABC_tot$subset %in% c("subset2"),])
+
+```
+
+```{r comparisonquercusABCCMAES, include=TRUE, fig.height = 2.7, fig.width = 4, fig.align = "center", fig.cap = "Comparison of CMA-ES and ABC-rejection methods, with two holm oak occurrence subsets, on \\textbf{(A)} calibration AUC (only calibration points) and \\textbf{(B)} total AUC (every presence/absence points). Each point is a calibration run. The black horizontal bars represent the pairwise Mann–Whitney tests between the two methods on the same subset. CMA-ES is red and ABC green.", fig.pos="H", fig.showtext=TRUE, eval = F}
+
+quercus_auc_data_cal_comparison$sub_met <- paste0(quercus_auc_data_cal_comparison$subset, quercus_auc_data_cal_comparison$method)
+
+positions_cal <- c(rep(1,5), rep(1.05,5), rep(1.15,5), rep(1.20,5))
+quercus_auc_data_cal_comparison$positions_cal <- positions_cal
+
+wilcoxon_test_cal <- compare_means(cal ~ positions_cal,  data = quercus_auc_data_cal_comparison) 
+
+p_auc_cal <- quercus_auc_data_cal_comparison %>% ggplot(aes(y = cal, x = factor(method, levels = c("CMAES", "ABC")), 
+                                                      color = factor(method, levels = c("CMAES", "ABC")), 
+                                                      fill = factor(method, levels = c("CMAES", "ABC")))) +
+  facet_wrap(~subset) +
+  geom_boxplot(width = 0.7, alpha = 0.2, outlier.shape = NA, fatten = 1, lwd=0.3) +
+  geom_beeswarm(alpha = 0.8, cex = 2.5, size = 0.5, dodge.width = 0.5) + 
+  scale_fill_manual(values = c("#DB9D85", "#6DBC86")) +
+  scale_color_manual(values = c("#DB9D85", "#6DBC86")) +
+  stat_compare_means(comparisons = list(c("ABC", "CMAES")), symnum.args = symnum.args,
+                     tip.length = 0.005, label.y = 0.963,
+                     size=3, vjust = 0.6, bracket.size = 0.2) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        axis.ticks.x=element_blank(),
+        panel.grid.major = element_line(size = 0.35),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        strip.text.x = element_blank(),
+        panel.spacing.x = unit(1.3, "lines"),
+        legend.position="none") +
+  coord_cartesian(ylim = c(0.915, 0.965)) +
+  labs(y = "")
+  
+
+quercus_auc_data_tot_comparison$sub_met <- paste0(quercus_auc_data_tot_comparison$subset, quercus_auc_data_tot_comparison$method)
+
+positions_tot <- c(rep(1,5), rep(1.05,5), rep(1.15,5), rep(1.20,5))
+quercus_auc_data_tot_comparison$positions_tot <- positions_tot
+
+p_auc_tot <- na.omit(quercus_auc_data_tot_comparison) %>% ggplot(aes(y = tot, x = factor(method, levels = c("CMAES", "ABC")), 
+                                                      color = factor(method, levels = c("CMAES", "ABC")), 
+                                                      fill = factor(method, levels = c("CMAES", "ABC")))) +
+  facet_wrap(~subset) +
+  geom_boxplot(width = 0.7, alpha = 0.2, outlier.shape = NA, fatten = 1, lwd=0.3) +
+  geom_beeswarm(alpha = 0.8, cex = 2.5, size = 0.5, dodge.width = 0.5) + 
+  scale_fill_manual(values = c("#DB9D85", "#6DBC86")) +
+  scale_color_manual(values = c("#DB9D85", "#6DBC86")) +
+  stat_compare_means(comparisons = list(c("ABC", "CMAES")), symnum.args = symnum.args,
+                     tip.length = 0.005, label.y = 0.963,
+                     size=3, vjust = 0.6, bracket.size = 0.2) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        axis.ticks.x=element_blank(),
+        panel.grid.major = element_line(size = 0.35),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        strip.text.x = element_blank(),
+        panel.spacing.x = unit(1.3, "lines"),
+        legend.position="none") +
+  coord_cartesian(ylim = c(0.915, 0.965)) +
+  labs(y = "")
+
+plot_grid(p_auc_cal, p_auc_tot, labels=c("(A)", "(B)"), ncol = 2, nrow = 1,
+          hjust = 0, vjust = 1, align = "h", label_size = 12, label_colour = "#495057")
+
+```
+
+```{r calibCMAESquercus, include=TRUE, fig.height = 2.7, fig.width = 3, fig.align = "center", fig.cap = "CMA-ES calibration using the PHENOFIT model and holm oak: \\textbf{(A)} calibration AUC (only calibration cells) and \\textbf{(B)} total AUC (every presence/absence cells). Each color is a different sub-sampling of occurrence data, each point is a calibration run. The black horizontal bars represent the pairwise Mann–Whitney tests between the two subsets.", fig.pos="H", fig.showtext=TRUE, results='hide'}
+
+positions <- c(rep(1,5), rep(1.1,5))
+quercus_auc_data_cal$positions <- positions
+
+# wilcoxon_test_cal <- compare_means(cal ~ positions,  data = auc_data_cal) 
+# wilcoxon_test_s7 <- wilcoxon_test_cal %>% filter(p.signif != "ns") %>% filter(group1 == "1.7" | group2 == "1.7")
+# list_comparisons <- lapply(1:nrow(wilcoxon_test_s7), function(i){
+#   return(c(wilcoxon_test_s7$group1[i], wilcoxon_test_s7$group2[i]))})
+# list_positions <- c(0.875, 0.9225, 0.9245, 0.917, 0.9145, 0.8785, 0.882, 0.894, 0.888)
+
+symnum.args <- list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), symbols = c("****", "***", "**", "*", "NS."))
+
+p_auc_cal <- quercus_auc_data_cal %>% ggplot(aes(y = cal, x = as.character(positions), group = subset, 
+                    color = factor(subset, levels = paste0("subset", 1:10)), 
+                    fill = factor(subset, levels = paste0("subset", 1:10)))) +
+  geom_boxplot(width = 0.5, alpha = 0.3, outlier.shape = NA, fatten = 1, lwd=0.3) +
+  geom_beeswarm(alpha = 0.8, cex = 2.5, size = 0.5) +
+  # stat_compare_means(comparisons = list_comparisons, symnum.args = symnum.args, 
+  #                    tip.length = c(-0.005, rep(0.005,4), rep(-0.005,4)),
+  #                    label.y = list_positions, size=2, vjust = 0.6, bracket.size = 0.2) + 
+  stat_compare_means(comparisons = list(c("1", "1.1")), symnum.args = symnum.args,
+                     tip.length = 0.005, label.y = 0.965,
+                     size=2, vjust = 0.1, bracket.size = 0.2) +
+  scale_fill_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  scale_color_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G", margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.ticks.x=element_blank(),
+        panel.grid.major = element_line(size = 0.2),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  coord_cartesian(ylim = c(0.94, 0.967)) +
+  labs(y = "AUC")
+
+quercus_auc_data_tot$positions <- positions
+
+# wilcoxon_test_tot <- compare_means(tot ~ positions,  data = auc_data_tot) 
+# wilcoxon_test_s7 <- wilcoxon_test_tot %>% filter(p.signif != "ns") %>% filter(group1 == "1.7" | group2 == "1.7")
+# list_comparisons <- lapply(1:nrow(wilcoxon_test_s7), function(i){
+#   return(c(wilcoxon_test_s7$group1[i], wilcoxon_test_s7$group2[i]))})
+
+p_auc_tot <- na.omit(quercus_auc_data_tot) %>% ggplot(aes(y = tot, as.character(positions), group = subset, 
+                    color = factor(subset, levels = paste0("subset", 1:10)), fill = factor(subset, levels = paste0("subset", 1:10)))) +
+  geom_boxplot(width = 0.5, alpha = 0.2, outlier.shape = NA, fatten = 1, lwd=0.3) +
+  geom_beeswarm(alpha = 0.8, cex = 2.5, size = 0.5) +
+  stat_compare_means(comparisons = list(c("1", "1.1")), symnum.args = symnum.args,
+                     tip.length = 0.005, label.y = 0.965,
+                     size=2, vjust = 0.1, bracket.size = 0.2) +
+  scale_fill_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  scale_color_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        axis.ticks.x=element_blank(),
+        panel.grid.major = element_line(size = 0.2),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  coord_cartesian(ylim = c(0.94, 0.967)) +
+  labs(y = "")
+
+
+plot_grid(p_auc_cal, p_auc_tot, labels=c("(A)", "(B)"), ncol = 2, nrow = 1,
+          hjust = 0, vjust = 1.2, align = "h", label_size = 12, label_colour = "#495057")
+
+
+
+```
+
+```{r calibCMAESabies, include=TRUE, fig.height = 2.7, fig.width = 3, fig.align = "center", fig.cap = "CMA-ES calibration using the PHENOFIT model and silver fir: \\textbf{(A)} calibration AUC (only calibration cells) and \\textbf{(B)} total AUC (every presence/absence cells). Each color is a different sub-sampling of occurrence data, each point is a calibration run. The black horizontal bars represent the pairwise Mann–Whitney tests between the two subsets.", fig.pos="H", fig.showtext=TRUE, results='hide'}
+
+positions <- c(rep(1,5), rep(1.1,5))
+abies_auc_data_cal$positions <- positions
+
+# wilcoxon_test_cal <- compare_means(cal ~ positions,  data = auc_data_cal) 
+# wilcoxon_test_s7 <- wilcoxon_test_cal %>% filter(p.signif != "ns") %>% filter(group1 == "1.7" | group2 == "1.7")
+# list_comparisons <- lapply(1:nrow(wilcoxon_test_s7), function(i){
+#   return(c(wilcoxon_test_s7$group1[i], wilcoxon_test_s7$group2[i]))})
+# list_positions <- c(0.875, 0.9225, 0.9245, 0.917, 0.9145, 0.8785, 0.882, 0.894, 0.888)
+
+
+p_auc_cal <- abies_auc_data_cal %>% ggplot(aes(y = cal, x = as.character(positions), group = subset, 
+                    color = factor(subset, levels = paste0("subset", 1:10)), 
+                    fill = factor(subset, levels = paste0("subset", 1:10)))) +
+  geom_boxplot(width = 0.5, alpha = 0.3, outlier.shape = NA, fatten = 1, lwd=0.3) +
+  geom_beeswarm(alpha = 0.8, cex = 2.5, size = 0.5) +
+  # stat_compare_means(comparisons = list_comparisons, symnum.args = symnum.args, 
+  #                    tip.length = c(-0.005, rep(0.005,4), rep(-0.005,4)),
+  #                    label.y = list_positions, size=2, vjust = 0.6, bracket.size = 0.2) + 
+  stat_compare_means(comparisons = list(c("1", "1.1")), symnum.args = symnum.args,
+                     tip.length = 0.005, label.y = 0.92,
+                     size=2, vjust = 0.1, bracket.size = 0.2) +
+  scale_fill_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  scale_color_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G", margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.ticks.x=element_blank(),
+        panel.grid.major = element_line(size = 0.2),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  coord_cartesian(ylim = c(0.87, 0.923)) +
+  labs(y = "AUC")
+
+abies_auc_data_tot$positions <- positions
+
+# wilcoxon_test_tot <- compare_means(tot ~ positions,  data = auc_data_tot) 
+# wilcoxon_test_s7 <- wilcoxon_test_tot %>% filter(p.signif != "ns") %>% filter(group1 == "1.7" | group2 == "1.7")
+# list_comparisons <- lapply(1:nrow(wilcoxon_test_s7), function(i){
+#   return(c(wilcoxon_test_s7$group1[i], wilcoxon_test_s7$group2[i]))})
+
+p_auc_tot <- na.omit(abies_auc_data_tot) %>% ggplot(aes(y = tot, as.character(positions), group = subset, 
+                    color = factor(subset, levels = paste0("subset", 1:10)), fill = factor(subset, levels = paste0("subset", 1:10)))) +
+  geom_boxplot(width = 0.5, alpha = 0.2, outlier.shape = NA, fatten = 1, lwd=0.3) +
+  geom_beeswarm(alpha = 0.8, cex = 2.5, size = 0.5) +
+  stat_compare_means(comparisons = list(c("1", "1.1")), symnum.args = symnum.args,
+                     tip.length = 0.005, label.y = 0.92,
+                     size=2, vjust = 0.1, bracket.size = 0.2) +
+  scale_fill_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  scale_color_manual(values = hcl.colors(10, palette = "Dynamic")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(family = "Linux Libertine G"),
+        axis.title.y = element_text(family = "Linux Libertine G"),
+        axis.ticks.x=element_blank(),
+        panel.grid.major = element_line(size = 0.2),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="none") +
+  coord_cartesian(ylim = c(0.87, 0.923)) +
+  labs(y = "")
+
+
+plot_grid(p_auc_cal, p_auc_tot, labels=c("(A)", "(B)"), ncol = 2, nrow = 1,
+          hjust = 0, vjust = 1.2, align = "h", label_size = 12, label_colour = "#495057")
+
+
+
+```
+

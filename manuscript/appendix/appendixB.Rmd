@@ -1,0 +1,101 @@
+---
+output: 
+  stevetemplates::article:
+    fig_caption: true
+#bibliography: master.bib
+title: "Estimating process-based model parameters from species distribution data"
+subtitle: "Supplementary Appendix B"
+author:
+- name: Victor Van der Meersch
+  affiliation: CEFE, CNRS
+- name: Isabelle Chuine
+  affiliation: CEFE, CNRS
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: libertine
+fontsize: 11pt
+# spacing: double
+appendix: yes
+appendixletter: B
+endnote: no
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage[width=.9\textwidth, textfont=it, font=small]{caption}
+  - \usepackage{libertine}
+
+---
+
+```{r setup_appendixB, include=FALSE}
+
+knitr::opts_chunk$set(cache=TRUE,
+                      message=FALSE, warning=FALSE,
+                      echo = FALSE,
+                      fig.path='figs/',
+                      cache.path = '_cache/',
+                      fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      if (file.rename(x, x2)) x2 else x
+                      })
+
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(ggbeeswarm)
+library(showtext)
+library(kableExtra)
+options(kableExtra.latex.load_packages = FALSE)
+font_add("Linux Libertine G", regular = "LinLibertine_R_G.ttf")
+
+```
+
+\hfill \break
+
+
+```{r, results='asis'}
+table <- data.frame(
+  species = c('Fagus sylvatica', 'Quercus ilex', 'Abies alba'),
+  number = c("718.898", "78.979", "119.891"),
+  link = c('https://doi.org/10.15468/dl.e9wasa', 'https://doi.org/10.15468/dl.2a4haw', ' https://doi.org/10.15468/dl.my6c9t ')
+)
+kable(table, booktabs = TRUE, escape = FALSE, align="ccc",
+      col.names = c("Species", "Number of occurrences", "Download link"),
+      caption = "GBIF download links") %>%
+  kable_classic(full_width = F, html_font = "Linux Libertine G") %>%
+  kable_styling(position = "center", latex_options = "hold_position")
+
+```
+
+\hfill \break
+
+```{=latex}
+\begin{figure}[htbp]
+
+{\centering \includegraphics{figs/files/presence_clustering} 
+
+}
+
+\caption{Stratified random sampling of beech presence records based on climate clusters.}\label{fig:pres_clustering}
+\end{figure}
+
+```
+
+```{=latex}
+\begin{landscape}
+\begin{figure}[htbp]
+
+{\centering \includegraphics{figs/files/occurrence_processing} 
+
+}
+
+\caption{Processing of holm oak occurrence records. GBIF: Global Biodiversity Information Facility, AFE: Atlas Flora Europeae, EVM: EuroVegMap.}\label{fig:occ_processing}
+\end{figure}
+\end{landscape}
+```
+
+
+\newpage
+

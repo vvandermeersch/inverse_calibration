@@ -1,0 +1,104 @@
+---
+output: 
+  stevetemplates::article:
+    fig_caption: true
+#bibliography: master.bib
+title: "Estimating process-based model parameters from species distribution data"
+subtitle: "Supplementary Appendix C"
+author:
+- name: Victor Van der Meersch
+  affiliation: CEFE, CNRS
+- name: Isabelle Chuine
+  affiliation: CEFE, CNRS
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: libertine
+fontsize: 11pt
+# spacing: double
+appendix: yes
+appendixletter: C
+endnote: no
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage[width=.9\textwidth, textfont=it, font=small]{caption}
+  - \usepackage{libertine}
+
+---
+
+```{r setup_appendixC, include=FALSE}
+
+knitr::opts_chunk$set(cache=TRUE,
+                      message=FALSE, warning=FALSE,
+                      echo = FALSE,
+                      fig.path='figs/',
+                      cache.path = '_cache/',
+                      fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      if (file.rename(x, x2)) x2 else x
+                      })
+
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(ggbeeswarm)
+library(showtext)
+library(kableExtra)
+options(kableExtra.latex.load_packages = FALSE)
+font_add("Linux Libertine G", regular = "LinLibertine_R_G.ttf")
+
+```
+
+```{r distributionmaps, fig.cap= "Species distributions of \\textbf{(A)} beech, \\textbf{(B)} holm oak and \\textbf{(C)} silver fir. Green cells are $0.1^\\circ$ cells where species is present, orange cells where species is supposed to be absent.", fig.height = 7.8, fig.width = 4, fig.pos="H", fig.showtext=TRUE, eval = T}
+
+fagus_map <- ggplot() + 
+  geom_raster(data = fsyl_presabs[fsyl_presabs$pres==1,], aes(x = lon, y = lat), fill = "#0C8346") +
+  geom_raster(data = fsyl_presabs[fsyl_presabs$pres==0,], aes(x = lon, y = lat), fill = "#D57A66") +
+  geom_sf(data = eu_map_cropped, fill = 'grey', alpha=0.1, color='grey', size = 0.05) +
+  theme_void() +
+  ylab("") +
+  xlab("") +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) 
+
+quercus_map <- ggplot() + 
+  geom_raster(data = qile_presabs[qile_presabs$pres==1,], aes(x = lon, y = lat), fill = "#0C8346") +
+  geom_raster(data = qile_presabs[qile_presabs$pres==0,], aes(x = lon, y = lat), fill = "#D57A66") +
+  geom_sf(data = eu_map_cropped, fill = 'grey', alpha=0.1, color='grey', size = 0.05) +
+  theme_void() +
+  ylab("") +
+  xlab("") +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) 
+
+abies_map <- ggplot() + 
+  geom_raster(data = aalb_presabs[aalb_presabs$pres==1,], aes(x = lon, y = lat), fill = "#0C8346") +
+  geom_raster(data = aalb_presabs[aalb_presabs$pres==0,], aes(x = lon, y = lat), fill = "#D57A66") +
+  geom_sf(data = eu_map_cropped, fill = 'grey', alpha=0.1, color='grey', size = 0.05) +
+  theme_void() +
+  ylab("") +
+  xlab("") +
+  theme(legend.title.align = 0.5, legend.position = "bottom", 
+        legend.key.height = unit(0.2, 'cm'), legend.key.width = unit(0.5, 'cm'),
+        legend.title = element_text(family = "Linux Libertine G", size = 9),
+        legend.text = element_text(family = "Linux Libertine G")) 
+
+
+p <- plot_grid(fagus_map, quercus_map, abies_map,
+               labels=c("(A)", "(B)", "(C)"), ncol = 1,
+               align = "h", label_size = 12, label_colour = "#495057",
+               hjust = 0)
+
+p
+
+
+```
+
+

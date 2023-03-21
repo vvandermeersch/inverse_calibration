@@ -1,0 +1,77 @@
+---
+output: 
+  stevetemplates::article:
+    fig_caption: true
+#bibliography: master.bib
+title: "Estimating process-based model parameters from species distribution data"
+subtitle: "Supplementary Appendix D"
+author:
+- name: Victor Van der Meersch
+  affiliation: CEFE, CNRS
+- name: Isabelle Chuine
+  affiliation: CEFE, CNRS
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: libertine
+fontsize: 11pt
+# spacing: double
+appendix: yes
+appendixletter: D
+endnote: no
+include-after: true
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage[width=.9\textwidth, textfont=it, font=small]{caption}
+  - \usepackage{libertine}
+  - \definecolor{darkgreen}{RGB}{112,173,71}
+
+
+---
+
+```{r setup_appendixD, include=FALSE}
+
+knitr::opts_chunk$set(cache=TRUE,
+                      message=FALSE, warning=FALSE,
+                      echo = FALSE,
+                      fig.path='figs/',
+                      cache.path = '_cache/',
+                      fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      if (file.rename(x, x2)) x2 else x
+                      })
+
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(ggbeeswarm)
+library(showtext)
+library(kableExtra)
+options(kableExtra.latex.load_packages = FALSE)
+font_add("Linux Libertine G", regular = "LinLibertine_R_G.ttf")
+
+```
+
+\hfill \break
+
+## The AUC as an objective function
+
+The AUC is the area under the receiver operating characteristic curve, which plots sensitivity (correctly predicted positive fraction) as a function of commission error (falsely predicted positive fraction), as the probability threshold discriminating presence/absence varies. It is a discrimination metric, which has been widely used in the species distribution modelling literature.
+
+## Box constraint handling
+
+With this constraint handling - implemented by default in the R package *cmaes* [@Trautmann2011] - each evaluated solution is guaranteed to lie within the feasible space.
+Let's say we have a parameter vector $x$.
+For each parameter $x_i$, we have a lower bound $lb_i$ and an upper bound $ub_i$.
+If a parameter $x_i$ violates one of this bound, we set $x_i$ to a new value $x_i^{repaired}$ equal to the closest boundary value ($lb_i$ or $ub_i$). We thus obtained a new parameter set $x^{repaired}$, with a minimal $\|x-x^{repaired}\|$ value. This new feasible solution $x^{repaired}$ is used for the evaluation of the objective function $AUC_{model}(x^{repaired})$, and to compute a penalty term $pen=\sum\limits_{i}(x_i-x_i^{repaired})^2=\|x^{repaired}-x\|^2$. Then $x^{repaired}$ is discarded, and the algorithm computes the penalized objective function of $x^{repaired}$ as follows: $AUC_{model}(x)=AUC_{model}(x^{repaired})+pen$. This boundary handling could be improved with adaptive weights [see @Hansen2009]. 
+
+## Ecological infeasibility constraint
+
+We added a simple way to handle ecological constraint (e.g. unfolding before flowering in beech mixed bud) with a death penalty. When a parameter vector $x$ violates a constraint, it is rejected and generated again. The main drawback of this approach is that CMA-ES does not use information from unfeasible points. An other approach could be to set $AUC_{model}(x)=0$. However, as our feasible space was large, the death penalty constraint worked well in our case. 
+  
+We applied an inequality constraint on both \textit{Fagus sylvatica} and \textit{Quercus ilex}, which have mixed buds (leaves and flowers within the same bud): unfolding must happen before flowering. On the contrary, we did not apply any inequality constraint on \textit{Abies alba} simple bud phenology parameters.
+
+
