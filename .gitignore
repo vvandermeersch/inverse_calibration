@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+**/manuscript/_cache
+**/manuscript/cache
+**/manuscript/figs
+**/manuscript/appendix/_cache
+**/manuscript/appendix/figs
