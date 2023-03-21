@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Species>
+    <Provenance>
+        <Name>Quercus_ilex</Name>
+		<!-- INIT VALUES, MIDDLE VALUES IN NARROW RANGE -->
+        <Leaf Model="2">
+			<t0>-61.00</t0>		
+            <a>15</a>
+            <b>0</b>
+            <c>5</c>
+            <d>-1.025</d> 
+            <e>12.5</e>
+            <Ccrit>75.5</Ccrit>
+            <Fcrit>60.5</Fcrit>
+        </Leaf>
+        <Flower Model="2">
+			<t0>-61.00</t0>		
+            <a>15</a>
+            <b>0</b>
+            <c>5</c>
+            <d>-1.025</d> 
+            <e>12.5</e>
+            <Ccrit>75.5</Ccrit>
+            <Fcrit>60.5</Fcrit>
+        </Flower>
+        <FruitMaturation Model="2"> 
+            <Tb>12.5</Tb>
+            <Fcrit>1500.5</Fcrit>
+            <sigma>150.5</sigma>
+            <pfe50>0.5</pfe50>
+        </FruitMaturation>
+        <Senescence Model="1"> <!-- Trick to have no senescence (initially Model="4") -->
+            <Fcrit>300</Fcrit> <!-- Fixed value -->
+			<Tb>20</Tb> <!-- Fixed value -->
+			<sigmaSen>0</sigmaSen> <!-- Fixed value -->
+		</Senescence>
+        <CompoundBud>2</CompoundBud> <!-- Fixed value, mixed bud -->
+        <LeafHabit>2</LeafHabit> <!-- Fixed value, evergreen tree -->
+        <Tdeath>-35</Tdeath> <!-- Fixed value -->
+        <Frost>
+			<FHfrmax1>-7.5</FHfrmax1>
+			<FHfrmax2>-20</FHfrmax2>
+			<FHminfe>-5</FHminfe>
+			<FHminfl>-5</FHminfl>
+			<Te1>10</Te1>
+			<Te2>-15</Te2>
+			<FHtfemax>-8.5</FHtfemax>
+			<FHtflmax>-8.5</FHtflmax>
+			<FHpfemax>-12.5</FHpfemax>
+			<FHpflmax>-12.5</FHpflmax>
+			<NL1>10.5</NL1>
+			<NL2>10.5</NL2>
+		</Frost>
+        <Drought Model="1">
+            <pp1>375</pp1>
+            <pp2>2250</pp2>
+        </Drought>
+    </Provenance>
+</Species>

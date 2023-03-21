@@ -1,0 +1,515 @@
+Currently doing repetition 1 ...2022-08-11 14:59:38
+Starting CMA-ES calibration
+-------------------------------------
+1 run(s) with 20 parallel simulations
+-------------------------------------
+Iteration 1 completed... Current fitness: 0.32
+Iteration 5 completed... Current fitness: 0.3
+Iteration 10 completed... Current fitness: 0.26
+Best fitness so far: 0.27
+Iteration 15 completed... Current fitness: 0.25
+Iteration 20 completed... Current fitness: 0.21
+Best fitness so far: 0.21
+Iteration 25 completed... Current fitness: 0.22
+Iteration 30 completed... Current fitness: 0.2
+Best fitness so far: 0.18
+Iteration 35 completed... Current fitness: 0.19
+Iteration 40 completed... Current fitness: 0.15
+Best fitness so far: 0.17
+Iteration 45 completed... Current fitness: 0.16
+Iteration 50 completed... Current fitness: 0.15
+Best fitness so far: 0.15
+Iteration 55 completed... Current fitness: 0.14
+Iteration 60 completed... Current fitness: 0.14
+Best fitness so far: 0.13
+Iteration 65 completed... Current fitness: 0.13
+Iteration 70 completed... Current fitness: 0.12
+Best fitness so far: 0.13
+Iteration 75 completed... Current fitness: 0.13
+Iteration 80 completed... Current fitness: 0.12
+Best fitness so far: 0.12
+Iteration 85 completed... Current fitness: 0.13
+Iteration 90 completed... Current fitness: 0.13
+Best fitness so far: 0.12
+Iteration 95 completed... Current fitness: 0.12
+Iteration 100 completed... Current fitness: 0.12
+Best fitness so far: 0.12
+Iteration 105 completed... Current fitness: 0.11
+Iteration 110 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 115 completed... Current fitness: 0.11
+Iteration 120 completed... Current fitness: 0.12
+Best fitness so far: 0.11
+Iteration 125 completed... Current fitness: 0.11
+Iteration 130 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 135 completed... Current fitness: 0.11
+Iteration 140 completed... Current fitness: 0.12
+Best fitness so far: 0.11
+Iteration 145 completed... Current fitness: 0.11
+Iteration 150 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 155 completed... Current fitness: 0.11
+Iteration 160 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 165 completed... Current fitness: 0.11
+Iteration 170 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 175 completed... Current fitness: 0.11
+Iteration 180 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 185 completed... Current fitness: 0.11
+Iteration 190 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 195 completed... Current fitness: 0.11
+Iteration 200 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 205 completed... Current fitness: 0.11
+Iteration 210 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 215 completed... Current fitness: 0.11
+Iteration 220 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 225 completed... Current fitness: 0.11
+Iteration 230 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 235 completed... Current fitness: 0.11
+Iteration 240 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 245 completed... Current fitness: 0.11
+Iteration 250 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 255 completed... Current fitness: 0.1
+Iteration 260 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 265 completed... Current fitness: 0.1
+Iteration 270 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 275 completed... Current fitness: 0.1
+Iteration 280 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 285 completed... Current fitness: 0.1
+Iteration 290 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 295 completed... Current fitness: 0.1
+Iteration 300 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+---------------------------------------
+Run 1/1 on host cl1n043, pid 278173
+AUC = 0.897 
+Number of function evaluations : 6000 
+Runtime : 83250.1 secondes
+---------------------------------------
+Total runtime : 23.1 hours
+Currently doing repetition 2 ...2022-08-12 14:07:10
+Starting CMA-ES calibration
+-------------------------------------
+1 run(s) with 20 parallel simulations
+-------------------------------------
+Iteration 1 completed... Current fitness: 0.31
+Iteration 5 completed... Current fitness: 0.26
+Iteration 10 completed... Current fitness: 0.24
+Best fitness so far: 0.21
+Iteration 15 completed... Current fitness: 0.19
+Iteration 20 completed... Current fitness: 0.21
+Best fitness so far: 0.19
+Iteration 25 completed... Current fitness: 0.16
+Iteration 30 completed... Current fitness: 0.14
+Best fitness so far: 0.14
+Iteration 35 completed... Current fitness: 0.14
+Iteration 40 completed... Current fitness: 0.14
+Best fitness so far: 0.14
+Iteration 45 completed... Current fitness: 0.13
+Iteration 50 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 55 completed... Current fitness: 0.12
+Iteration 60 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 65 completed... Current fitness: 0.11
+Iteration 70 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 75 completed... Current fitness: 0.1
+Iteration 80 completed... Current fitness: 0.11
+Best fitness so far: 0.1
+Iteration 85 completed... Current fitness: 0.1
+Iteration 90 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 95 completed... Current fitness: 0.1
+Iteration 100 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 105 completed... Current fitness: 0.1
+Iteration 110 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 115 completed... Current fitness: 0.1
+Iteration 120 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 125 completed... Current fitness: 0.1
+Iteration 130 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 135 completed... Current fitness: 0.1
+Iteration 140 completed... Current fitness: 0.1
+Best fitness so far: 0.09
+Iteration 145 completed... Current fitness: 0.1
+Iteration 150 completed... Current fitness: 0.1
+Best fitness so far: 0.09
+Iteration 155 completed... Current fitness: 0.1
+Iteration 160 completed... Current fitness: 0.1
+Best fitness so far: 0.09
+Iteration 165 completed... Current fitness: 0.09
+Iteration 170 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 175 completed... Current fitness: 0.09
+Iteration 180 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 185 completed... Current fitness: 0.09
+Iteration 190 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 195 completed... Current fitness: 0.09
+Iteration 200 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 205 completed... Current fitness: 0.09
+Iteration 210 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 215 completed... Current fitness: 0.09
+Iteration 220 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 225 completed... Current fitness: 0.09
+Iteration 230 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 235 completed... Current fitness: 0.09
+Iteration 240 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 245 completed... Current fitness: 0.09
+Iteration 250 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 255 completed... Current fitness: 0.09
+Iteration 260 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 265 completed... Current fitness: 0.09
+Iteration 270 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 275 completed... Current fitness: 0.09
+Iteration 280 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 285 completed... Current fitness: 0.09
+Iteration 290 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 295 completed... Current fitness: 0.09
+Iteration 300 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+---------------------------------------
+Run 1/1 on host cl1n043, pid 278173
+AUC = 0.912 
+Number of function evaluations : 6000 
+Runtime : 81035.2 secondes
+---------------------------------------
+Total runtime : 22.5 hours
+Currently doing repetition 3 ...2022-08-13 12:37:47
+Starting CMA-ES calibration
+-------------------------------------
+1 run(s) with 20 parallel simulations
+-------------------------------------
+Iteration 1 completed... Current fitness: 0.29
+Iteration 5 completed... Current fitness: 0.29
+Iteration 10 completed... Current fitness: 0.21
+Best fitness so far: 0.21
+Iteration 15 completed... Current fitness: 0.2
+Iteration 20 completed... Current fitness: 0.19
+Best fitness so far: 0.17
+Iteration 25 completed... Current fitness: 0.2
+Iteration 30 completed... Current fitness: 0.15
+Best fitness so far: 0.15
+Iteration 35 completed... Current fitness: 0.14
+Iteration 40 completed... Current fitness: 0.15
+Best fitness so far: 0.14
+Iteration 45 completed... Current fitness: 0.16
+Iteration 50 completed... Current fitness: 0.14
+Best fitness so far: 0.14
+Iteration 55 completed... Current fitness: 0.14
+Iteration 60 completed... Current fitness: 0.13
+Best fitness so far: 0.13
+Iteration 65 completed... Current fitness: 0.12
+Iteration 70 completed... Current fitness: 0.13
+Best fitness so far: 0.12
+Iteration 75 completed... Current fitness: 0.12
+Iteration 80 completed... Current fitness: 0.12
+Best fitness so far: 0.12
+Iteration 85 completed... Current fitness: 0.12
+Iteration 90 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 95 completed... Current fitness: 0.11
+Iteration 100 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 105 completed... Current fitness: 0.11
+Iteration 110 completed... Current fitness: 0.11
+Best fitness so far: 0.1
+Iteration 115 completed... Current fitness: 0.11
+Iteration 120 completed... Current fitness: 0.11
+Best fitness so far: 0.1
+Iteration 125 completed... Current fitness: 0.11
+Iteration 130 completed... Current fitness: 0.11
+Best fitness so far: 0.1
+Iteration 135 completed... Current fitness: 0.11
+Iteration 140 completed... Current fitness: 0.11
+Best fitness so far: 0.1
+Iteration 145 completed... Current fitness: 0.11
+Iteration 150 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 155 completed... Current fitness: 0.11
+Iteration 160 completed... Current fitness: 0.11
+Best fitness so far: 0.1
+Iteration 165 completed... Current fitness: 0.1
+Iteration 170 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 175 completed... Current fitness: 0.1
+Iteration 180 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 185 completed... Current fitness: 0.1
+Iteration 190 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 195 completed... Current fitness: 0.1
+Iteration 200 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 205 completed... Current fitness: 0.1
+Iteration 210 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 215 completed... Current fitness: 0.1
+Iteration 220 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 225 completed... Current fitness: 0.1
+Iteration 230 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 235 completed... Current fitness: 0.1
+Iteration 240 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 245 completed... Current fitness: 0.1
+Iteration 250 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 255 completed... Current fitness: 0.1
+Iteration 260 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 265 completed... Current fitness: 0.1
+Iteration 270 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 275 completed... Current fitness: 0.1
+Iteration 280 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 285 completed... Current fitness: 0.1
+Iteration 290 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 295 completed... Current fitness: 0.1
+Iteration 300 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+---------------------------------------
+Run 1/1 on host cl1n043, pid 278173
+AUC = 0.898 
+Number of function evaluations : 6000 
+Runtime : 82816.2 secondes
+---------------------------------------
+Total runtime : 23 hours
+Currently doing repetition 4 ...2022-08-14 11:38:05
+Starting CMA-ES calibration
+-------------------------------------
+1 run(s) with 20 parallel simulations
+-------------------------------------
+Iteration 1 completed... Current fitness: 0.29
+Iteration 5 completed... Current fitness: 0.29
+Iteration 10 completed... Current fitness: 0.27
+Best fitness so far: 0.27
+Iteration 15 completed... Current fitness: 0.28
+Iteration 20 completed... Current fitness: 0.27
+Best fitness so far: 0.24
+Iteration 25 completed... Current fitness: 0.22
+Iteration 30 completed... Current fitness: 0.2
+Best fitness so far: 0.18
+Iteration 35 completed... Current fitness: 0.17
+Iteration 40 completed... Current fitness: 0.17
+Best fitness so far: 0.16
+Iteration 45 completed... Current fitness: 0.17
+Iteration 50 completed... Current fitness: 0.17
+Best fitness so far: 0.16
+Iteration 55 completed... Current fitness: 0.15
+Iteration 60 completed... Current fitness: 0.16
+Best fitness so far: 0.15
+Iteration 65 completed... Current fitness: 0.15
+Iteration 70 completed... Current fitness: 0.14
+Best fitness so far: 0.14
+Iteration 75 completed... Current fitness: 0.13
+Iteration 80 completed... Current fitness: 0.14
+Best fitness so far: 0.13
+Iteration 85 completed... Current fitness: 0.13
+Iteration 90 completed... Current fitness: 0.13
+Best fitness so far: 0.13
+Iteration 95 completed... Current fitness: 0.13
+Iteration 100 completed... Current fitness: 0.13
+Best fitness so far: 0.12
+Iteration 105 completed... Current fitness: 0.12
+Iteration 110 completed... Current fitness: 0.12
+Best fitness so far: 0.12
+Iteration 115 completed... Current fitness: 0.12
+Iteration 120 completed... Current fitness: 0.12
+Best fitness so far: 0.12
+Iteration 125 completed... Current fitness: 0.12
+Iteration 130 completed... Current fitness: 0.12
+Best fitness so far: 0.12
+Iteration 135 completed... Current fitness: 0.12
+Iteration 140 completed... Current fitness: 0.12
+Best fitness so far: 0.12
+Iteration 145 completed... Current fitness: 0.11
+Iteration 150 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 155 completed... Current fitness: 0.11
+Iteration 160 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 165 completed... Current fitness: 0.11
+Iteration 170 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 175 completed... Current fitness: 0.11
+Iteration 180 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 185 completed... Current fitness: 0.11
+Iteration 190 completed... Current fitness: 0.11
+Best fitness so far: 0.1
+Iteration 195 completed... Current fitness: 0.11
+Iteration 200 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 205 completed... Current fitness: 0.11
+Iteration 210 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 215 completed... Current fitness: 0.1
+Iteration 220 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 225 completed... Current fitness: 0.1
+Iteration 230 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 235 completed... Current fitness: 0.1
+Iteration 240 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 245 completed... Current fitness: 0.1
+Iteration 250 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 255 completed... Current fitness: 0.1
+Iteration 260 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 265 completed... Current fitness: 0.1
+Iteration 270 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 275 completed... Current fitness: 0.1
+Iteration 280 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 285 completed... Current fitness: 0.1
+Iteration 290 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 295 completed... Current fitness: 0.1
+Iteration 300 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+---------------------------------------
+Run 1/1 on host cl1n043, pid 278173
+AUC = 0.901 
+Number of function evaluations : 6000 
+Runtime : 82405.7 secondes
+---------------------------------------
+Total runtime : 22.9 hours
+Currently doing repetition 5 ...2022-08-15 10:31:32
+Starting CMA-ES calibration
+-------------------------------------
+1 run(s) with 20 parallel simulations
+-------------------------------------
+Iteration 1 completed... Current fitness: 0.27
+Iteration 5 completed... Current fitness: 0.3
+Iteration 10 completed... Current fitness: 0.23
+Best fitness so far: 0.23
+Iteration 15 completed... Current fitness: 0.19
+Iteration 20 completed... Current fitness: 0.2
+Best fitness so far: 0.19
+Iteration 25 completed... Current fitness: 0.18
+Iteration 30 completed... Current fitness: 0.18
+Best fitness so far: 0.17
+Iteration 35 completed... Current fitness: 0.18
+Iteration 40 completed... Current fitness: 0.16
+Best fitness so far: 0.16
+Iteration 45 completed... Current fitness: 0.16
+Iteration 50 completed... Current fitness: 0.14
+Best fitness so far: 0.14
+Iteration 55 completed... Current fitness: 0.12
+Iteration 60 completed... Current fitness: 0.14
+Best fitness so far: 0.11
+Iteration 65 completed... Current fitness: 0.12
+Iteration 70 completed... Current fitness: 0.12
+Best fitness so far: 0.11
+Iteration 75 completed... Current fitness: 0.11
+Iteration 80 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 85 completed... Current fitness: 0.11
+Iteration 90 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 95 completed... Current fitness: 0.11
+Iteration 100 completed... Current fitness: 0.11
+Best fitness so far: 0.11
+Iteration 105 completed... Current fitness: 0.11
+Iteration 110 completed... Current fitness: 0.11
+Best fitness so far: 0.1
+Iteration 115 completed... Current fitness: 0.1
+Iteration 120 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 125 completed... Current fitness: 0.1
+Iteration 130 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 135 completed... Current fitness: 0.1
+Iteration 140 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 145 completed... Current fitness: 0.1
+Iteration 150 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 155 completed... Current fitness: 0.1
+Iteration 160 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 165 completed... Current fitness: 0.1
+Iteration 170 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 175 completed... Current fitness: 0.1
+Iteration 180 completed... Current fitness: 0.1
+Best fitness so far: 0.1
+Iteration 185 completed... Current fitness: 0.09
+Iteration 190 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 195 completed... Current fitness: 0.09
+Iteration 200 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 205 completed... Current fitness: 0.09
+Iteration 210 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 215 completed... Current fitness: 0.09
+Iteration 220 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 225 completed... Current fitness: 0.09
+Iteration 230 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 235 completed... Current fitness: 0.09
+Iteration 240 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 245 completed... Current fitness: 0.09
+Iteration 250 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 255 completed... Current fitness: 0.09
+Iteration 260 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 265 completed... Current fitness: 0.09
+Iteration 270 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 275 completed... Current fitness: 0.09
+Iteration 280 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 285 completed... Current fitness: 0.09
+Iteration 290 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+Iteration 295 completed... Current fitness: 0.09
+Iteration 300 completed... Current fitness: 0.09
+Best fitness so far: 0.09
+---------------------------------------
+Run 1/1 on host cl1n043, pid 278173
+AUC = 0.914 
+Number of function evaluations : 6000 
+Runtime : 82380.7 secondes
+---------------------------------------
+Total runtime : 22.9 hours

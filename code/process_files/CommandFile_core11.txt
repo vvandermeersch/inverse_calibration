@@ -1,0 +1,10 @@
+# File for Phenofit4 CommandScript
+# Generated with Rstudio (time: 2022-06-14 18:32:00, user: vvandermeersch)
+					
+speciesInputDir =
+climateInputDir =
+outputDir = /scratch/vvandermeersch/phenofit_calibration/process_files/output/core11/run
+quietMode = true
+					
+# speciesFileName	climateFolderName	climateScenario	startingYear	endingYear
+/scratch/vvandermeersch/phenofit_calibration/process_files/params/pinus_sylvestris_11.species	/scratch/vvandermeersch/data/climate/phenofit_format/ERA5Land_pinsyl/1000pres_1000abs/subset_1	ERA5LAND	1970	2000

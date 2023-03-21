@@ -1,0 +1,10 @@
+# File for Phenofit4 CommandScript
+# Generated with Rstudio (time: 2022-01-13 14:49:39, user: vandermeersch)
+					
+speciesInputDir = C:/Users/vandermeersch/Documents/CEFE/thesis/phenofit/Phenofit_from_R/inverse_modelling/input_files/
+climateInputDir = D:/climate/
+outputDir = C:/Users/vandermeersch/Documents/CEFE/thesis/phenofit/Phenofit_from_R/inverse_modelling/process_files/output/run
+quietMode = true
+					
+# speciesFileName	climateFolderName	climateScenario	startingYear	endingYear
+Fagus_sylvatica_EvolLett2019.species	Cerfacs_PhenofitCapsis	CERFACS	1952	1953
