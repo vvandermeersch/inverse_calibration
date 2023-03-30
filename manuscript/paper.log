@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.16)  28 MAR 2023 21:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.16)  29 MAR 2023 16:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -872,196 +872,196 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
 
 {c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5]
 LaTeX Font Info:    Font shape `TS1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 10.95pt on input line 539.
+(Font)              scaled to size 10.95pt on input line 550.
 [6] [7]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 623.
+(Font)              <10.95> on input line 634.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 623.
+(Font)              <8> on input line 634.
 [8] [9]
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 721.
+(Font)              scaled to size 10.0pt on input line 733.
 
-Overfull \hbox (4.14326pt too wide) in paragraph at lines 731--731
+Overfull \hbox (4.14326pt too wide) in paragraph at lines 743--743
 []\T1/LinuxLibertineT-TLF/m/n/10.95 PHENOFIT|  
  []
 
 
-Overfull \hbox (8.24948pt too wide) in paragraph at lines 731--731
+Overfull \hbox (8.24948pt too wide) in paragraph at lines 743--743
 []\T1/LinuxLibertineT-TLF/m/n/10.95 CASTANEA|  
  []
 
-<figs/phenofitmaps.pdf, id=384, 505.89pt x 505.89pt>
+<figs/phenofitmaps.pdf, id=381, 505.89pt x 505.89pt>
 File: figs/phenofitmaps.pdf Graphic file (type pdf)
 <use figs/phenofitmaps.pdf>
-Package pdftex.def Info: figs/phenofitmaps.pdf  used on input line 755.
+Package pdftex.def Info: figs/phenofitmaps.pdf  used on input line 767.
 (pdftex.def)             Requested size: 469.76265pt x 469.76265pt.
 [10]
-<figs/castaneamaps.pdf, id=393, 505.89pt x 505.89pt>
+<figs/castaneamaps.pdf, id=391, 505.89pt x 505.89pt>
 File: figs/castaneamaps.pdf Graphic file (type pdf)
 <use figs/castaneamaps.pdf>
-Package pdftex.def Info: figs/castaneamaps.pdf  used on input line 764.
+Package pdftex.def Info: figs/castaneamaps.pdf  used on input line 776.
 (pdftex.def)             Requested size: 469.76265pt x 469.76265pt.
 [11 <./figs/phenofitmaps.pdf>]
-<figs/cmaesrepAUCcal.pdf, id=420, 433.62pt x 216.81pt>
+<figs/cmaesrepAUCcal.pdf, id=418, 433.62pt x 216.81pt>
 File: figs/cmaesrepAUCcal.pdf Graphic file (type pdf)
 <use figs/cmaesrepAUCcal.pdf>
-Package pdftex.def Info: figs/cmaesrepAUCcal.pdf  used on input line 781.
+Package pdftex.def Info: figs/cmaesrepAUCcal.pdf  used on input line 793.
 (pdftex.def)             Requested size: 433.63878pt x 216.81938pt.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 10.0pt on input line 785.
+(Font)              scaled to size 10.0pt on input line 797.
 [12 <./figs/castaneamaps.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 797--803
+Underfull \hbox (badness 10000) in paragraph at lines 809--815
 
  []
 
 [13 <./figs/cmaesrepAUCcal.pdf>]
-<figs/unfoldingplots.pdf, id=472, 289.08pt x 289.08pt>
+<figs/unfoldingplots.pdf, id=470, 289.08pt x 289.08pt>
 File: figs/unfoldingplots.pdf Graphic file (type pdf)
 <use figs/unfoldingplots.pdf>
-Package pdftex.def Info: figs/unfoldingplots.pdf  used on input line 826.
+Package pdftex.def Info: figs/unfoldingplots.pdf  used on input line 838.
 (pdftex.def)             Requested size: 289.09251pt x 289.09251pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 830.
+(Font)              <7> on input line 842.
 [14 <./figs/unfoldingplots.pdf>] [15] [16] [17] [18] [19] [20]
-Overfull \hbox (31.06586pt too wide) in paragraph at lines 1144--1149
+Overfull \hbox (31.06586pt too wide) in paragraph at lines 1156--1161
  \T1/LinuxLibertineT-TLF/m/n/10.95 sphere have plan-e-tary tip-ping points? \T1/LinuxLibertineT-TLF/m/it/10.95 Trends in Ecol-ogy & Evo-lu-tion\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 28\T1/LinuxLibertineT-TLF/m/n/10.95 , 396--401. [][]10.1016/j.tree.2013.01.016[][] 
  []
 
 [21] [22] [23] [24]
-Overfull \hbox (24.13837pt too wide) in paragraph at lines 1397--1403
+Overfull \hbox (24.13837pt too wide) in paragraph at lines 1409--1415
  \T1/LinuxLibertineT-TLF/m/n/10.95 straints: Re-sults from a process-based mod-elling study. \T1/LinuxLibertineT-TLF/m/it/10.95 Global Change Bi-ol-ogy\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 6\T1/LinuxLibertineT-TLF/m/n/10.95 , 507--523. [][]10.1046/j.1365-
  []
 
 [25] [26]
-Overfull \hbox (46.92027pt too wide) in paragraph at lines 1515--1523
+Overfull \hbox (46.92027pt too wide) in paragraph at lines 1527--1535
  \T1/LinuxLibertineT-TLF/m/n/10.95 im-prove pro-jec-tions of species dis-tri-bu-tions? \T1/LinuxLibertineT-TLF/m/it/10.95 Eco-log-i-cal Mod-elling\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 326\T1/LinuxLibertineT-TLF/m/n/10.95 , 63--74. [][]10.1016/j.ecolmodel.2015.11.007[][] 
  []
 
 
-Overfull \hbox (1.19322pt too wide) in paragraph at lines 1543--1547
+Overfull \hbox (1.19322pt too wide) in paragraph at lines 1555--1559
  []\T1/LinuxLibertineT-TLF/m/n/10.95 Urban, M.C. (2015). Ac-cel-er-at-ing ex-tinc-tion risk from cli-mate change. \T1/LinuxLibertineT-TLF/m/it/10.95 Sci-ence\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 348\T1/LinuxLibertineT-TLF/m/n/10.95 , 571--573. [][]10.1126/sci-
  []
 
 
-Overfull \hbox (47.6712pt too wide) in paragraph at lines 1564--1570
+Overfull \hbox (47.6712pt too wide) in paragraph at lines 1576--1582
  \T1/LinuxLibertineT-TLF/m/n/10.95 cli-mates by 2100 AD. \T1/LinuxLibertineT-TLF/m/it/10.95 Pro-ceed-ings of the Na-tional Academy of Sci-ences\T1/LinuxLibertineT-TLF/m/n/10.95 , \T1/LinuxLibertineT-TLF/b/n/10.95 104\T1/LinuxLibertineT-TLF/m/n/10.95 , 5738--5742. [][]10.1073/pnas.0606292104[][] 
  []
 
 [27] [28]
 
 pdfTeX warning: pdflatex.exe (file ./figs/files/phenofit.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
-<figs/files/phenofit.pdf, id=683, 625.96065pt x 540.60239pt>
+<figs/files/phenofit.pdf, id=681, 625.96065pt x 540.60239pt>
 File: figs/files/phenofit.pdf Graphic file (type pdf)
 <use figs/files/phenofit.pdf>
-Package pdftex.def Info: figs/files/phenofit.pdf  used on input line 1597.
+Package pdftex.def Info: figs/files/phenofit.pdf  used on input line 1609.
 (pdftex.def)             Requested size: 469.76541pt x 405.7065pt.
 
 
 pdfTeX warning: pdflatex.exe (file ./figs/files/castanea_schema.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
-<figs/files/castanea_schema.pdf, id=684, 483.69685pt x 426.79132pt>
+<figs/files/castanea_schema.pdf, id=682, 483.69685pt x 426.79132pt>
 File: figs/files/castanea_schema.pdf Graphic file (type pdf)
 <use figs/files/castanea_schema.pdf>
-Package pdftex.def Info: figs/files/castanea_schema.pdf  used on input line 1606.
+Package pdftex.def Info: figs/files/castanea_schema.pdf  used on input line 1618.
 (pdftex.def)             Requested size: 469.76106pt x 414.49504pt.
 [1 <./figs/files/phenofit.pdf>] [2 <./figs/files/castanea_schema.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 1628--1629
+Underfull \hbox (badness 10000) in paragraph at lines 1640--1641
  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1645--1646
+Underfull \hbox (badness 10000) in paragraph at lines 1657--1658
  
  []
 
 
 
 pdfTeX warning: pdflatex.exe (file ./figs/files/presence_clustering.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
-<figs/files/presence_clustering.pdf, id=790, 910.48819pt x 284.52756pt>
+<figs/files/presence_clustering.pdf, id=788, 910.48819pt x 284.52756pt>
 File: figs/files/presence_clustering.pdf Graphic file (type pdf)
 <use figs/files/presence_clustering.pdf>
-Package pdftex.def Info: figs/files/presence_clustering.pdf  used on input line 1649.
+Package pdftex.def Info: figs/files/presence_clustering.pdf  used on input line 1661.
 (pdftex.def)             Requested size: 469.76108pt x 146.80032pt.
 [1 <./figs/files/presence_clustering.pdf>]
 
 pdfTeX warning: pdflatex.exe (file ./figs/files/occurrence_processing.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
-<figs/files/occurrence_processing.pdf, id=827, 753.99802pt x 597.50786pt>
+<figs/files/occurrence_processing.pdf, id=825, 753.99802pt x 597.50786pt>
 File: figs/files/occurrence_processing.pdf Graphic file (type pdf)
 <use figs/files/occurrence_processing.pdf>
-Package pdftex.def Info: figs/files/occurrence_processing.pdf  used on input line 1659.
+Package pdftex.def Info: figs/files/occurrence_processing.pdf  used on input line 1671.
 (pdftex.def)             Requested size: 592.78714pt x 469.75584pt.
 
-LaTeX Warning: Float too large for page by 34.00082pt on input line 1664.
+LaTeX Warning: Float too large for page by 34.00082pt on input line 1676.
 
 [2 <./figs/files/occurrence_processing.pdf>]
-<figs/distributionmaps.pdf, id=869, 289.08pt x 563.10374pt>
+<figs/distributionmaps.pdf, id=867, 289.08pt x 563.10374pt>
 File: figs/distributionmaps.pdf Graphic file (type pdf)
 <use figs/distributionmaps.pdf>
-Package pdftex.def Info: figs/distributionmaps.pdf  used on input line 1686.
+Package pdftex.def Info: figs/distributionmaps.pdf  used on input line 1698.
 (pdftex.def)             Requested size: 289.09251pt x 563.12814pt.
 [1
 
 
  <./figs/distributionmaps.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 1708--1709
+Underfull \hbox (badness 10000) in paragraph at lines 1720--1721
  
  []
 
 [1] [2]
-Underfull \hbox (badness 10000) in paragraph at lines 1776--1777
+Underfull \hbox (badness 10000) in paragraph at lines 1788--1789
  
  []
 
-<figs/calibCMAESquercus.pdf, id=909, 216.81pt x 194.7275pt>
+<figs/calibCMAESquercus.pdf, id=907, 216.81pt x 194.7275pt>
 File: figs/calibCMAESquercus.pdf Graphic file (type pdf)
 <use figs/calibCMAESquercus.pdf>
-Package pdftex.def Info: figs/calibCMAESquercus.pdf  used on input line 1780.
+Package pdftex.def Info: figs/calibCMAESquercus.pdf  used on input line 1792.
 (pdftex.def)             Requested size: 216.81607pt x 194.73294pt.
-<figs/calibCMAESabies.pdf, id=910, 216.81pt x 194.7275pt>
+<figs/calibCMAESabies.pdf, id=908, 216.81pt x 194.7275pt>
 File: figs/calibCMAESabies.pdf Graphic file (type pdf)
 <use figs/calibCMAESabies.pdf>
-Package pdftex.def Info: figs/calibCMAESabies.pdf  used on input line 1789.
+Package pdftex.def Info: figs/calibCMAESabies.pdf  used on input line 1801.
 (pdftex.def)             Requested size: 216.81607pt x 194.73294pt.
 [1 <./figs/calibCMAESquercus.pdf> <./figs/calibCMAESabies.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 1810--1811
+Underfull \hbox (badness 10000) in paragraph at lines 1822--1823
  
  []
 
-<figs/phenofit_output_maps.pdf, id=936, 325.215pt x 505.89pt>
+<figs/phenofit_output_maps.pdf, id=934, 325.215pt x 505.89pt>
 File: figs/phenofit_output_maps.pdf Graphic file (type pdf)
 <use figs/phenofit_output_maps.pdf>
-Package pdftex.def Info: figs/phenofit_output_maps.pdf  used on input line 1814.
+Package pdftex.def Info: figs/phenofit_output_maps.pdf  used on input line 1826.
 (pdftex.def)             Requested size: 325.21916pt x 505.89645pt.
-<figs/best_forward_maps.pdf, id=937, 325.215pt x 578.16pt>
+<figs/best_forward_maps.pdf, id=935, 325.215pt x 578.16pt>
 File: figs/best_forward_maps.pdf Graphic file (type pdf)
 <use figs/best_forward_maps.pdf>
-Package pdftex.def Info: figs/best_forward_maps.pdf  used on input line 1823.
+Package pdftex.def Info: figs/best_forward_maps.pdf  used on input line 1835.
 (pdftex.def)             Requested size: 325.22908pt x 578.18504pt.
 [1 <./figs/phenofit_output_maps.pdf>] [2 <./figs/best_forward_maps.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 1845--1846
+Underfull \hbox (badness 10000) in paragraph at lines 1857--1858
  
  []
 
-<figs/leafpardensity.pdf, id=989, 289.08pt x 289.08pt>
+<figs/leafpardensity.pdf, id=987, 289.08pt x 289.08pt>
 File: figs/leafpardensity.pdf Graphic file (type pdf)
 <use figs/leafpardensity.pdf>
-Package pdftex.def Info: figs/leafpardensity.pdf  used on input line 1878.
+Package pdftex.def Info: figs/leafpardensity.pdf  used on input line 1890.
 (pdftex.def)             Requested size: 289.09251pt x 289.09251pt.
 [1]
-<figs/consensusfitnessmap.pdf, id=998, 505.89pt x 289.08pt>
+<figs/consensusfitnessmap.pdf, id=996, 505.89pt x 289.08pt>
 File: figs/consensusfitnessmap.pdf Graphic file (type pdf)
 <use figs/consensusfitnessmap.pdf>
-Package pdftex.def Info: figs/consensusfitnessmap.pdf  used on input line 1887.
+Package pdftex.def Info: figs/consensusfitnessmap.pdf  used on input line 1899.
 (pdftex.def)             Requested size: 469.76265pt x 268.43579pt.
 [2 <./figs/leafpardensity.pdf> <./figs/consensusfitnessmap.pdf>]
-<figs/unfoldingdatesbackforw.pdf, id=1015, 505.89pt x 289.08pt>
+<figs/unfoldingdatesbackforw.pdf, id=1013, 505.89pt x 289.08pt>
 File: figs/unfoldingdatesbackforw.pdf Graphic file (type pdf)
 <use figs/unfoldingdatesbackforw.pdf>
-Package pdftex.def Info: figs/unfoldingdatesbackforw.pdf  used on input line 1905.
+Package pdftex.def Info: figs/unfoldingdatesbackforw.pdf  used on input line 1917.
 (pdftex.def)             Requested size: 469.76265pt x 268.43579pt.
 [3 <./figs/unfoldingdatesbackforw.pdf>]
 
-LaTeX Warning: Empty bibliography on input line 1918.
+LaTeX Warning: Empty bibliography on input line 1930.
 
 (./paper.aux)
 
@@ -1084,12 +1084,12 @@ Here is how much of TeX's memory you used:
  43346 multiletter control sequences out of 15000+600000
  592910 words of font info for 76 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 69i,16n,117p,819b,851s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 69i,16n,117p,787b,851s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_naooyc.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}{c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}<c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/libertine/LinBiolinumT.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/Users/vandermeersch/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb>
-Output written on paper.pdf (41 pages, 7122517 bytes).
+Output written on paper.pdf (41 pages, 7123113 bytes).
 PDF statistics:
- 1148 PDF objects out of 1200 (max. 8388607)
- 877 compressed objects within 9 object streams
+ 1146 PDF objects out of 1200 (max. 8388607)
+ 875 compressed objects within 9 object streams
  210 named destinations out of 1000 (max. 500000)
  353 words of extra memory for PDF output out of 10000 (max. 10000000)
 

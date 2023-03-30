@@ -229,7 +229,7 @@ Montpellier, CNRS, EPHE, IRD, Montpellier, France}
   process-based models. Although there is some continuity between these
   two types of models, they are fundamentally different in their
   hypotheses (statistical relationships \emph{vs} mechanistic
-  relationships) and and their calibration methods
+  relationships) and their calibration methods
   \textcolor{darkgreen}{(SDMs tend to be occurrence data-driven while PBMs tend to be prior-driven)}.
 \item
   One of the limitations to the use of process-based models is the
@@ -396,9 +396,20 @@ models is to measure parameters, statistical inference might be useful
 when data are not yet available to infer parameter values. Parameter
 inference can be achieved through several methods which have been
 developed in the last decades.
-\textcolor{darkgreen}{Most of them fall into two categories: informal and statistical calibration. On the one hand, statistical calibration assumes a data-generating model, and a likelihood function, which quantifies the probability of the observed data given the model parameters, is expressed mathematically. This likelihood is the foundation of *maximum likelihood estimation* and *Bayesian inference*, two commonly used methods for parameter estimation. In practice, deriving the likelihood function can be quite challenging for complex models with many parameters and thresholding. One approach is to use numerical methods such as *simulation-based inference* or *approximate Bayesian computation*}
-(e.g. \protect\hyperlink{ref-Hartig2014}{Hartig \emph{et al.}
-2014})\textcolor{darkgreen}{. However, obtaining a reliable estimate of the likelihood of a complex process-based model can require a large number of simulated samples, which can be computationally expensive. On the other hand, informal calibration uses an informal objective function to measure the discrepancy between the model predictions and the observed data may be a reasonable alternative. By minimizing the objective function, one is able to identify the parameter values that best fit the observed data, even though it may not have the same statistical rigor as statistical calibration. This optimization step can be achieved with several methods, either deterministic (e.g. Nelder-Mead method) or stochastic (e.g. simulated annealing, evolutionary algorithms).}\\
+\textbackslash textcolor\{darkgreen\}\{Most of them fall into two
+categories: informal and statistical calibration. On the one hand,
+statistical calibration assumes a data-generating model, and a
+likelihood function, which quantifies the probability of the observed
+data given the model parameters, is expressed mathematically. This
+likelihood is the foundation of \emph{maximum likelihood estimation} and
+\emph{Bayesian inference}, two commonly used methods for parameter
+estimation. In practice, deriving the likelihood function can be quite
+challenging for complex models with many parameters and thresholding.
+One approach is to use numerical methods such as
+\emph{simulation-based inference} or
+\emph{approximate Bayesian computation} (e.g.
+\protect\hyperlink{ref-Hartig2014}{Hartig \emph{et al.}
+2014})\textcolor{darkgreen}{. However, obtaining a reliable estimate of the likelihood of a complex process-based model can require a large number of simulated samples, which can be computationally expensive. On the other hand, informal calibration uses an informal objective function to measure the discrepancy between the model predictions and the observed data. By minimizing the objective function, one is able to identify the parameter values that best fit the observed data, even though it may not have the same statistical rigor as statistical calibration. This optimization step can be achieved with several methods, either deterministic (e.g. Nelder-Mead method) or stochastic (e.g. simulated annealing, evolutionary algorithms).}\\
 Recently, an approach belonging to the evolutionary algorithm family,
 called Covariance Matrix Adaptation Evolution Strategy (CMA-ES), has
 been proposed (\protect\hyperlink{ref-Hansen2001}{Hansen \& Ostermeier
@@ -623,16 +634,17 @@ providing the best predictions). At each iteration:\\
 - \(\lambda\) candidate solutions are evaluated, i.e.~model runs
 \(\lambda\) times with \(\lambda\) different parameter sets and the
 objective function is evaluated\\
-- the best \(\mu\) candidate solutionss are selected\\
+- the best \(\mu\) candidate solutions are selected\\
 - the weighted mean candidate solution \(m\) is computed (mean of the
-best \(\mu\) parameter sets weighted by their objective function value)
+best \(\mu\) parameter sets weighted by their objective function
+value)\\
 - covariance matrix \(C\) and step size \(\sigma\) are updated (with
 information accumulated over several consecutive iterations)\\
 - new \(\lambda\) candidate solutions are sampled in a normal
 distribution \(\mathcal{N}(m, \sigma C)\), with both recombination (via
 the favorite solution \(m\)) and mutations (via the perturbations
 \(\sigma C\))\\
-One of the strength of this approach lies in the combination of
+One of the strengths of this approach lies in the combination of
 rank-\(\mu\)-update, where prior information from previous generations
 is exploited (mean of the previous covariance matrices, with a higher
 weight for recent generations), and cumulation, where correlations
@@ -982,10 +994,10 @@ they are not a perfect representation of the reality, and their inherent
 structural errors increase the probability of finding parameter values
 that deviate from the true values of the underlying processes (see
 \protect\hyperlink{ref-Oberpriller2021}{Oberpriller \emph{et al.}
-2021}). Secondly, they do not necessarily include all the environmental
+2021}). Second, they do not necessarily include all the environmental
 factors at stake. For example, pedologic variable in PHENOFIT only
 involve the water holding capacity. In this model, other variables such
-as pH or soil texture are not considered. Thirdly, and more importantly,
+as pH or soil texture are not considered. Third, and more importantly,
 they are used here to represent the fundamental niche, and to estimate
 the potential distribution of the species using pedoclimatic variables.
 When calibrated against observed distributions, which represent the
@@ -1018,7 +1030,7 @@ as in the leaf unfolding submodel), inverse calibration might not
 provide the right parameter estimates. In such a case, expert knowledge,
 observations and measurements are necessary to determine \emph{a
 posteriori} which estimates are the most realistic. This is possible in
-the case of process-based SDMs, and usually not feasable in the case of
+the case of process-based SDMs, and usually not feasible in the case of
 correlative SDMs. A combination of both expert and inverse calibrations
 might offer a new perspective for spreading the use of process-based
 models in predictive ecology, especially for climate change impact
