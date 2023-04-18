@@ -229,23 +229,22 @@ Montpellier, CNRS, EPHE, IRD, Montpellier, France}
   process-based models. Although there is some continuity between these
   two types of models, they are fundamentally different in their
   hypotheses (statistical relationships \emph{vs} mechanistic
-  relationships) and their calibration methods
-  \textcolor{darkgreen}{(SDMs tend to be occurrence data-driven while PBMs tend to be prior-driven)}.
+  relationships) and their calibration methods (SDMs tend to be
+  occurrence data-driven while PBMs tend to be prior-driven).
 \item
   One of the limitations to the use of process-based models is the
-  difficulty to parameterize them for a large number of species
-  \textcolor{darkgreen}{compared to correlative SDMs}. We investigated
-  the feasibility of using an evolutionary algorithm (called covariance
-  matrix adaptation evolution strategy, CMA-ES) to calibrate
-  process-based models using species distribution data. This method is
-  well established in some fields (robotics, aerospace research,
-  \ldots), but has never been used, to our knowledge, in ecology,
-  despite its ability to deal with very large space dimensions. Using
-  tree species occurrence data across Europe, we adapted the CMA-ES
-  algorithm to find appropriate values of model parameters. We estimated
-  simultaneously 27 to 77 parameters of two process-based models
-  simulating forest tree's ecophysiology for three species with varying
-  range sizes and geographical distributions.
+  difficulty to parameterize them for a large number of species compared
+  to correlative SDMs. We investigated the feasibility of using an
+  evolutionary algorithm (called covariance matrix adaptation evolution
+  strategy, CMA-ES) to calibrate process-based models using species
+  distribution data. This method is well established in some fields
+  (robotics, aerospace research, \ldots), but has never been used, to
+  our knowledge, in ecology, despite its ability to deal with very large
+  space dimensions. Using tree species occurrence data across Europe, we
+  adapted the CMA-ES algorithm to find appropriate values of model
+  parameters. We estimated simultaneously 27 to 77 parameters of two
+  process-based models simulating forest tree's ecophysiology for three
+  species with varying range sizes and geographical distributions.
 \item
   CMA-ES provided parameter estimates leading to better prediction of
   species distribution than parameter estimates based on experts
@@ -253,14 +252,14 @@ Montpellier, CNRS, EPHE, IRD, Montpellier, France}
   processes were strongly dependent, and different parameter
   combinations could therefore lead to high model accuracy.
 \item
-  \textcolor{darkgreen}{We conclude that} CMA-ES is an efficient
-  state-of-the-art method to calibrate process-based models with a large
-  number of parameters using species occurrence data. Inverse modelling
-  using CMA-ES is a powerful method to calibrate process-based
-  parameters which can hardly be measured. However, the method does not
-  warranty that parameter estimates are correct because of several
-  sources of bias, similarly to correlative models, and expert knowledge
-  is required to validate results.
+  We conclude that CMA-ES is an efficient state-of-the-art method to
+  calibrate process-based models with a large number of parameters using
+  species occurrence data. Inverse modelling using CMA-ES is a powerful
+  method to calibrate process-based parameters which can hardly be
+  measured. However, the method does not warranty that parameter
+  estimates are correct because of several sources of bias, similarly to
+  correlative models, and expert knowledge is required to validate
+  results.
 \end{enumerate}
 
 
@@ -395,21 +394,29 @@ data to calibrate them. Therefore, although the philosophy of such
 models is to measure parameters, statistical inference might be useful
 when data are not yet available to infer parameter values. Parameter
 inference can be achieved through several methods which have been
-developed in the last decades.
-\textbackslash textcolor\{darkgreen\}\{Most of them fall into two
-categories: informal and statistical calibration. On the one hand,
-statistical calibration assumes a data-generating model, and a
-likelihood function, which quantifies the probability of the observed
-data given the model parameters, is expressed mathematically. This
-likelihood is the foundation of \emph{maximum likelihood estimation} and
+developed in the last decades. Most of them fall into two categories:
+informal and statistical calibration. On the one hand, statistical
+calibration assumes a data-generating model, and a likelihood function,
+which quantifies the probability of the observed data given the model
+parameters, is expressed mathematically. This likelihood is the
+foundation of \emph{maximum likelihood estimation} and
 \emph{Bayesian inference}, two commonly used methods for parameter
 estimation. In practice, deriving the likelihood function can be quite
 challenging for complex models with many parameters and thresholding.
 One approach is to use numerical methods such as
-\emph{simulation-based inference} or
-\emph{approximate Bayesian computation} (e.g.
-\protect\hyperlink{ref-Hartig2014}{Hartig \emph{et al.}
-2014})\textcolor{darkgreen}{. However, obtaining a reliable estimate of the likelihood of a complex process-based model can require a large number of simulated samples, which can be computationally expensive. On the other hand, informal calibration uses an informal objective function to measure the discrepancy between the model predictions and the observed data. By minimizing the objective function, one is able to identify the parameter values that best fit the observed data, even though it may not have the same statistical rigor as statistical calibration. This optimization step can be achieved with several methods, either deterministic (e.g. Nelder-Mead method) or stochastic (e.g. simulated annealing, evolutionary algorithms).}\\
+\emph{simulation-based inference} or \textbackslash emph\{approximate
+Bayesian computation (e.g. \protect\hyperlink{ref-Hartig2014}{Hartig
+\emph{et al.} 2014}). However, obtaining a reliable estimate of the
+likelihood of a complex process-based model can require a large number
+of simulated samples, which can be computationally expensive. On the
+other hand, informal calibration uses an informal objective function to
+measure the discrepancy between the model predictions and the observed
+data. By minimizing the objective function, one is able to identify the
+parameter values that best fit the observed data, even though it may not
+have the same statistical rigor as statistical calibration. This
+optimization step can be achieved with several methods, either
+deterministic (e.g.~Nelder-Mead method) or stochastic (e.g.~simulated
+annealing, evolutionary algorithms).\\
 Recently, an approach belonging to the evolutionary algorithm family,
 called Covariance Matrix Adaptation Evolution Strategy (CMA-ES), has
 been proposed (\protect\hyperlink{ref-Hansen2001}{Hansen \& Ostermeier
@@ -845,7 +852,15 @@ temperature \(T_{50}\) is -0.55 (\(p <\) 0.001).
 \hypertarget{discussion}{%
 \section{3. Discussion}\label{discussion}}
 
-\textcolor{darkgreen}{Our results showed that CMA-ES is an efficient optimizer for inverse calibration of complex ecological models. The algorithm was able to find parameter sets that significantly improved the predictions of the calibrated models compared to the expert parametrization.  However, our study also highlighted the issue of non-identifiability of parameter values due to the data limitation and the dependence between process-based model parameters, which may result in diverging parameter values even though the calibrated models describe the observed species distribution well.}
+Our results showed that CMA-ES is an efficient optimizer for inverse
+calibration of complex ecological models. The algorithm was able to find
+parameter sets that significantly improved the predictions of the
+calibrated models compared to the expert parametrization. However, our
+study also highlighted the issue of non-identifiability of parameter
+values due to the data limitation and the dependence between
+process-based model parameters, which may result in diverging parameter
+values even though the calibrated models describe the observed species
+distribution well.
 
 \hypertarget{performance-and-advantages-of-cma-es-to-calibrate-complex-models-in-ecology}{%
 \subsection{3.1. Performance and advantages of CMA-ES to calibrate
@@ -856,10 +871,9 @@ Here we demonstrated that inverse calibration with CMA-ES is feasible
 and provide good results for complex and runtime-expensive ecological
 models.\\
 With a subsampling of species occurrence data, the algorithm succeeds in
-finding parameter sets which provide \textcolor{darkgreen}{higher} AUC
-values. The predictions of the calibrated models are sharply improved
-compared to expert parametrization
-(\hyperref[fig:phenofitmaps]{Figure 1} and
+finding parameter sets which provide higher AUC values. The predictions
+of the calibrated models are sharply improved compared to expert
+parametrization (\hyperref[fig:phenofitmaps]{Figure 1} and
 \hyperref[fig:castaneamaps]{Figure 2}). Two striking examples are the
 increase in the performance of PHENOFIT model for silver fir, from 0.72
 to 0.9, and of CASTANEA model for holm oak, from 0.7 to 0.95. Moreover,
@@ -874,24 +888,33 @@ to efficiently explore the parameter space. We only had to choose the
 number of candidate solutions \(\lambda\), and the initial search region
 (initial starting point and step size \(\sigma\)). As well as being
 quasi parameter-free, CMA-ES has several structural advantages
-particularly useful for complex optimization problems.
-\textcolor{darkgreen}{First, the algorithm's covariance matrix enables the learning of second-order information, which provides insights into pairwise dependencies between parameters. Second, the covariance matrix adaptation of CMA-ES is highly efficient in handling ill-conditioned and non-separable problems }(\protect\hyperlink{ref-Hansen2011}{Hansen
-\emph{et al.}
-2011})\textcolor{darkgreen}{. Last, CMA-ES's update mechanism of step size $\sigma$ (i.e. the mutation force) helps prevent premature convergence }(\protect\hyperlink{ref-Hansen2001}{Hansen
-\& Ostermeier
-2001})\textcolor{darkgreen}{, allowing the algorithm to explore more of the search space.}
-CMA-ES has been shown to outperform several other optimization
-algorithms (\protect\hyperlink{ref-Hansen2010}{Hansen \emph{et al.}
-2010}), and is usually the most efficient method when the target cost
-(i.e.~the number of objective function evaluations) is about \(100*N\)
-(\(N\) being the dimension of the parameter search space,
+particularly useful for complex optimization problems. First, the
+algorithm's covariance matrix enables the learning of second-order
+information, which provides insights into pairwise dependencies between
+parameters. Second, the covariance matrix adaptation of CMA-ES is highly
+efficient in handling ill-conditioned and non-separable problems
+(\protect\hyperlink{ref-Hansen2011}{Hansen \emph{et al.} 2011}). Last,
+CMA-ES's update mechanism of step size \(\sigma\) (i.e.~the mutation
+force) helps prevent premature convergence
+(\protect\hyperlink{ref-Hansen2001}{Hansen \& Ostermeier 2001}),
+allowing the algorithm to explore more of the search space. CMA-ES has
+been shown to outperform several other optimization algorithms
+(\protect\hyperlink{ref-Hansen2010}{Hansen \emph{et al.} 2010}), and is
+usually the most efficient method when the target cost (i.e.~the number
+of objective function evaluations) is about \(100*N\) (\(N\) being the
+dimension of the parameter search space,
 \protect\hyperlink{ref-Baeck2013}{Bäck \emph{et al.} 2013}).
 
 \hypertarget{non-identifiability-of-parameter-values}{%
 \subsection{3.2. Non-identifiability of parameter
 values}\label{non-identifiability-of-parameter-values}}
 
-\textcolor{darkgreen}{Equifinality is a common problem encountered during model calibration, where multiple parameter sets can produce equally good fits to the observed data. This issue can arise due to several factors, including limitations in the quantity or quality of available data, competing processes within the model, and parameter interactions that affect the model output in complex ways.}
+Equifinality is a common problem encountered during model calibration,
+where multiple parameter sets can produce equally good fits to the
+observed data. This issue can arise due to several factors, including
+limitations in the quantity or quality of available data, competing
+processes within the model, and parameter interactions that affect the
+model output in complex ways.
 
 In both models used in this study, biological mechanisms are explicitly
 calculated in several submodels (e.g.~a leaf unfolding submodel or a
@@ -949,8 +972,10 @@ objectively, we did not attempt to minimize this non-identifiability
 issue by restricting the parameter space. To deal with equifinality
 issues, an avenue to explore could be the use of multiple objective
 functions during model calibration to assess different aspects of the
-model performance.
-\textcolor{darkgreen}{Additionally, if a closed-form likelihood can be derived, one could use a Bayesian framework to combine prior knowledge and inverse estimation of parameters to constrain the parameter space and study the nature of trade-offs between parameters}
+model performance. Additionally, if a closed-form likelihood can be
+derived, one could use a Bayesian framework to combine prior knowledge
+and inverse estimation of parameters to constrain the parameter space
+and study the nature of trade-offs between parameters
 (\protect\hyperlink{ref-Hartig2012}{Hartig \emph{et al.} 2012};
 \protect\hyperlink{ref-Cailleret2020}{Cailleret \emph{et al.} 2020}).
 
@@ -963,9 +988,14 @@ quite complex process-based species distribution models using species
 occurrence data. We did not attempt to validate our parametrizations
 using temporally or spatially independent data, and AUC was only used to
 determine if model outputs were consistent with species distributions.
-\textcolor{darkgreen}{However, AUC is scale-invariant: it measures how well predictions are ranked rather than their absolute values. For example, with PHENOFIT, a species with a fitness of $0.8$ could be considered as absent while another one with the same fitness could be considered as present. Therefore, when it is used as an objective function for model calibration, we probably lack some precision and consistency among species’ parameters estimation.}
-Further work could thus be conducted to examine the effects of choosing
-a different objective function.
+However, AUC is scale-invariant: it measures how well predictions are
+ranked rather than their absolute values. For example, with PHENOFIT, a
+species with a fitness of \(0.8\) could be considered as absent while
+another one with the same fitness could be considered as present.
+Therefore, when it is used as an objective function for model
+calibration, we probably lack some precision and consistency among
+species' parameters estimation. Further work could thus be conducted to
+examine the effects of choosing a different objective function.
 
 It would also be valuable to use a significantly higher computing power,
 with an adapted version of CMA-ES. To improve the global search
