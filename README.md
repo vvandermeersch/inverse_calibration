@@ -5,3 +5,6 @@ This repository contains the manuscript files, R code and data that were used in
 * `data` contains occurrence subsets used in our study, as well as some climate data
 
 <img src="https://github.com/vvandermeersch/inverse_calibration/blob/main/example.png" width="80%">
+
+Feel free to contact me for details !  
+:email: *victor.vandermeersch@cefe.cnrs.fr*
