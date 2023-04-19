@@ -1,9 +1,7 @@
+
 #-----------------------------------------------------------------------#
 # Script to format ERA5-Land climate data as required by Phenofit model #
 #-----------------------------------------------------------------------#
-
-# author : V. Van der Meersch
-# date : 16/02/2022
 
 wd <- "~/projects/inverse_calibration/data_compilation/format"
 
