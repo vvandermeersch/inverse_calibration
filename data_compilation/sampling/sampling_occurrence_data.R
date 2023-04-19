@@ -67,7 +67,7 @@ ERA5land <- raster(paste0(rawdata_folder,"2m_dewpoint_temperature_1969_01.nc"))
 GBIF <- fread(paste0(speciesdata_folder,"GBIF/Fagus_sylvatica_20012022/0112486-210914110416597.csv"), sep="\t", dec=".", quote = "",
                              header = TRUE, fill = TRUE, stringsAsFactors = FALSE)
 fagussylvatica_occ_rs <- process_occurrence("Fagus sylvatica", EUForest, GBIF, EVM, AFE, ERA5land)
-save(fagussylvatica_occ_rs, file = "D:/species/processed/fagus_sylvatica/fagus_sylvatica_occ_rs.Rdata") # one can save file to prevent future computations
+saveRDS(fagussylvatica_occ_rs, file = "D:/species/processed/fagus_sylvatica/fagus_sylvatica_occ_rs.rds") # one can save file to prevent future computations
 
 
 
@@ -81,5 +81,7 @@ nclusters <- 10 # number of clusters for presence data
 
 output_folder <- "D:/species/processed/fagus_sylvatica"
 
-generate_subsets(N, npres, nabs, nclusters, quercuspubescens_occ_rs, output_folder)
+generate_subsets(N, npres, nabs, nclusters, 
+                 fagussylvatica_occ_rs, env_data = biovars_30y, # k-means is not affected by collinearity, we can use all bioclimatic variables
+                 output_folder)
 

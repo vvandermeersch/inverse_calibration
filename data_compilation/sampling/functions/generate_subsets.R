@@ -1,7 +1,7 @@
 
 # Function to generate random pres/(pseudo)abs combination
 
-generate_subsets <- function(N, npres, nabs, nclusters, occ_data, output_dir){
+generate_subsets <- function(N, npres, nabs, nclusters, occ_data, env_data, output_dir){
   
   sub_dir <- paste0(npres, "pres_", nabs, "abs")
   work_dir <- file.path(output_dir, sub_dir)
@@ -9,8 +9,8 @@ generate_subsets <- function(N, npres, nabs, nclusters, occ_data, output_dir){
   
   for(i in 1:N){
     
-    fagussylvatica_pres <- .sample_presence_by_env(occ_data, biovars_30y, k = nclusters, nb_samples = npres)
-    fagussylvatica_abs <- sample_absence(occ_data, EUForest, ERA5land, nb_samples = nabs, env_data = biovars_30y)
+    fagussylvatica_pres <- .sample_presence_by_env(occ_data, env_data, k = nclusters, nb_samples = npres)
+    fagussylvatica_abs <- .sample_absence(occ_data, EUForest, ERA5land, nb_samples = nabs, env_data)
     
     species_occurrence <- .create_occurrence(fagussylvatica_pres, fagussylvatica_abs)
     
